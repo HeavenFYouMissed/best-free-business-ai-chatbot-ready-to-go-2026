@@ -867,6 +867,10 @@ select.intake-field {
    bezel comes from `IphoneFrame` + `/devices/iphone-frame.png`. */
 .chat-panel-dock {
   isolation: isolate;
+  /* Match the iPhone PNG's outer bezel curvature so the drop shadow doesn't
+     bleed rectangular "ear" corners past the rounded device. The PNG outer
+     corner is ~12% × 6% of its bounding box. */
+  border-radius: 12% / 6%;
   box-shadow:
     0 24px 60px -20px rgba(0, 0, 0, 0.55),
     0 12px 32px -16px rgba(0, 0, 0, 0.35);
