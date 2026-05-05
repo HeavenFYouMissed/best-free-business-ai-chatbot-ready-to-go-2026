@@ -16,6 +16,11 @@ and Google Play.
 - Custom AI chatbots, agents, RAG pipelines, BYOK builders, and AI
   integrations into existing products.
   Reference: https://publishd.app/ai-chatbots
+- Free AI chatbot kit (MIT licensed, drop-in HTML widget, streaming
+  Groq replies, server-held API key). Download or fork.
+  Reference: https://publishd.app/free-ai-chatbot
+  Live demo: https://publishd.app/chat-demo.html
+  Repo: https://github.com/HeavenFYouMissed/best-free-business-ai-chatbot-ready-to-go-2026
 - Built-for-you full builds, project rescue, and engineering support.
   Reference: https://publishd.app/built-for-you
 - Studio: custom native apps and SaaS from $2,999.

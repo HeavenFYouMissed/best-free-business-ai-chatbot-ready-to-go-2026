@@ -33,6 +33,12 @@ export const navItems: NavItem[] = [
         description: "Grounded chatbots from $399 that capture leads or take action.",
       },
       {
+        label: "Free AI chatbot kit",
+        href: "/free-ai-chatbot",
+        description: "Drop-in MIT-licensed chatbot widget — download v1.0 zip or fork the repo.",
+        tag: "FREE",
+      },
+      {
         label: "Try the chat demo",
         href: "/chat-demo.html",
         description: "Live AI chat in an iPhone frame — same one I install on client sites.",

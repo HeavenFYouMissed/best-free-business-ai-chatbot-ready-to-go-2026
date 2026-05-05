@@ -185,14 +185,18 @@ export default function AiChatbotsPage() {
               <ArrowRight className="icon h-4 w-4" aria-hidden="true" />
             </ShipButton>
             <Link
+              href="/free-ai-chatbot"
+              className="btn btn--glass inline-flex items-center gap-2 px-5 py-3 text-[14px]"
+            >
+              Download the free kit
+              <ArrowRight className="icon h-4 w-4" aria-hidden="true" />
+            </Link>
+            <Link
               href="/chat-demo.html"
               className="btn btn--glass inline-flex items-center gap-2 px-5 py-3 text-[14px]"
             >
               Try the live demo
               <ArrowRight className="icon h-4 w-4" aria-hidden="true" />
-            </Link>
-            <Link href="/website-design" className="btn btn--glass inline-flex items-center px-5 py-3 text-[14px]">
-              Pair it with a landing page
             </Link>
           </div>
 

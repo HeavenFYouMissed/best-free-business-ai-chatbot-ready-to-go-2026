@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/built-for-you`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: `${SITE_URL}/website-design`, lastModified: now, changeFrequency: "weekly", priority: 0.84 },
     { url: `${SITE_URL}/ai-chatbots`, lastModified: now, changeFrequency: "weekly", priority: 0.83 },
+    { url: `${SITE_URL}/free-ai-chatbot`, lastModified: now, changeFrequency: "weekly", priority: 0.86 },
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/careers`, lastModified: now, changeFrequency: "monthly", priority: 0.55 },
     {

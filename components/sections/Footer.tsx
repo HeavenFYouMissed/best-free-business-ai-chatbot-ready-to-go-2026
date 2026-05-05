@@ -42,6 +42,7 @@ export function Footer() {
                 { label: "Kickoff intake", href: "/kickoff" },
                 { label: "Website design", href: "/website-design" },
                 { label: "AI chatbots", href: "/ai-chatbots" },
+                { label: "Free AI chatbot kit", href: "/free-ai-chatbot" },
                 { label: "Live chat demo", href: "/chat-demo.html" },
                 { label: "Web app → stores", href: "/ship-web-app-to-app-store" },
                 { label: "What's included", href: "/#included" },

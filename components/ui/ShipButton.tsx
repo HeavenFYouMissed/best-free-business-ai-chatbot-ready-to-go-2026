@@ -12,6 +12,8 @@ type Props = {
   size?: "default" | "large" | "compact";
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /** Pass through to the underlying anchor — true for default filename, or a string. */
+  download?: boolean | string;
 };
 
 /**
@@ -27,6 +29,7 @@ export function ShipButton({
   size = "default",
   className,
   onClick,
+  download,
 }: Props) {
   const ref = useRef<HTMLAnchorElement | null>(null);
   const [coarsePointer, setCoarsePointer] = useState(false);
@@ -88,6 +91,7 @@ export function ShipButton({
       href={href}
       target={target}
       rel={rel}
+      download={download}
       style={coarsePointer ? undefined : { x: sx, y: sy }}
       onPointerMove={onPointerMove}
       onPointerLeave={onLeave}
