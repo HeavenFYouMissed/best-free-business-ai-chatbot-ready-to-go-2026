@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #14110d;
+    --card: #1c1814;
+    --card-2: #2a241d;
+    --border: rgba(236,228,210,0.06);
+    --fg: #ece4d2;
+    --muted: #7d7261;
+    --accent: #d4a574;
+    --accent-soft: rgba(212,165,116,0.10);
+    --green: #e8c79a;
+    --green-soft: rgba(232,199,154,0.10);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251,191,36,0.10);
+    --red: #f87171;
+    --red-soft: rgba(248,113,113,0.10);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .status-bar .right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .status-bar svg { width: 16px; height: 16px; }
+
+  .app-header {
+    padding: 4px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .app-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .icon-btn:active { background: var(--card-2); }
+  .icon-btn svg { width: 16px; height: 16px; color: var(--muted); }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── PROJECT CARD ── */
+  .project-card {
+    margin: 0 20px 20px;
+    padding: 20px;
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .project-card:active { border-color: rgba(212,165,116,0.2); }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(212,165,116,0.12) 0%, transparent 70%);
+  }
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .project-status.live { background: var(--green-soft); color: var(--green); }
+  .project-status.dev { background: var(--accent-soft); color: var(--accent); }
+  .project-status .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease infinite;
+  }
+  .project-status.live .dot { background: var(--green); }
+  .project-status.dev .dot { background: var(--accent); }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .project-name {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .project-client {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .progress-pct {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    transition: width 0.6s ease;
+  }
+
+  /* ── MILESTONES ── */
+  .milestones {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .milestone {
+    flex-shrink: 0;
+    padding: 14px 16px;
+    background: var(--card);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    min-width: 130px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .milestone:active { transform: scale(0.97); }
+  .milestone-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .milestone-icon svg { width: 14px; height: 14px; }
+  .milestone-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .milestone-date {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .milestone.done .milestone-icon { background: var(--green-soft); }
+  .milestone.done .milestone-icon svg { color: var(--green); }
+  .milestone.active .milestone-icon { background: var(--accent-soft); }
+  .milestone.active .milestone-icon svg { color: var(--accent); }
+  .milestone.pending .milestone-icon { background: rgba(255,255,255,0.04); }
+  .milestone.pending .milestone-icon svg { color: var(--muted); }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 12px;
+  }
+  .section-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .section-header a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* ── FEED ── */
+  .feed { padding: 0 20px; padding-bottom: 100px; }
+  .feed-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .feed-item:active { opacity: 0.7; }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .feed-icon svg { width: 16px; height: 16px; }
+  .feed-info { flex: 1; min-width: 0; }
+  .feed-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    line-height: 1.35;
+  }
+  .feed-meta {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .feed-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  /* ── PROJECTS PAGE ── */
+  .project-list { padding: 0 20px; padding-bottom: 100px; }
+  .project-list-item {
+    padding: 16px;
+    background: var(--card);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .project-list-item:active { transform: scale(0.98); border-color: rgba(212,165,116,0.2); }
+  .project-list-item .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .project-list-item .name {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .project-list-item .client {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .mini-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  /* ── CHAT PAGE ── */
+  .chat-page-content { padding: 0 20px; padding-bottom: 100px; }
+  .chat-empty {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .chat-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .chat-empty-icon svg { width: 26px; height: 26px; color: var(--accent); }
+  .chat-empty h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .chat-empty p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 240px;
+    margin: 0 auto 20px;
+  }
+  .chat-start-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .chat-start-btn:active { opacity: 0.8; }
+
+  /* ── PROFILE PAGE ── */
+  .profile-content { padding: 0 20px; padding-bottom: 100px; }
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #0088aa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--bg);
+    margin: 0 auto 12px;
+  }
+  .profile-name {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .profile-email {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .profile-stats {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .profile-stat {
+    flex: 1;
+    padding: 16px;
+    background: var(--card);
+    text-align: center;
+  }
+  .profile-stat .val {
+    font-size: 22px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .profile-stat .val span { color: var(--accent); }
+  .profile-stat .lbl {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  .profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--card);
+    border-radius: 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .profile-menu-item:active { background: var(--card-2); }
+  .profile-menu-item svg { width: 18px; height: 18px; color: var(--muted); }
+  .profile-menu-item span { font-size: 14px; font-weight: 500; flex: 1; }
+  .profile-menu-item .arrow { font-size: 14px; color: var(--muted); }
+
+  /* ── TAB BAR ── */
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 28px;
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+  }
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab.active { color: var(--accent); }
+  .tab svg { width: 22px; height: 22px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast .check { color: var(--green); font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"><span class="check">&#10003;</span> <span id="toast-text"></span></div>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="right">
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v3H1zM5 8h2v6H5zM9 5h2v9H9zM13 2h2v12h-2z"/></svg>
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 12h12v2H2zm1-1h10l-1-2H4zm2-3h4l-1-2H6z"/></svg>
+    <svg viewBox="0 0 20 12" fill="currentColor" style="width:22px"><rect x="0" y="1" width="16" height="10" rx="2" stroke="currentColor" fill="none" stroke-width="1"/><rect x="2" y="3" width="10" height="6" rx="1"/><path d="M17 4.5v3a1.5 1.5 0 000-3z"/></svg>
+  </div>
+</div>
+
+<!-- ═══ HOME PAGE ═══ -->
+<div id="page-home" class="page active">
+  <div class="app-header">
+    <h1>Projects</h1>
+    <div class="header-actions">
+      <div class="icon-btn" onclick="showToast('Search coming soon')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5l3 3"/></svg>
+      </div>
+      <div class="icon-btn" onclick="showToast('New project created')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4v12M4 10h12"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-card" onclick="showToast('Opening Riviera Analytics...')">
+    <div class="project-status dev"><div class="dot"></div> In Development</div>
+    <div class="project-name">Riviera Analytics</div>
+    <div class="project-client">Riviera Labs &middot; Next.js + AI</div>
+    <div class="progress-row">
+      <span class="progress-label">Sprint 3 of 4</span>
+      <span class="progress-pct">72%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+  </div>
+
+  <div class="milestones">
+    <div class="milestone done" onclick="showToast('Wireframes completed Apr 14')">
+      <div class="milestone-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 8.5l3 3 6-6"/></svg>
+      </div>
+      <div class="milestone-title">Wireframes</div>
+      <div class="milestone-date">Apr 14</div>
+    </div>
+    <div class="milestone done" onclick="showToast('Frontend completed Apr 21')">
+      <div class="milestone-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 8.5l3 3 6-6"/></svg>
+      </div>
+      <div class="milestone-title">Frontend</div>
+      <div class="milestone-date">Apr 21</div>
+    </div>
+    <div class="milestone active" onclick="showToast('API + AI in progress')">
+      <div class="milestone-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 2"/></svg>
+      </div>
+      <div class="milestone-title">API + AI</div>
+      <div class="milestone-date">Apr 28</div>
+    </div>
+    <div class="milestone pending" onclick="showToast('Ship scheduled May 5')">
+      <div class="milestone-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/></svg>
+      </div>
+      <div class="milestone-title">Ship</div>
+      <div class="milestone-date">May 5</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2>Activity</h2>
+    <a onclick="switchTab('projects')">See all</a>
+  </div>
+  <div class="feed">
+    <div class="feed-item" onclick="showToast('Dashboard layout deployed')">
+      <div class="feed-icon" style="background:var(--accent-soft)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M2 4h12v8H2zM2 7h12"/></svg>
+      </div>
+      <div class="feed-info">
+        <div class="feed-title">Dashboard layout deployed</div>
+        <div class="feed-meta">Riviera Analytics &middot; 2h ago</div>
+      </div>
+      <div class="feed-badge" style="background:var(--green-soft);color:var(--green)">Live</div>
+    </div>
+    <div class="feed-item" onclick="showToast('Awaiting Apple review')">
+      <div class="feed-icon" style="background:var(--amber-soft)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="var(--amber)" stroke-width="1.5"><path d="M8 3v5l3 3"/><circle cx="8" cy="8" r="6"/></svg>
+      </div>
+      <div class="feed-info">
+        <div class="feed-title">Awaiting Apple review</div>
+        <div class="feed-meta">FitSync Pro &middot; 18h ago</div>
+      </div>
+      <div class="feed-badge" style="background:var(--amber-soft);color:var(--amber)">Review</div>
+    </div>
+    <div class="feed-item" onclick="showToast('Google Play approved')">
+      <div class="feed-icon" style="background:var(--green-soft)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M3 8.5l3 3 7-7"/></svg>
+      </div>
+      <div class="feed-info">
+        <div class="feed-title">Google Play approved</div>
+        <div class="feed-meta">MealPrep AI &middot; Yesterday</div>
+      </div>
+      <div class="feed-badge" style="background:var(--green-soft);color:var(--green)">Done</div>
+    </div>
+    <div class="feed-item" onclick="showToast('AI chat integration started')">
+      <div class="feed-icon" style="background:var(--accent-soft)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.5"><rect x="3" y="3" width="10" height="10" rx="2"/><path d="M7 6l3 2-3 2z" fill="var(--accent)"/></svg>
+      </div>
+      <div class="feed-info">
+        <div class="feed-title">AI chat integration started</div>
+        <div class="feed-meta">Riviera Analytics &middot; 2 days ago</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROJECTS PAGE ═══ -->
+<div id="page-projects" class="page">
+  <div class="app-header">
+    <h1>All Projects</h1>
+    <div class="header-actions">
+      <div class="icon-btn" onclick="showToast('Filter coming soon')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h14M5 10h10M7 15h6"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="project-list">
+    <div class="project-list-item" onclick="showToast('Opening Riviera Analytics...')">
+      <div class="row">
+        <div>
+          <div class="name">Riviera Analytics</div>
+          <div class="client">Riviera Labs &middot; Next.js + AI</div>
+        </div>
+        <div class="mini-badge" style="background:var(--accent-soft);color:var(--accent)">Dev</div>
+      </div>
+    </div>
+    <div class="project-list-item" onclick="showToast('Opening FitSync Pro...')">
+      <div class="row">
+        <div>
+          <div class="name">FitSync Pro</div>
+          <div class="client">FitSync Inc &middot; React Native</div>
+        </div>
+        <div class="mini-badge" style="background:var(--amber-soft);color:var(--amber)">Review</div>
+      </div>
+    </div>
+    <div class="project-list-item" onclick="showToast('Opening MealPrep AI...')">
+      <div class="row">
+        <div>
+          <div class="name">MealPrep AI</div>
+          <div class="client">MealPrep Co &middot; Flutter + GPT</div>
+        </div>
+        <div class="mini-badge" style="background:var(--green-soft);color:var(--green)">Live</div>
+      </div>
+    </div>
+    <div class="project-list-item" onclick="showToast('Opening Kova Finance...')">
+      <div class="row">
+        <div>
+          <div class="name">Kova Finance</div>
+          <div class="client">Kova Ltd &middot; Swift + Plaid</div>
+        </div>
+        <div class="mini-badge" style="background:var(--green-soft);color:var(--green)">Live</div>
+      </div>
+    </div>
+    <div class="project-list-item" onclick="showToast('Opening PulseHR...')">
+      <div class="row">
+        <div>
+          <div class="name">PulseHR</div>
+          <div class="client">PulseHR &middot; Next.js + Prisma</div>
+        </div>
+        <div class="mini-badge" style="background:var(--accent-soft);color:var(--accent)">Dev</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAT PAGE ═══ -->
+<div id="page-chat" class="page">
+  <div class="app-header">
+    <h1>Messages</h1>
+    <div class="header-actions">
+      <div class="icon-btn" onclick="showToast('New message')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4v12M4 10h12"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="chat-page-content">
+    <div class="chat-empty">
+      <div class="chat-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <h3>Project Chat</h3>
+      <p>Real-time messaging with your clients and team, right inside the app.</p>
+      <button class="chat-start-btn" onclick="showToast('Starting new conversation...')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M8 3v10M3 8h10"/></svg>
+        New Conversation
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROFILE PAGE ═══ -->
+<div id="page-profile" class="page">
+  <div class="app-header">
+    <h1>Profile</h1>
+    <div class="header-actions">
+      <div class="icon-btn" onclick="showToast('Settings')">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="3"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.2 4.2l2.1 2.1M13.7 13.7l2.1 2.1M4.2 15.8l2.1-2.1M13.7 6.3l2.1-2.1"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="profile-content">
+    <div class="profile-avatar">D</div>
+    <div class="profile-name">Daniel C.</div>
+    <div class="profile-email">daniel@publishd.app</div>
+
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <div class="val">5</div>
+        <div class="lbl">Active</div>
+      </div>
+      <div class="profile-stat">
+        <div class="val">11<span>+</span></div>
+        <div class="lbl">Shipped</div>
+      </div>
+      <div class="profile-stat">
+        <div class="val">99<span>%</span></div>
+        <div class="lbl">On Time</div>
+      </div>
+    </div>
+
+    <div class="profile-menu-item" onclick="showToast('Account settings')">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-4 3.5-7 7-7s7 3 7 7"/></svg>
+      <span>Account</span>
+      <span class="arrow">&rsaquo;</span>
+    </div>
+    <div class="profile-menu-item" onclick="showToast('Notifications')">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2a6 6 0 016 6c0 4 2 5 2 5H2s2-1 2-5a6 6 0 016-6zM8 17h4"/></svg>
+      <span>Notifications</span>
+      <span class="arrow">&rsaquo;</span>
+    </div>
+    <div class="profile-menu-item" onclick="showToast('Billing & plans')">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 8h16"/></svg>
+      <span>Billing</span>
+      <span class="arrow">&rsaquo;</span>
+    </div>
+    <div class="profile-menu-item" onclick="showToast('Help & support')">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M8 8a2 2 0 114 0c0 1.5-2 1.5-2 3M10 14v.5"/></svg>
+      <span>Help & Support</span>
+      <span class="arrow">&rsaquo;</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB BAR ═══ -->
+<div class="tab-bar">
+  <div class="tab active" data-tab="home" onclick="switchTab('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l9-8 9 8"/><path d="M5 10v8a2 2 0 002 2h10a2 2 0 002-2v-8"/></svg>
+    Home
+  </div>
+  <div class="tab" data-tab="projects" onclick="switchTab('projects')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Projects
+  </div>
+  <div class="tab" data-tab="chat" onclick="switchTab('chat')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    Chat
+  </div>
+  <div class="tab" data-tab="profile" onclick="switchTab('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15a5 5 0 100-10 5 5 0 000 10zM19 21a7 7 0 00-14 0"/></svg>
+    Profile
+  </div>
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelector('.tab[data-tab="' + name + '"]').classList.add('active');
+}
+
+let toastTimer;
+function showToast(text) {
+  const t = document.getElementById('toast');
+  const tt = document.getElementById('toast-text');
+  tt.textContent = text;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+
+</body>
+</html>

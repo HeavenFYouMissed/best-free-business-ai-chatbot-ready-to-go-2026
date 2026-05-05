@@ -1,0 +1,151 @@
+---
+title: "Building a Data Scraping Stack: Sourcing LLM Training Data"
+description: "How to ethically scrape web data for LLM training. APIs first, legal framework, cost breakdown."
+slug: "scraping-stack-llm-training-data"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["data", "ai", "tools", "scraping"]
+draft: false
+---
+
+You need training data. Your LLM isn't accurate because it hasn't seen examples of your domain. You could buy a dataset, but you'd rather not blow your budget. Scraping the web is fast. It's also legally precarious if you don't know what you're doing.
+
+Here's the pragmatic path: what works, what's legal, and what will get you sued.
+
+## Why Data Quality Matters
+
+Garbage data produces garbage models. This isn't negotiable.
+
+I've seen teams spend weeks collecting training data only to discover it's 40% duplicates, riddled with formatting errors, or completely irrelevant to their use case. The model trained on that data performs worse than a smaller, cleaner dataset.
+
+Your LLM's performance depends on three things: **diversity, volume, and quality**. You can't optimize for all three equally, but you can't neglect any of them.
+
+**Diversity** means your training data covers different writing styles, domains, edge cases, and perspectives. A model trained only on technical documentation will hallucinate when asked about creative writing. A model trained only on Reddit will fail on academic text.
+
+**Volume** is straightforward: more examples generally means better performance, up to a point where redundancy takes over. For fine-tuning a smaller model (under 7B parameters), you might get by with 5,000 to 50,000 quality examples. For training from scratch, you need millions.
+
+**Quality** beats volume. A thousand hand-curated examples outperform ten thousand scraped, noisy examples. But hand-curation doesn't scale. The real strategy is scraping at volume, then being ruthless about filtering.
+
+## Scraping Approaches: The Pyramid
+
+Start at the top and only move down when necessary.
+
+**Level 1: APIs (Free & Paid)**
+
+APIs are the legitimate path. Twitter/X, GitHub, HackerNews, Wikipedia dumps, and most news outlets offer API access. They're rate-limited, sometimes expensive at scale, but they're *legal* and the data is *clean*.
+
+If your target source has an API, use it. You avoid legal risk and spend less time on parsing logic.
+
+**Level 2: Respectful Crawling**
+
+If you must crawl a website directly, follow these rules:
+
+1. Check `robots.txt`. It's not legally binding, but ignoring it is hostile. Most sites say "slow down," not "don't crawl."
+2. Set a User-Agent that identifies your bot, not a fake browser string.
+3. Respect `Crawl-Delay` directives. If robots.txt says wait 5 seconds between requests, wait 5 seconds.
+4. Distribute your requests over time. Hammering a server with 100 requests per second will trigger their DDoS protection and you'll get IP-banned.
+
+Most websites won't sue you for respectful crawling. What gets you in trouble is:
+
+- Ignoring robots.txt entirely
+- Impersonating a real user
+- Crawling at speeds that disrupt the site
+- Scraping non-public data (data behind paywalls or login walls)
+- Scraping then republishing the data
+
+**Level 3: Headless Browser Crawling**
+
+For JavaScript-heavy sites, you need Puppeteer, Playwright, or Selenium. These simulate a real browser, wait for JavaScript to load, then extract the DOM.
+
+This is slower and more resource-intensive than simple HTTP requests. Only use it when static crawling fails.
+
+## Legal & Ethical Framework
+
+Here's what matters legally:
+
+**Terms of Service**
+
+Most websites' ToS forbid scraping. That's fact. Violating ToS can open you to breach-of-contract claims, but in practice, websites don't pursue small-scale scrapers. They pursue people who scrape at massive scale, republish content, or undermine the site's business model.
+
+Training an LLM on scraped data falls into a gray zone. Some argue it's fair use (transformative use of data). Courts haven't settled this definitively. The safest approach: scrape public data, don't scrape paywalled content, and don't republish the raw data.
+
+**Copyright**
+
+Data is not automatically copyrighted, but *creative works* are. Scraping news articles and using them to train a model falls into fair use territory (transformative, non-commercial research). Scraping copyrighted code or books is closer to infringement.
+
+For code: scraping public GitHub is widespread and largely tolerated. GitHub's ToS technically forbids it, but they take a pragmatic stance for research and model training.
+
+For text: public domain content (Wikipedia, government documents, academic papers with open licenses) is safe. Copyrighted novels? Don't.
+
+**Data Residency & Privacy**
+
+If you're scraping personal data (emails, names, contact info), you're subject to GDPR, CCPA, and other privacy laws. Don't do this unless you have explicit consent. 
+
+Scraping non-personal, public data (published articles, code repositories, public posts) is different. Still follow local privacy laws, but the risk is lower.
+
+**What Actually Gets You Sued**
+
+- Scraping paywalled content and republishing it
+- Scraping personal data and selling it
+- Scraping at volumes that crash the server
+- Ignoring cease-and-desist letters
+- Violating a specific injunction
+
+Scraping for internal training data use is low-risk. Scraping to build a competing product that republishes the same data is high-risk.
+
+## Storage & Processing
+
+Once you have raw data, you need to clean it.
+
+**Deduplication** removes duplicate documents. A simple hash-based approach catches exact duplicates. For near-duplicates (same article published on different sites), use MinHash or Jaccard similarity.
+
+**Filtering** removes low-quality examples: broken text, spam, auto-generated gibberish, or content that doesn't match your domain. This is where quality happens. Spend time building good filters.
+
+**Normalization** standardizes format: remove extra whitespace, fix encoding issues, convert HTML to plain text, strip metadata you don't need.
+
+**Chunking** breaks long documents into training examples of appropriate length. A 10,000-word article should become multiple 500-word examples for fine-tuning, or 2,000-word chunks if you're pretraining.
+
+Store cleaned data in a relational database (PostgreSQL) or object storage (S3). For datasets over 100GB, use S3. Cheaper. Easier to version and share.
+
+## Tools & Stack
+
+**Scrapers:**
+- `Scrapy` (Python, production-grade, learning curve)
+- `Beautiful Soup` (Python, lightweight, good for simple jobs)
+- `Puppeteer` (JavaScript, headless browsers)
+- `Selenium` (Python/Java, mature, slower)
+
+**Storage:**
+- `PostgreSQL` with full-text search (structured data, small to medium datasets)
+- `S3` (large datasets, cheap, integrates with ML pipelines)
+- `Hugging Face Datasets` (if you're fine-tuning models on their platform)
+
+**Processing:**
+- `Pandas` (data manipulation)
+- `DuckDB` (fast SQL queries on large files)
+- `Langchain` (text splitting, chunking for LLMs)
+
+**Cost estimates:**
+- Scraping: Free if you own the server. Budget under $50/month for a basic VPS.
+- Storage: $0.023/GB/month on S3. A 1TB dataset costs under $25/month.
+- Processing: One-time cost. A laptop handles most cleaning tasks. Use AWS Batch for large-scale jobs ($0.05 to $0.10 per GPU-hour).
+
+## Putting It Together
+
+1. Identify your data sources (APIs first, then respectful crawling)
+2. Build a scraper that respects rate limits and robots.txt
+3. Store raw data in S3 or a database
+4. Build a cleaning pipeline: deduplication, filtering, normalization
+5. Chunk your data into training examples
+6. Version your dataset
+7. Feed it to your fine-tuning job
+
+The entire process, from zero to 100K clean examples, takes one person about two weeks. Most of that time is in filtering and validation, not scraping.
+
+## Next Steps
+
+If you're building a data pipeline to train or fine-tune a model for your specific domain, [let's talk](/kickoff). I help teams scope data infrastructure, choose the right tools, and avoid the legal landmines.
+
+Also check out how to [integrate custom knowledge into Cursor](/blog/cursor-model-surgery-workflow) for AI-assisted coding with your domain expertise built in.

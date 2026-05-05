@@ -1,0 +1,156 @@
+---
+title: "Shipping AI Tools to the App Store: What They Don't Tell You"
+description: "Your AI tool got rejected. Here's why—and how to fix it before resubmitting."
+slug: "ship-ai-tool-app-store"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["ai", "shipping", "app-store", "rejections", "ios"]
+draft: false
+---
+
+You built an AI tool. It works locally. You trained it, tested it, shipped it to the App Store. Then this arrives in your inbox: "Guideline 4.2 — Minimum Functionality" or "Unavailable Services." Your app is rejected.
+
+You're not alone. AI tools hit the App Store like they're invincible, then get demolished by guidelines written for a different era. Here's what Apple and Google actually expect, why your AI app failed, and how to ship it without wasting another 3 weeks on rejections.
+
+## The Pattern Behind AI App Rejections
+
+Apple doesn't hate AI. Apple hates apps that are just wrappers. If your app is 90% API call and 10% native, you're flagged as "minimum functionality." Same goes for Google Play, but the bar is lower.
+
+Here are the 3 most common rejection reasons:
+
+**1. "It's Just an API Wrapper"**
+
+You built a UI that calls OpenAI, Anthropic, or local LLMs. No offline mode. No native features. No fallback. If the API goes down, the app does nothing.
+
+Apple's view: This isn't an app; it's a website in a container.
+
+**2. "Unavailable Services"**
+
+You ship with hardcoded API keys (bad security + easy to revoke). Or you require signup on first launch through a web view, and Apple can't verify your business model. Or your core feature requires internet, and you haven't built offline gracefully.
+
+**3. "No Native Features"**
+
+Your app doesn't use camera, microphone, push notifications, or device-specific capabilities. It's purely computational. Apple sees: Why is this not just a web app?
+
+## What Apple Actually Requires (The Rules Nobody Reads)
+
+Let's be direct. Here's what you need to hit approval:
+
+**Native Features Are Your First Win**
+
+You don't need many. Pick at least one:
+- **Camera/Photos**: Users select an image, you process it with your AI, return results. This is legitimate and shows device integration.
+- **Voice Input**: Accept speech, transcribe or analyze it with your AI, return results. Apple loves this because it's multi-modal.
+- **Offline Processing**: If you use on-device models (Ollama, CoreML, or ONNX), you can do inference without internet. Build a graceful fallback for when internet is available for better models.
+- **Push Notifications**: Send meaningful notifications based on processing or status updates.
+- **Health/Fitness Data**: If your AI analyzes fitness, health, or wellness data from HealthKit, this is a native differentiator.
+
+**Graceful Degradation (Required)**
+
+Your app needs to work meaningfully even if the API is down. Options:
+- Cache previous results and show them
+- Use a lighter, on-device model as fallback
+- Show a queue and say "We'll process this when internet returns"
+- Never leave the user with a blank screen and an error
+
+**Offline Mode (Highly Recommended)**
+
+This isn't required, but it's your fast-track approval. Use TensorFlow Lite, Core ML, or Ollama to run models on-device. Even a smaller model counts. Apple sees this as "real app" technology.
+
+**Clear Revenue Model**
+
+Apple needs to understand how you make money:
+- Subscription: Paid features behind IAP (In-App Purchase)
+- Freemium: Free tier with limited API calls, paid tier for more
+- One-time purchase: Pay once, unlimited access
+- Don't hide this behind a web redirect or complex signup
+
+## Building for Approval: The Architecture
+
+Here's what we ship:
+
+**Layer 1: Native UI**
+- Use SwiftUI for iOS, Jetpack Compose for Android. Not React Native or Flutter (they're slower to approve if they're just wrappers).
+- Build at least one native feature (usually camera or voice input).
+
+**Layer 2: Hybrid Processing**
+```
+User Input → Native Feature (Camera/Voice/Health) 
+           → Local Model (if available) for instant feedback
+           → API Call (for better results)
+           → Display Results
+           → Cache + Offline Access
+```
+
+**Layer 3: API Layer**
+- Hardcoded API keys are a security nightmare. Use a backend endpoint that you control, which proxies to OpenAI/Anthropic.
+- Implement rate limiting and abuse detection.
+- If your app is rejected for "unavailable services," it's usually because Apple couldn't verify the backend service exists or is functional.
+
+**Layer 4: Graceful Fallback**
+- When API is down or rate-limited, show: "Using offline mode" or "Queued for processing."
+- Never show a blank error. Always have a user-facing fallback.
+
+## Google Play: The Easier Path (With Caveats)
+
+Google Play has nearly identical guidelines but enforces them less strictly. You still need minimum functionality, but Google's definition is more forgiving.
+
+Here's the difference:
+- Google doesn't require native features as aggressively, but you still need to show device integration (notifications, storage, permissions).
+- Google rejects less often for "minimum functionality" if your feature set is clear.
+- Google's review is faster: typically 2–4 hours.
+
+Downside: Google's user base is more skeptical of wrapper apps. Even if Google approves, users will leave one-star reviews if your app feels like a web wrapper.
+
+Ship both, but expect Google Play approval in days while App Store takes weeks.
+
+## Timeline and Costs (Reality Check)
+
+**First Submission: 5–10 Days**
+- App Store initial review: 24–48 hours (usually)
+- If rejected, you resubmit. New review: 24–48 hours again
+- If you get 2+ rejections, next review can take 5+ days because escalation kicks in
+
+**Rejection + Appeal + Resubmit: Add 7–14 Days**
+- Average: 2 rejections before approval on AI tools
+- Some take 4+
+
+**Realistic Timeline: 2–3 Weeks for First Approval**
+
+**Cost Per Iteration**
+- Your time: 4–8 hours per rejection (analyze, fix architecture, resubmit)
+- Backend changes: $0–500 depending on what you need to adjust
+- Total for the whole process: 30–50 hours of engineering + 1–2 weeks of calendar time
+
+**Avoid These Mistakes (They Add Weeks)**
+
+- Resubmitting without reading the rejection. Apple gives specific reasons. Fix them or appeal, don't guess.
+- Changing unrelated features between rejections. Apple notices. Stick to the rejection point.
+- Using a web view as your main UI. It's basically a web app and Apple will catch it.
+- Not having a working backend. If your service is down when Apple reviews, instant rejection.
+
+## Real Example: Approved AI Tool Architecture
+
+We shipped an image processing AI tool (runs local model + OpenAI fallback). Here's what Apple approved:
+
+1. **Camera Input** (native feature): User takes or selects photo
+2. **Instant Preview** (local model): Show fast, lower-quality result immediately
+3. **Enhanced Processing** (API call): Background process for high-quality result via OpenAI
+4. **Offline Access**: Previously processed images cached, available without internet
+5. **Notifications**: User notified when enhanced result is ready
+
+Result: Approved in one round after initial rejection for "minimum functionality." Second submission: approved in 24 hours.
+
+The key: Native feature (camera) + offline capability + clear feature set. This checks all Apple's boxes.
+
+## What To Do Before You Submit
+
+1. **Build one native feature first.** Don't submit until you're using camera, voice, health data, or notifications meaningfully.
+2. **Test offline gracefully.** Turn off your API and use the app for 10 minutes. If it breaks, so does Apple's review.
+3. **Have a backend ready.** API keys in code = rejection. Use a backend to proxy API calls.
+4. **Read the last rejection (if you got one).** Apple's wording is specific. Fix that specific issue or write a clear appeal.
+5. **Plan for 2–3 weeks.** Don't launch on a Friday expecting approval by Monday.
+
+If you're shipping an AI tool and got rejected, [let's ship it right.](/kickoff)

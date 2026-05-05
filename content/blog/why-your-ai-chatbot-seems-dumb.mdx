@@ -1,0 +1,52 @@
+---
+title: "Why Your AI Chatbot Seems Dumb"
+description: "You added an AI chatbot and it hallucinates. Here's why and what actually makes it smart."
+slug: "why-your-ai-chatbot-seems-dumb"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["AI", "chatbots", "RAG", "training"]
+draft: false
+---
+
+You added an AI chatbot to your site. Users ask it questions, and it gives nonsense answers.
+
+Here's what happened: **You let an LLM talk to your users without teaching it anything about your business.**
+
+LLMs generate plausible-sounding text. They don't "know" things. Without real knowledge about your business, your products, your policies—they'll guess.
+
+**Customer:** "Do you ship to Canada?"
+**Your chatbot:** "Yes, we ship worldwide" (actually, you don't)
+**Customer:** Orders. Gets disappointed.
+
+This isn't the model's fault. It's that you didn't teach the model anything.
+
+## Why Chatbots Hallucinate
+
+LLMs are pattern-matching engines. They generate plausible text based on patterns in their training data. Without YOUR data (your docs, FAQ, product descriptions, policies), the chatbot is a generic LLM guessing.
+
+## What Actually Fixes This: RAG
+
+RAG = Retrieval Augmented Generation.
+
+1. You give the chatbot your docs (FAQs, shipping policy, product descriptions)
+2. When a user asks a question, the chatbot searches your docs for relevant information
+3. The chatbot generates an answer based on *your actual data*
+4. The chatbot cites where it found the info
+
+**Without RAG:** "Do you ship to Canada?" → Chatbot guesses "Yes"
+**With RAG:** "Do you ship to Canada?" → Searches your docs → Finds "We ship to USA, UK, EU only" → Tells the user the truth
+
+## The Cost vs. Benefit
+
+**Build your own:** `$2K–$5K` setup + `$200–$500/month` → Handles 60–70% of support
+**Use Intercom/Drift:** `$300–$1,000/month` → Handles 30–50% of support
+**Use ChatGPT direct:** `$20–$100/month` → Handles 10% correctly, high hallucination risk
+
+## When to Build Your Own vs. Buy
+
+**Buy if:** fewer than 100 support requests/month
+**Build if:** >100 support requests/month (ROI is there)
+
+If you want a chatbot that actually works, [let's talk about building one trained on your actual business.](/kickoff)

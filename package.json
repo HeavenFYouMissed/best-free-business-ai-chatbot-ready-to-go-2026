@@ -1,0 +1,48 @@
+{
+  "name": "publishd",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "node scripts/generate-blog-manifest.mjs",
+    "prebuild": "node scripts/generate-blog-manifest.mjs",
+    "dev": "node scripts/generate-blog-manifest.mjs && next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "setup:stripe": "node scripts/setup-stripe.mjs",
+    "seo:indexnow": "node scripts/indexnow.mjs"
+  },
+  "dependencies": {
+    "embla-carousel-auto-scroll": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.24.0",
+    "gray-matter": "^4.0.3",
+    "groq-sdk": "^1.1.2",
+    "lenis": "^1.3.16",
+    "lucide-react": "^0.544.0",
+    "marked": "^18.0.2",
+    "next": "^15.5.5",
+    "next-mdx-remote": "^5.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "reading-time": "^1.5.0",
+    "shaders": "^2.5.104",
+    "stripe": "^19.2.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.11.1",
+    "@tailwindcss/postcss": "^4.1.15",
+    "@types/node": "^22.15.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.31.0",
+    "eslint-config-next": "^15.5.5",
+    "tailwindcss": "^4.1.15",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.49.0"
+  }
+}

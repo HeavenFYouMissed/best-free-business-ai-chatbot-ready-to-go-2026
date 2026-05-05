@@ -1,0 +1,58 @@
+{
+  "mode": "LIVE",
+  "created": "2026-04-21T12:45:40.331Z",
+  "prices": {
+    "coaching": {
+      "productId": "prod_UMqmAPMlKijALE",
+      "priceId": "price_1TO74aGGHOc6OYEsONlOU1j8"
+    },
+    "single": {
+      "productId": "prod_UMqmjQMwowZngO",
+      "priceId": "price_1TO74bGGHOc6OYEsL2tYO9Nz"
+    },
+    "both": {
+      "productId": "prod_UMqmM58ql6Cggt",
+      "priceId": "price_1TO74cGGHOc6OYEsLMnfBL9g"
+    },
+    "premium": {
+      "productId": "prod_UMqmBHDd76pmfe",
+      "priceId": "price_1TO74dGGHOc6OYEs2h6pudYt"
+    },
+    "rescue": {
+      "productId": "prod_UMqmsk1owu4z3H",
+      "priceId": "price_1TO74dGGHOc6OYEsgF39Ddkc"
+    },
+    "retainer": {
+      "productId": "prod_UMqmG9ZB5KRv2o",
+      "priceId": "price_1TO74eGGHOc6OYEsuNXYdkkh"
+    },
+    "update": {
+      "productId": "prod_UMqmqSLwSbgmr7",
+      "priceId": "price_1TO74fGGHOc6OYEs8H3QV1tF"
+    },
+    "starterSite": {
+      "productId": "prod_UNOTXdDmuaoPat",
+      "priceId": "price_1TOdgJGGHOc6OYEsomIT0u77"
+    },
+    "proSite": {
+      "productId": "prod_UNOTPW4QpywYCE",
+      "priceId": "price_1TOdgKGGHOc6OYEs6FE2QOc9"
+    },
+    "chatbotInstall": {
+      "productId": "prod_UNOTGi85yvxg4c",
+      "priceId": "price_1TOdgLGGHOc6OYEsk81MkxVZ"
+    },
+    "chatbotPro": {
+      "productId": "prod_UNOTGMZinRMAXa",
+      "priceId": "price_1TOdgMGGHOc6OYEsnKS3xsV8"
+    },
+    "appPolish": {
+      "productId": "prod_UNOT2FTHP8MCMn",
+      "priceId": "price_1TOdgNGGHOc6OYEse8e83ghw"
+    },
+    "resubmitAddon": {
+      "productId": "prod_UNOT6iWS1yjUsC",
+      "priceId": "price_1TOdgOGGHOc6OYEszGVn1pUr"
+    }
+  }
+}

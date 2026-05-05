@@ -1,0 +1,218 @@
+---
+title: "Cursor + Model Surgery: AI-Assisted Coding with Custom Knowledge"
+description: "Inject domain knowledge into Cursor's AI. Model Surgery workflow for personalized coding assistance."
+slug: "cursor-model-surgery-workflow"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["cursor", "ai", "workflow", "coding"]
+draft: false
+---
+
+Cursor is fast. You open a file, hit Tab, and it writes half your boilerplate before you finish thinking. But it doesn't know your codebase. It doesn't know your company's patterns, your API conventions, or the weird quirks of your domain.
+
+That's where Model Surgery comes in. It's a technique to inject custom knowledge into the AI model Cursor uses—without retraining from scratch. The result: Cursor that writes code that actually fits *your* system.
+
+Here's how.
+
+## What Cursor Does Well (And Doesn't)
+
+Cursor excels at:
+
+- Fast scaffolding. Write a function signature and it fills in the body.
+- Language conventions. It knows Python idioms, JavaScript patterns, React hooks.
+- Common libraries. It's trained on thousands of GitHub repos, so it knows the top 500 libraries inside and out.
+
+Cursor struggles with:
+
+- Your custom framework. You built a DSL for your company? Cursor doesn't know it.
+- Domain-specific patterns. You have an unusual architecture—microservices with a shared event bus, custom serialization—Cursor will sometimes ignore it.
+- Non-public libraries. Your internal package `@company/data-layer`? Cursor's never seen it.
+- Style decisions. Your codebase uses trailing commas, strict null checks, and a specific folder structure. Cursor will guess, but guess wrong.
+
+The gap widens as your codebase gets more specialized. A standard Rails app? Cursor nails it. A custom trading system with domain-specific execution model? Cursor needs help.
+
+## Model Surgery: The Concept
+
+Model Surgery is a technique to augment a language model's knowledge without retraining. Instead of retraining the entire model (expensive, slow, requires massive compute), you:
+
+1. Extract patterns from your codebase
+2. Build a knowledge graph of those patterns
+3. Feed that graph into the model's context window
+4. The model uses that context to generate better completions
+
+This is different from fine-tuning. Fine-tuning adapts model weights, which is slow. Model Surgery injects knowledge as context, which is instant.
+
+Cursor supports this through its `.cursor` configuration and context injection via the `@docs` syntax. You can point Cursor at your documentation, code patterns, and custom libraries, and it will reference them during generation.
+
+## Practical Workflow
+
+Here's the step-by-step:
+
+**Step 1: Audit Your Codebase**
+
+Identify the patterns that are unique to you:
+- Custom frameworks or middleware
+- Database query patterns
+- API conventions (how you structure responses, error codes)
+- Naming conventions
+- Folder structure
+- Build or deployment patterns
+- Custom testing utilities
+
+Spend 2 hours writing them down. Be specific. "We use async/await" is too generic. "We use async/await with a custom error handler that logs to Sentry and returns a standardized error response" is useful.
+
+**Step 2: Extract Code Examples**
+
+For each pattern, grab 3 to 5 real examples from your codebase. Don't abstract them. Keep them concrete. Cursor learns better from examples than from prose descriptions.
+
+Example: If your pattern is "database queries always go through a `query()` helper," extract actual usage:
+
+```
+const user = await query(
+  `SELECT * FROM users WHERE id = $1`,
+  [userId]
+);
+
+const posts = await query(
+  `SELECT * FROM posts WHERE user_id = $1 ORDER BY created_at DESC`,
+  [userId]
+);
+```
+
+**Step 3: Create a Pattern Documentation File**
+
+Build a single `.md` or `.txt` file that documents these patterns. Structure it like:
+
+```
+# Codebase Patterns
+
+## Database Queries
+Always use the query() helper. Never use raw SQL.
+
+[examples]
+
+## API Responses
+All endpoints return {data, error, metadata}.
+
+[examples]
+
+## Error Handling
+Throw ApplicationError with a code and message.
+
+[examples]
+```
+
+Keep it under 5,000 words. Cursor's context window is large, but brevity forces you to be specific.
+
+**Step 4: Index Into Cursor**
+
+Add your documentation to Cursor's knowledge:
+
+1. Create `.cursor/context.txt` in your project root.
+2. Paste your patterns file into it.
+3. In your `.cursorignore`, explicitly exclude large dependencies and generated code (node_modules, dist, build, .next).
+4. In `.cursor/rules.txt`, add project-specific coding standards:
+
+```
+- Use TypeScript strict mode
+- No `any` types without explicit @ts-ignore comment
+- All async functions must handle errors explicitly
+- Database access only through query() helper
+```
+
+**Step 5: Integrate Into Workflow**
+
+In Cursor:
+- Use `@codebase` to reference your patterns during chat
+- Use `@file` to pin important reference files
+- Ask Cursor to "follow the patterns in .cursor/context.txt"
+
+After 3 to 5 interactions, Cursor will internalize your style. Subsequent completions will respect your conventions without being prompted.
+
+## Real Examples
+
+**Example 1: Custom Framework**
+
+Your team built a lightweight web framework that wraps Express. Every route handler follows a pattern:
+
+```typescript
+const handler = createHandler(async (req, res) => {
+  const {userId} = req.context;
+  const user = await db.user.find(userId);
+  
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+  
+  res.json({data: user});
+});
+```
+
+Without Model Surgery, Cursor suggests raw Express handlers. With it, Cursor autocompletes the `createHandler` wrapper and understands that errors are thrown, not passed to `res.status()`.
+
+**Example 2: Domain-Specific Types**
+
+You work in fintech. Your codebase uses a `Money` type for all currency values, never bare numbers:
+
+```typescript
+type Money = {
+  amount: bigint;
+  currency: string;
+};
+
+const transfer = (from: Money, to: Money): Money => {
+  if (from.currency !== to.currency) {
+    throw new CurrencyMismatchError();
+  }
+  return {amount: from.amount - to.amount, currency: from.currency};
+};
+```
+
+Cursor, without context, suggests `number` for currency amounts. With Model Surgery, it suggests `Money`. This small change prevents bugs.
+
+**Example 3: Testing Patterns**
+
+Your tests use a custom test runner with assertion helpers:
+
+```typescript
+test("user creation sets verified to false", async () => {
+  const user = await createUser({email: "test@example.com"});
+  assertUser(user, {email: "test@example.com", verified: false});
+});
+```
+
+Cursor knows Jest and Mocha, but not your `assertUser` helper. With context, it autocompletes the helper and knows the signature.
+
+## Limitations & Gotchas
+
+Model Surgery isn't magic. Here's what it *can't* do:
+
+**It doesn't understand deep system architecture.** If your system has complex state flows, multiple services, or intricate timing dependencies, documenting them in text won't fully capture that. Cursor will still make locally correct suggestions that break the broader system.
+
+**It doesn't replace actual tests.** Model Surgery makes Cursor better at generating code that fits your style. It doesn't make the code correct. You still need tests.
+
+**It requires maintenance.** Your codebase evolves. Patterns change. Your Model Surgery context needs to stay in sync, or Cursor will suggest outdated patterns.
+
+**Large context hurts latency.** If your context file is over 10,000 words, Cursor's autocomplete slows down. Keep it lean.
+
+**It works best for syntax and conventions, not algorithms.** If you're coding business logic that requires understanding of domain rules (pricing tiers, eligibility criteria, state machines), Cursor might still get it wrong, even with context. Use it for routing, API structure, error handling—not core business logic.
+
+## Setup Complexity
+
+Be honest: this takes time.
+
+- Auditing patterns: 2 to 4 hours
+- Writing documentation: 4 to 8 hours
+- Integration and testing: 3 to 5 hours
+
+Total: one person, one day, start to finish. The payoff comes over weeks and months as Cursor saves you 10 to 20 seconds per completion, across thousands of completions.
+
+For a small team (2 to 4 people), it's worth it. For a solo project, it's a nice-to-have. For a large team, it's essential—it ensures all developers get AI assistance that respects the team's standards.
+
+## Next Steps
+
+If you're building a custom Cursor setup for your team or want to integrate Model Surgery into your workflow, [let's talk](/kickoff). I help teams architect their AI tooling, from Cursor configuration to larger knowledge systems.
+
+Also check out how to [source training data for custom LLMs](/blog/scraping-stack-llm-training-data) if you want to go deeper than Cursor and build a fully personalized model.

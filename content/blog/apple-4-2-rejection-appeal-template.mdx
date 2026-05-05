@@ -1,0 +1,170 @@
+---
+title: "Apple Guideline 4.2 rejection: the appeal letter that actually works"
+description: "If your app got hit with Guideline 4.2 (Minimum Functionality), the binary is probably fine — your appeal isn't. Here's the letter I use, why each line is there, and what to change in the build itself."
+slug: "apple-4-2-rejection-appeal-template"
+date: "2026-04-22"
+updated: "2026-04-22"
+author: "Daniel Castellani"
+pillar: "app-shipping"
+tags: ["apple", "rejection", "guideline 4.2", "appeal", "ios"]
+cover: "/blog/covers/apple-4-2-appeal.png"
+draft: false
+---
+
+The most common rejection I see for AI-built apps and Lovable wrappers is **Guideline 4.2 — Minimum Functionality**. The reviewer's note usually reads something like:
+
+> *We noticed that your app provides a limited user experience as it is not sufficiently different from a mobile browsing experience.*
+
+If that's what you got, don't panic and don't rebuild. The binary is probably fine. The appeal is the part that matters.
+
+I've appealed `4.2` rejections enough times to have a working template. Here's the letter I send, line by line, with notes on why each piece is there.
+
+## First: confirm it's actually `4.2`
+
+Apple sometimes layers rejections (e.g. `4.2 + 5.1.1`). Look at the resolution center message and confirm the section is *4.2 — Minimum Functionality* (sometimes labeled *4.2.0*). If it's `4.3` (Spam — duplicate of another app), that's a different problem and a different letter.
+
+The four sub-clauses inside `4.2` that tend to bite:
+
+- **`4.2.0`** — Minimum Functionality (looks like a website).
+- **`4.2.2`** — App is "marketing material" or has limited features.
+- **`4.2.6`** — App generated from a template service (this is the one Lovable, Bolt, and v0 apps trigger most often).
+- **`4.2.3`** — Web content is the primary feature.
+
+Read the reviewer's exact wording. If they cite `4.2.6`, your appeal needs to make the case that you're not a template farm — you're a custom app. If they cite `4.2.3`, you need to point out the native APIs you're using.
+
+## What changes in the build before you appeal
+
+Don't appeal a build you haven't improved. Reviewers can tell when you submitted the same binary with a different cover letter.
+
+The minimum-viable binary changes I make before any `4.2` appeal:
+
+1. **At least one native API integration.** Push notifications, camera, biometrics, HealthKit, share sheet — pick one that fits your app and wire it up. Lovable apps almost always already have an obvious candidate.
+2. **An onboarding flow that explains the value before the web view is touched.** Even `2–3` screens. This single change removes ~half of the "looks like a website" rejections I've seen.
+3. **At least one screen that's clearly native and clearly not a webpage.** Settings, profile, an offline mode toggle. Something that wouldn't exist on the web.
+4. **Pull-to-refresh, haptic feedback, native scrolling momentum.** These are tiny but reviewers feel them.
+
+If your app, after these changes, still feels like "a website in a wrapper," your appeal will fail. The appeal letter is what you send when the binary is genuinely good and you need the reviewer to see it.
+
+## The appeal letter (template)
+
+Copy this and adapt. The placeholders in `{{ }}` are mine to fill — don't ship the literal braces.
+
+```text
+Hello App Review,
+
+Thank you for the feedback on Build {{ build_number }}. I'd like to respectfully
+clarify why I believe {{ app_name }} meets the bar set by Guideline 4.2.
+
+{{ app_name }} is a native iOS application that provides {{ specific_value_prop }}.
+While the core view is rendered with web technologies (a common, supported pattern
+for cross-platform apps), the app is not a wrapper around an existing website.
+Specifically:
+
+1. Native integrations
+   - {{ native_api_1 }} — used for {{ specific_user_outcome }}.
+   - {{ native_api_2 }} — used for {{ specific_user_outcome }}.
+   - The app handles offline state via {{ how }}.
+
+2. iOS-specific user experience
+   - Onboarding flow at first launch ({{ N }} screens) explaining the app's value.
+   - Native settings screen (not present on the web equivalent, if any).
+   - Native share sheet, haptic feedback on key interactions.
+
+3. Account, data, and platform parity
+   - Sign-in supports Sign in with Apple as a primary option, per 4.8.
+   - Privacy questions in App Store Connect have been reviewed and updated to match
+     the data the app actually collects ({{ summary }}).
+   - There is {{ no / a separate }} marketing website at {{ url }}, and the app is
+     {{ available only via the App Store / available with platform-specific features
+     beyond the web version }}.
+
+To make the iOS-specific functionality immediately visible to your team, the demo
+account I provided ({{ demo_email }} / {{ demo_password }}) lands directly on the
+{{ feature }} screen, which exercises {{ native_api_1 }} on first interaction.
+
+If there is a specific element that did not surface in your testing, I'd appreciate
+the chance to point you to it directly so I can address the concern in the next
+build.
+
+Thank you for the time and the careful review.
+
+— {{ your_name }}
+```
+
+## Why each section is there
+
+I'll walk through it, because the structure is doing the work, not the prose.
+
+### Opening — gratitude, not defensiveness
+
+"Thank you for the feedback" sounds gratuitous. It isn't — it sets the tone. Reviewers are humans answering hundreds of these a day. A defensive appeal gets read as adversarial; a gratitude-first appeal gets read as "this person is going to make my day easier."
+
+### "Respectfully clarify"
+
+You're not arguing. You're providing information they may have missed. This framing matters because it gives them an out: they can approve without admitting they were wrong. Make that easy.
+
+### Section 1 — Native integrations
+
+This is the most important section. Reviewers are trained to look for "what makes this an app, not a webpage." Give them a list, with specific user outcomes, not features. "Push notifications" is weak. "Push notifications used to remind users to take their evening dose" is strong.
+
+Two examples is the sweet spot. Three is fine. One looks like a stretch.
+
+### Section 2 — iOS-specific UX
+
+Onboarding, settings, native gestures. This is your "we built this for iOS" evidence. If you don't have these, stop appealing and go build them.
+
+### Section 3 — Account, data, parity
+
+This pre-empts the follow-up rejections. If your app has a public website, address it. If you have Sign in with Apple, mention it. If your privacy labels are accurate, say so. This section is fire prevention — most apps that survive `4.2` get hit with something else next round if they don't address these.
+
+### Demo account direction
+
+The single most useful line in the letter: "the demo account lands directly on the `{{ feature }}` screen." Reviewers spend an average of a few minutes per app. Tell them where to look. If they don't have to hunt for the value, they're more likely to find it.
+
+### Closing — a graceful out
+
+"If there is a specific element that did not surface in your testing" gives the reviewer a way to come back with a question instead of a final rejection. Sometimes they will. That's good — you want a conversation, not a verdict.
+
+## What not to do
+
+The fastest way to lose a `4.2` appeal:
+
+- **Argue legality.** "Apple has approved similar apps" is not a winning move. They don't care.
+- **Beg.** "Please, I've worked so hard on this" is a loss. They don't care about your effort; they care about user outcomes.
+- **Submit the same build with the same letter.** Reviewers rotate, but the rejection notes follow the app. They'll see what was said before.
+- **Get sarcastic.** I know. I've felt it. Don't.
+- **Wait too long.** I aim to appeal within `24 hours` of rejection. Faster cycle = your app stays "in motion" in App Review.
+
+## Timing
+
+Once you submit the appeal:
+
+- Most appeals come back within `24–48 hours`.
+- If the reviewer wants more info, they'll send a Resolution Center message.
+- If your appeal works, the status moves to "In Review" and then approval. Sometimes it skips and goes straight to "Pending Developer Release."
+- If the appeal fails, you get the same `4.2` again, possibly with more detail. That's actually useful — you now know what to change.
+
+## When to escalate
+
+If you've been bounced back-and-forth `3+` times and the reviewer's notes are getting vaguer, you can request a phone call from App Review. There's a button in the Resolution Center to schedule. They'll call you in `~5 business days` and you can have a real conversation. I've done this twice. Both times the call resolved the rejection in `~15 minutes`.
+
+Don't escalate on the first round. Don't escalate on the second. Third or fourth, sure.
+
+## When the appeal is the wrong tool
+
+Some `4.2` rejections aren't appealable. If the reviewer is correct that your app is "not sufficiently different from a mobile browsing experience," the answer is to build more app, not to write a better letter.
+
+Signs your app actually needs more work:
+
+- You can't list two genuine native API integrations.
+- Your onboarding is one screen and it's the login.
+- Your "settings" screen is a link to the web version.
+- The web version is identical and you don't have a story for why someone would prefer the app.
+
+In those cases, [tell me about it](/kickoff) and I'll quote the actual fix instead of an appeal.
+
+## TL;DR
+
+`4.2` is fixable. The fix is `60%` build changes (real native APIs, real onboarding) and `40%` a well-structured appeal letter. The template above is the one I use. Adapt it. Send it. If it doesn't work, you've got your next move (escalate or rebuild).
+
+If you'd rather not learn this from your own rejection, [hire it out](/pricing). The whole reason I exist as a service is that one rejection is more expensive than a fixed-price submission.

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #14110d;
+    --card: #1c1814;
+    --border: #312a22;
+    --fg: #ece4d2;
+    --muted: #b8ad97;
+    --subtle: #7d7261;
+    --accent: #d4a574;
+    --accent-deep: #b88550;
+    --mint: #e8c79a;
+  }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px; border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links li { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); cursor: pointer; transition: color 0.2s; }
+  .nav-links li:hover { color: var(--fg); }
+  .nav-links li:first-child { color: var(--accent); }
+
+  .hero {
+    display: grid; grid-template-columns: 1fr 1fr; min-height: 460px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-content { display: flex; flex-direction: column; justify-content: center; padding: 56px 48px; }
+  .hero-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+  .hero-title { font-size: 40px; font-weight: 700; line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 18px; }
+  .hero-title span { color: var(--accent); }
+  .hero-sub { font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 380px; margin-bottom: 30px; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--bg);
+    padding: 13px 26px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; width: fit-content;
+  }
+  .hero-cta:hover { background: var(--mint); }
+  .hero-cta::after { content: '\2192'; font-size: 14px; }
+  .hero-visual {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #1a1510 0%, #14110d 40%, #1e1a14 100%);
+  }
+  .hero-visual::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(212,165,116,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(232,199,154,0.06) 0%, transparent 50%);
+  }
+  .grid-lines {
+    position: absolute; inset: 0; opacity: 0.06;
+    background-image:
+      linear-gradient(var(--accent) 1px, transparent 1px),
+      linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .floating-card {
+    position: absolute; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; backdrop-filter: blur(8px);
+  }
+  .floating-card.c1 { top: 20%; left: 12%; }
+  .floating-card.c2 { top: 55%; right: 10%; }
+  .fc-label { font-size: 10px; color: var(--subtle); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .fc-value { font-size: 22px; font-weight: 700; }
+  .fc-value span { color: var(--accent); }
+  .fc-sub { font-size: 11px; color: var(--mint); margin-top: 2px; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat { padding: 30px 40px; text-align: center; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-num { font-size: 30px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--subtle); margin-top: 6px; }
+
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+  }
+  .feature { background: var(--bg); padding: 44px 32px; }
+  .feature-icon {
+    width: 40px; height: 40px; border-radius: 10px; margin-bottom: 18px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(212,165,116,0.08); border: 1px solid rgba(212,165,116,0.15);
+  }
+  .feature-icon svg { width: 20px; height: 20px; }
+  .feature h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .feature p { font-size: 13px; line-height: 1.65; color: var(--muted); }
+
+  .showcase {
+    display: grid; grid-template-columns: 1fr 1fr; min-height: 340px;
+    border-top: 1px solid var(--border);
+  }
+  .showcase-visual {
+    position: relative; overflow: hidden;
+    background: linear-gradient(160deg, #1a1510 0%, #14110d 50%, #1e1a14 100%);
+  }
+  .showcase-visual::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 40% 50%, rgba(212,165,116,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(232,199,154,0.08) 0%, transparent 40%);
+  }
+  .code-block-demo {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px;
+    line-height: 1.7; width: 80%; max-width: 320px;
+  }
+  .code-block-demo .kw { color: #c792ea; }
+  .code-block-demo .fn { color: var(--accent); }
+  .code-block-demo .str { color: var(--mint); }
+  .code-block-demo .cm { color: var(--subtle); }
+  .showcase-content {
+    display: flex; flex-direction: column; justify-content: center; padding: 48px;
+  }
+  .showcase-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .showcase-title { font-size: 26px; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .showcase-body { font-size: 14px; line-height: 1.65; color: var(--muted); max-width: 360px; margin-bottom: 24px; }
+  .showcase-link {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer; transition: color 0.2s;
+  }
+  .showcase-link:hover { color: var(--mint); }
+  .showcase-link::after { content: '\2192'; font-size: 14px; }
+
+  .cta-section {
+    text-align: center; padding: 56px 40px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--bg) 0%, rgba(212,165,116,0.03) 100%);
+  }
+  .cta-section h2 { font-size: 28px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .cta-section h2 span { color: var(--accent); }
+  .cta-section p { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: var(--bg); padding: 13px 30px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  }
+  .cta-btn:hover { background: var(--mint); }
+
+  footer {
+    display: flex; justify-content: space-between; padding: 20px 40px;
+    border-top: 1px solid var(--border); font-size: 11px; color: var(--subtle);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Nexus<span>.</span>dev</div>
+  <ul class="nav-links">
+    <li>Home</li><li>Platform</li><li>Pricing</li><li>Docs</li><li>Contact</li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Developer Platform</div>
+    <h1 class="hero-title">Ship faster<span>.</span><br>Scale smarter<span>.</span></h1>
+    <p class="hero-sub">One platform for your entire stack. Deploy, monitor, and scale with zero config. Built for teams that ship.</p>
+    <button class="hero-cta" onclick="this.textContent='Coming Soon'; this.style.pointerEvents='none'">Get Started Free</button>
+  </div>
+  <div class="hero-visual">
+    <div class="grid-lines"></div>
+    <div class="floating-card c1">
+      <div class="fc-label">Deployments</div>
+      <div class="fc-value"><span>2,847</span></div>
+      <div class="fc-sub">+12.4% this week</div>
+    </div>
+    <div class="floating-card c2">
+      <div class="fc-label">Avg Response</div>
+      <div class="fc-value">42<span>ms</span></div>
+      <div class="fc-sub">p99 latency</div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><div class="stat-num">99.9<span>%</span></div><div class="stat-label">Uptime SLA</div></div>
+  <div class="stat"><div class="stat-num">42<span>ms</span></div><div class="stat-label">Avg Latency</div></div>
+  <div class="stat"><div class="stat-num">12<span>K</span></div><div class="stat-label">Active Teams</div></div>
+  <div class="stat"><div class="stat-num">38</div><div class="stat-label">Edge Regions</div></div>
+</section>
+
+<section class="features">
+  <div class="feature">
+    <div class="feature-icon">
+      <svg viewBox="0 0 20 20" fill="none" stroke="#d4a574" stroke-width="1.5"><path d="M10 2L2 7v6l8 5 8-5V7l-8-5z"/><path d="M2 7l8 5 8-5M10 12v6"/></svg>
+    </div>
+    <h3>Edge Deploy</h3>
+    <p>Push to 38 regions in under 3 seconds. Zero-downtime rollbacks included.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">
+      <svg viewBox="0 0 20 20" fill="none" stroke="#d4a574" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/></svg>
+    </div>
+    <h3>Real-time Logs</h3>
+    <p>Stream every request, error, and metric. Searchable, filterable, instant.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">
+      <svg viewBox="0 0 20 20" fill="none" stroke="#d4a574" stroke-width="1.5"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 10h14M10 3v14"/></svg>
+    </div>
+    <h3>Auto Scaling</h3>
+    <p>From zero to ten thousand RPM without config. Pay only for what runs.</p>
+  </div>
+</section>
+
+<section class="showcase">
+  <div class="showcase-visual">
+    <div class="code-block-demo">
+      <span class="cm"># deploy in one command</span><br>
+      <span class="fn">nexus</span> deploy <span class="str">--prod</span><br><br>
+      <span class="cm"># scaling handled</span><br>
+      <span class="kw">regions:</span> <span class="str">auto</span><br>
+      <span class="kw">replicas:</span> <span class="str">1..100</span><br>
+      <span class="kw">latency:</span>  <span class="fn">&lt;50ms</span>
+    </div>
+  </div>
+  <div class="showcase-content">
+    <div class="showcase-tag">How It Works</div>
+    <h2 class="showcase-title">One Command.<br>Everywhere.</h2>
+    <p class="showcase-body">Connect your repo, push your code, and we handle the rest. Routing, TLS, scaling, monitoring — all automatic.</p>
+    <a class="showcase-link">Read the Docs</a>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Start shipping<span>.</span></h2>
+  <p>Free tier included. No credit card required.</p>
+  <button class="cta-btn" onclick="this.textContent='Coming Soon'; this.style.pointerEvents='none'">Deploy Your First App</button>
+</section>
+
+<footer>
+  <span>Nexus.dev — Ship faster, scale smarter</span>
+  <span>&copy; 2026</span>
+</footer>
+
+</body>
+</html>

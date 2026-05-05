@@ -1,0 +1,1577 @@
+---
+title: "How to Rank on Google in 2026"
+description: "Free SEO guide for founders and indie hackers, built from the Google leak, DOJ testimony, patents, and 100+ websites shipped."
+slug: "seo-guide"
+date: "2026-04-29"
+updated: "2026-04-29"
+author: "Daniel Castellani"
+pillar: "long-tail"
+tags: ["seo", "google ranking", "topical authority", "ai overviews", "technical seo", "indie hackers"]
+draft: false
+---
+
+> Free web edition. Share it, link to it, and use the printable companion at [`/seo-guide/checklist`](/seo-guide/checklist) if you want the skim-first version.
+
+**Need the shorter supporting pieces?**
+- [`How long should a title tag be in 2026?`](/blog/how-long-should-a-title-tag-be)
+- [`Why new websites do not rank right away`](/blog/why-new-websites-dont-rank-right-away)
+- [`Topical authority for founders without a content team`](/blog/topical-authority-for-founders-without-a-content-team)
+- [`SEO title and meta checker`](/seo-title-meta-checker)
+
+## Why This Guide Exists
+
+In May 2024, a Google engineer accidentally pushed 2,596 internal API modules to a public GitHub repo. 14,014 attributes. Confirmed under DOJ antitrust testimony.
+
+Google had denied the existence of these ranking signals for over a decade. The leak proved them wrong.
+
+Most SEO guides you've read were written before this happened. They're recycling the same 2018-era advice (write good content, build backlinks, optimize meta tags) without knowing what actually moves rankings now.
+
+This guide is different. Every claim here is backed by:
+
+- **The May 2024 Google API leak** (analyzed by Mike King, iPullRank)
+- **DOJ v. Google antitrust testimony** (sworn statements from Eric Lehman, 17-year Google Distinguished Engineer)
+- **Patent filings** (U.S. patent numbers cited)
+- **Documented case studies** (with verified traffic data)
+- **100+ websites I've personally shipped at Publishd**
+
+If you've been told "just write quality content and the rankings will come" — that advice is incomplete and outdated. There are mechanical ranking systems Google uses that you can specifically optimize for, once you know they exist.
+
+This guide tells you what they are.
+
+**Who this is for:**
+- Founders shipping apps and websites
+- Indie hackers who don't have a $5K/month SEO retainer
+- Small business owners doing it themselves
+- Anyone who's tired of generic "SEO 101" guides
+
+**What you'll learn:**
+- How Google actually ranks pages (the leaked architecture)
+- Why behavioral signals matter more than backlinks for new sites
+- How to build topical authority (0 → 128K visitors in 123 days, documented case)
+- AI Overview citation strategy (the new top-of-funnel)
+- Programmatic SEO for indie shippers (the unfair advantage)
+- A 90-day action plan with weekly milestones
+
+If your bigger problem is that the site itself is holding you back, not just the SEO plan, start with my [`website design and development page`](/website-design). If you want the long version first, keep reading.
+
+---
+
+## Table of Contents
+
+1. [The 2024 Google Leak: What Changed Everything](#chapter-1)
+2. [How Google Actually Ranks (The Real Architecture)](#chapter-2)
+3. [Behavioral Signals: Confirmed Under Oath](#chapter-3)
+4. [Topical Authority: The Indie Shipper's Cheat Code](#chapter-4)
+5. [Entity SEO and N-E-E-A-T](#chapter-5)
+6. [Technical SEO That Actually Matters](#chapter-6)
+7. [Content Strategy: Passage Indexing + Freshness](#chapter-7)
+8. [AI Overviews and LLM Citation Strategy](#chapter-8)
+9. [Programmatic SEO: The Indie Hacker Unfair Advantage](#chapter-9)
+10. [Free Tools as Link Magnets](#chapter-10)
+11. ["Alternatives to X" Plays for SaaS](#chapter-11)
+12. [Link Building Without a Budget](#chapter-12)
+13. [The 90-Day Ranking Plan](#chapter-13)
+14. [When to Stop DIY and Hire Help](#chapter-14)
+15. [The 24-Point Audit Checklist](#appendix)
+
+---
+
+<a id="chapter-1"></a>
+## Chapter 1: The 2024 Google Leak — What Changed Everything
+
+### What Happened
+
+May 5, 2024. A Google engineer accidentally pushed internal API documentation to a public GitHub repository. 2,596 modules. 14,014 attributes. Former Google engineer Erfan Azimi spotted it. Rand Fishkin (SparkToro) and Mike King (iPullRank) verified and published the analysis.
+
+The technical breakdown is at [ipullrank.com/google-algo-leak](https://ipullrank.com/google-algo-leak). I'll summarize the four findings that change how you should think about SEO.
+
+### Finding #1: NavBoost Exists (And Uses 13 Months of Click Data)
+
+NavBoost is a ranking system that ingests user click behavior. Specifically, it tracks per query-URL pair:
+
+- `goodClicks` — clicks where the user found what they wanted
+- `badClicks` — clicks where the user bounced quickly
+- `lastLongestClicks` — the click that ended the search session (i.e., they got their answer)
+
+Eric Lehman, a 17-year Google Distinguished Engineer, confirmed NavBoost exists during DOJ antitrust testimony. Under oath, he confirmed Google employees were instructed not to discuss it publicly because SEOs would game it.
+
+**Why this matters:** Click-through rate, dwell time, and pogo-sticking (clicking, bouncing, clicking another result) are direct ranking inputs — not correlations.
+
+### Finding #2: siteAuthority Is Real
+
+Google publicly denied for years that anything like "domain authority" existed in their algorithm. The leak found `siteAuthority` — a real, persistent, site-wide quality score stored in `CompressedQualitySignals`, fed into an internal system called `Q*`.
+
+**Why this matters:** A new site with the same content as an established site will not rank as well. Site-level authority is real and accumulates over time.
+
+### Finding #3: hostAge Confirms the Sandbox
+
+For over a decade, Google denied the existence of a "new site sandbox." The leak found `hostAge`, an attribute documented to "sandbox fresh spam in serving time."
+
+**Why this matters:** New domains are held back. If you launched 6 weeks ago and aren't ranking, that's why. Plan for 3-6 months minimum before you see meaningful organic movement on a new domain.
+
+### Finding #4: chromeInTotal Tracks Browser Data
+
+The leak revealed `chromeInTotal`, an attribute in the page quality module tracking site-level Chrome browser views. Google had repeatedly stated Chrome data was not used in ranking. It is.
+
+**Why this matters:** Real user traffic to your site (not just from search) feeds into Google's quality signals. Building any kind of audience that visits your site directly — newsletter, social, podcast listeners — compounds your search rankings over time.
+
+### What Most Guides Get Wrong (And You Now Know)
+
+Most SEO guides written before mid-2024 are based on what Google said publicly. The leak proved Google said one thing publicly and did another internally for years.
+
+The implication: ignore Google's public statements when they conflict with documented behavior. Follow the evidence.
+
+**Sources for this chapter:**
+- [iPullRank — Full Google Leak Analysis](https://ipullrank.com/google-algo-leak)
+- [Search Engine Land — Unpacking the Leak](https://searchengineland.com/unpacking-googles-massive-search-documentation-leak-442716)
+
+---
+
+<a id="chapter-2"></a>
+## Chapter 2: How Google Actually Ranks (The Real Architecture)
+
+Most guides describe Google as a single algorithm. It isn't. Based on the leak, court testimony, and patent filings, here's the actual architecture.
+
+### The Stack (Simplified)
+
+When you search Google, your query passes through multiple ranking systems in sequence:
+
+```
+1. QUERY UNDERSTANDING
+   ↓
+2. INITIAL RETRIEVAL (Indexing tier)
+   ↓
+3. RANKING (Multiple subsystems)
+   - Mustang (primary scoring)
+   - RankEmbed BERT (semantic understanding)
+   - NavBoost (click signals)
+   - Q* (quality signal aggregation)
+   ↓
+4. RE-RANKING (Twiddlers — small adjustments)
+   ↓
+5. SERP ASSEMBLY (AI Overviews, featured snippets, PAA, etc.)
+```
+
+Each system has its own inputs. You're not optimizing for "Google" — you're optimizing for ~30 distinct subsystems that each weight different signals.
+
+### The Three Pillars That Actually Matter
+
+Cutting through the complexity, every signal Google uses falls into three categories:
+
+**Pillar 1: RELEVANCE (Does this match the query?)**
+- Keyword presence (still matters, but less than 2010)
+- Semantic match (BERT/embeddings — does the meaning match?)
+- Entity presence (is the right "thing" being discussed?)
+- Passage relevance (does any section of the page directly answer the query?)
+
+**Pillar 2: AUTHORITY (Should we trust this source?)**
+- Backlink profile (who links to you, with what context)
+- siteAuthority (the site-wide quality score, leaked)
+- Entity recognition (are you a known entity in the Knowledge Graph?)
+- Brand search volume (people searching for you by name)
+
+**Pillar 3: USER SATISFACTION (Did this actually help?)**
+- NavBoost click signals (`goodClicks`, `badClicks`, `lastLongestClicks`)
+- Dwell time
+- Return-to-SERP rate (pogo-sticking)
+- Direct traffic (chromeInTotal — Chrome views)
+
+**The mental model:** You can win Pillar 1 with content. You build Pillar 2 over time. You earn Pillar 3 by actually being useful.
+
+A guide that only optimizes Pillar 1 (keywords, meta tags) will hit a ceiling at page 2-3. Cracking page 1 requires all three.
+
+### Why New Sites Struggle
+
+The combination of `hostAge` (sandbox) + `siteAuthority` (slow to build) means new sites face a real disadvantage in the first 3-6 months. This isn't a conspiracy — it's a documented anti-spam mechanism.
+
+**The workaround:** Topical authority (Chapter 4) lets you bypass site-wide authority constraints by becoming the obvious answer in a narrow niche. Generalists wait years for site authority. Specialists rank in months.
+
+---
+
+<a id="chapter-3"></a>
+## Chapter 3: Behavioral Signals — Confirmed Under Oath
+
+### The Court Testimony
+
+The U.S. v. Google antitrust trial (2023-2024) produced sworn testimony that confirmed what SEOs had suspected for a decade.
+
+Eric Lehman, 17-year Google engineer, testified that click data flows into ranking via three systems:
+1. **NavBoost** (the system from the leak)
+2. **Glue** (separate click-data system)
+3. **RankEmbed BERT** (trained on real user interaction data)
+
+He testified that Google deliberately avoided public acknowledgment of these systems.
+
+### Rand Fishkin's CTR Experiment
+
+In 2014, before any of this was public knowledge, Rand Fishkin ran a live experiment at SEO conferences:
+
+1. Direct an audience of 1,500+ to search a specific query
+2. Have everyone click result #4
+3. Have everyone immediately bounce from result #1 (the current top result)
+
+Within 30 minutes, results #1 and #4 swapped positions. The effect lasted ~2 days.
+
+He ran the experiment 11-13 times. 7-8 confirmed successes.
+
+The leak provided the mechanism for what he was observing: NavBoost was reading the unusual cluster of `goodClicks` to result #4 and `badClicks` to result #1, and adjusting in real time.
+
+### What This Means for Your SEO
+
+Behavioral signals are now first-class ranking inputs. You optimize for them like this:
+
+**Optimization 1: Title Tags as Ad Copy**
+
+Your title tag isn't just a label — it's the headline that determines whether someone clicks your result vs. a competitor's.
+
+Brian Dean's analysis shows CTR-optimized title rewrites lift clicks 20-40% on existing rankings. That CTR lift then becomes a positive NavBoost signal that lifts your ranking position further.
+
+**The compounding effect:** Better title → more clicks → NavBoost reads "this satisfies users" → ranking improves → more impressions → more clicks → more NavBoost signal.
+
+**Title tag patterns that win:**
+- Specific numbers: "How to Rank in 2026: 14 Tactics That Worked for 100+ Sites"
+- Curiosity gaps: "What Google's Leaked Documents Reveal About Ranking"
+- Time bounds: "I Ranked This Site in 90 Days. Here's the Playbook."
+- Negative framing: "Why Most SEO Guides Are Wrong (And What Actually Works)"
+
+**What loses:**
+- Generic: "SEO Tips for Beginners"
+- Vague: "How to Improve Your Website"
+- Keyword-stuffed: "SEO Guide SEO Tips SEO Strategy SEO 2026"
+
+**Optimization 2: First 3 Sentences = Stay/Leave Decision**
+
+When someone clicks your page, they decide within 3-5 seconds whether they're in the right place. If they bounce back to the SERP, that's a `badClick`.
+
+The first 3 sentences of any page need to confirm:
+1. The reader is in the right place (mentions their query/problem)
+2. There's a payoff coming (specific value)
+3. It's actually different from what they just saw on competitors
+
+**Bad opening:**
+> "Search engine optimization is the practice of optimizing your website to rank higher in search engine results. SEO has been around since the early days of the internet..."
+
+**Good opening:**
+> "Most SEO guides written before May 2024 are wrong. That's the month a Google engineer accidentally leaked the internal API. This guide rebuilds the playbook from what we now know."
+
+The good version: confirms you're in the right place (SEO, ranking), promises payoff (real playbook), differentiates (post-leak knowledge).
+
+**Optimization 3: Reduce Pogo-Sticking with Layered Information**
+
+Pogo-sticking is when a user clicks your result, glances, returns to the SERP, clicks the next result. This is the worst behavioral signal — it tells Google your page didn't satisfy.
+
+Layer your content:
+- **Top:** Direct answer in first 100 words (catches scanners)
+- **Middle:** Detailed explanation (catches readers)
+- **Bottom:** Expert depth (catches researchers)
+
+If a scanner gets the answer fast, they don't bounce. If a reader gets depth, they don't bounce. If a researcher needs everything, they don't bounce.
+
+**Optimization 4: Build Direct Traffic (chromeInTotal)**
+
+The leak confirmed Chrome browser views feed into quality signals. Sites with real audiences ranking direct traffic — not just search traffic — get an authority lift.
+
+How to build it:
+- Email newsletter (drives Chrome views every send)
+- Active Twitter/LinkedIn (drives clicks to your site)
+- Podcast appearances (referral traffic from listeners)
+- Reddit/Hacker News presence (spike traffic events)
+
+Every direct visit is a positive signal that compounds over months.
+
+**Sources for this chapter:**
+- [Search Engine Journal — CTR Ranking Factors](https://www.searchenginejournal.com/ranking-factors/click-through-rate/)
+- [xpert.digital — DOJ Testimony Analysis](https://xpert.digital/en/newly-revealed-google-ranking/)
+
+---
+
+<a id="chapter-4"></a>
+## Chapter 4: Topical Authority — The Indie Shipper's Cheat Code
+
+### The Case Study
+
+Koray Tugberk Gubur (Holistic SEO) documented a case study in May 2022:
+
+- New site, no significant backlinks
+- 0 → 128,000 organic monthly visits in 123 days
+- One topic cluster, comprehensively covered
+
+Full methodology at [holisticseo.digital/theoretical-seo/topical-authority](https://www.holisticseo.digital/theoretical-seo/topical-authority/).
+
+### How Topical Authority Beats Domain Authority
+
+Conventional SEO advice says: build domain authority over years, then you can rank for anything.
+
+Topical authority breaks this rule. The leaked `siteAuthority` module appears to be scoped by topic, not just site-wide. A site that completely covers a narrow topic gets treated as authoritative for that topic — even if its overall domain age is 6 months.
+
+The mechanism:
+1. Google identifies what topic your site is "about"
+2. Within that topic, it measures coverage completeness
+3. Sites with high topical coverage get ranking lifts within that topic
+4. Sites that are scattered (covering many topics shallowly) get weaker signals everywhere
+
+### The Topical Map
+
+Before writing anything, map the topic space.
+
+**Step 1: Identify your topic cluster**
+
+Pick a single, narrow topic. Not "marketing." Not "fitness." Something like:
+- "Conversion-focused web design for SaaS startups"
+- "Habit tracking app reviews and comparisons"
+- "Indie hacker SEO strategies"
+- "Nutrition for endurance athletes"
+
+The narrower, the better. Topical authority compounds faster on narrow topics.
+
+**Step 2: Build the content map**
+
+For your chosen topic, list every:
+- Head term (1-2 word queries)
+- Mid-tail variation (3-5 word queries)
+- Long-tail question (full sentences people search)
+- Adjacent topic (related concepts)
+- Use-case variant (industry, audience, scenario splits)
+
+For example, if your topic is "habit tracking for indie hackers":
+
+```
+HEAD TERMS:
+- habit tracking
+- habit tracker app
+- habit tracker
+
+MID-TAIL:
+- best habit tracker app 2026
+- habit tracker for entrepreneurs
+- habit tracker with analytics
+
+LONG-TAIL QUESTIONS:
+- how to build a habit that sticks
+- why habit trackers fail
+- difference between streaks and consistency in habits
+
+ADJACENT:
+- atomic habits methodology
+- behavioral psychology of habits
+- habit stacking strategy
+
+USE-CASE:
+- habit tracking for fitness
+- habit tracking for writers
+- habit tracking for remote workers
+```
+
+That's 15+ articles right there. A complete topical map for indie habit tracking might be 50-80 articles. That sounds like a lot — it's actually 12-18 months of content if you publish 1 post/week.
+
+**Step 3: Identify the pillar page**
+
+The pillar page is the master article that:
+- Ranks for your head term (or tries to)
+- Links out to every supporting article
+- Gets linked back from every supporting article
+- Acts as the structural center of your topic cluster
+
+Example: "The Complete Guide to Habit Tracking for Indie Hackers" links out to all 50 supporting posts. Each supporting post links back to the pillar.
+
+**Step 4: Internal linking the cluster**
+
+Within the cluster, every post should:
+- Link UP to the pillar
+- Link SIDEWAYS to 3-5 related posts
+- Link DOWN to deeper dives if applicable
+
+Orphan content (posts not internally linked into the cluster) doesn't contribute to topical authority. Don't publish orphans.
+
+### Why This Works for Indie Shippers Specifically
+
+You probably can't outrank Forbes or HubSpot on broad terms like "marketing tips." They have domain authority you can't match in 5 years.
+
+But you can absolutely outrank them on narrow, specific topics. Forbes covers "habit tracking" in one shallow listicle. You cover it in 80 deep, interconnected posts. Google's topical authority signal favors you.
+
+This is the cheat code. Pick a niche so narrow you'd be embarrassed to tell people about it. Cover it completely. Win the topic.
+
+**Sources for this chapter:**
+- [Holistic SEO — Topical Authority](https://www.holisticseo.digital/theoretical-seo/topical-authority/)
+
+---
+
+<a id="chapter-5"></a>
+## Chapter 5: Entity SEO and N-E-E-A-T
+
+### The Knowledge Graph Track
+
+Google's algorithm has two parallel tracks:
+1. **Link/PageRank track** (the original)
+2. **Entity/Knowledge Graph track** (added 2012, now dominant for trust queries)
+
+Bill Slawski spent 15 years analyzing Google's entity patents at [seobythesea.com](https://www.seobythesea.com). Jason Barnard (Kalicube) operationalized the playbook.
+
+### What Is an "Entity" to Google?
+
+An entity is a thing Google has identified, classified, and stored in its Knowledge Graph. Entities have:
+- A unique identifier (machine-readable ID)
+- A category (Person, Organization, Product, Place)
+- Relationships to other entities
+- A confidence score (how sure Google is this entity exists/is what it claims)
+
+Examples of entities:
+- "Daniel Castellani" (Person, founder of publishd.app)
+- "publishd.app" (Organization, web design service)
+- "Next.js" (Software framework)
+
+When you become an entity in the Knowledge Graph, you get:
+- Knowledge panel in search results
+- Increased trust scoring across all your content
+- Eligibility for AI Overview citations
+- Brand SERP control (your branded queries show what you want them to show)
+
+### How to Become an Entity
+
+**Step 1: Establish an Entity Home**
+
+Your Entity Home is the canonical URL Google associates with you. For a person: typically your About page. For a business: typically your homepage.
+
+Add structured data (JSON-LD) declaring the entity:
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Daniel Castellani",
+  "url": "https://publishd.app/about",
+  "image": "https://publishd.app/daniel.jpg",
+  "jobTitle": "Founder",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "publishd",
+    "url": "https://publishd.app"
+  },
+  "alumniOf": "Amazon",
+  "sameAs": [
+    "https://twitter.com/publishd",
+    "https://linkedin.com/in/danielcastellani",
+    "https://github.com/publishd"
+  ]
+}
+```
+
+The `sameAs` array is critical. It tells Google these are all the same entity across the web.
+
+**Step 2: Cross-Reference Across Trusted Sources**
+
+Google verifies entities through multiple corroborating sources. Get yourself listed on:
+- Wikidata (free, anyone can submit — no Wikipedia notability required)
+- Crunchbase
+- LinkedIn (with consistent name + title)
+- Google Business Profile
+- Industry directories (Clutch, G2 for SaaS, etc.)
+
+Critical: the information must be consistent across all of them. Same name spelling, same title, same company. Inconsistencies make Google less confident the entity exists.
+
+**Step 3: Get Mentioned by Existing Entities**
+
+Co-occurrence is the entity track's version of backlinks. When a known entity mentions you in context, Google updates its model of what you are.
+
+Example: If Mike King (a known entity) mentions "Daniel from publishd.app" in a podcast, Google's natural language processing connects these entities. This affects classification and trust — even without a backlink.
+
+How to get mentioned:
+- Guest on podcasts (your name + role gets indexed)
+- Get quoted in articles (HARO, Featured.com, Qwoted)
+- Speak at conferences (transcripts get indexed)
+- Get cited in industry roundups
+
+### N-E-E-A-T: The Updated Trust Framework
+
+Google's published framework is E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness). Jason Barnard at Kalicube extended it to N-E-E-A-T by adding **Notability**.
+
+Notability is whether you're recognized as a known thing in your field. The other components are about quality; notability is about whether you exist as far as the algorithm is concerned.
+
+**For a personal brand:**
+- N: Are you mentioned in your industry?
+- E: Have you actually done what you claim?
+- E: Can you demonstrate expertise?
+- A: Do authoritative sources reference you?
+- T: Do reviews/testimonials confirm trust?
+
+**For a business:**
+- N: Is the company recognized in its category?
+- E: Track record of completed work
+- E: Demonstrable expertise (case studies, results)
+- A: Authority signals (press, industry associations)
+- T: Reviews, certifications, transparency
+
+The framework matters because Google's Search Quality Rater Guidelines (the rubric humans use to train the algorithm) explicitly score pages on these dimensions.
+
+**Sources for this chapter:**
+- [SEO by the Sea — Entity Connections](https://www.seobythesea.com/2014/11/insightful-connections-entities-googles-knowledge-graph/)
+- [Kalicube — Brand SERP optimization](https://kalicube.com)
+
+---
+
+<a id="chapter-6"></a>
+## Chapter 6: Technical SEO That Actually Matters
+
+Most technical SEO advice is bloated. There are 200+ technical factors; 90% don't matter for most sites. Here's the 10% that does.
+
+### The Reasonable Surfer Patent (Why Internal Linking Is Underrated)
+
+U.S. Patent 8117209B1, filed 2004, granted 2012. Key shift from original PageRank: links don't pass equal equity. A link's weight is modulated by **estimated click probability** based on:
+- Position on the page (body > sidebar > footer)
+- Visual prominence (color, size, surrounding whitespace)
+- Anchor text relevance
+- Surrounding context
+
+**What this means concretely:**
+
+1. **A link in the middle of an article passes 5-10x more equity than the same link in the footer.** Stop putting your important links in nav/footer alone.
+
+2. **Navigation links pass high equity to a few pages and deplete fast.** If your nav has 40 links, each gets ~1/40th of homepage authority. If it has 5 links, each gets ~1/5th. Fewer nav items = stronger nav links.
+
+3. **Orphan pages are invisible.** A page with zero internal links from your site receives zero PageRank flow. Even if Google indexes it (which is unlikely), it functionally doesn't exist for ranking. **Action:** Audit your site monthly. Find orphan pages. Either link them in or delete them.
+
+4. **Deep pages (4+ clicks from homepage) get reduced equity flow.** On large sites, pages that require 4+ clicks to reach are at risk of shallow crawling. Keep important pages within 3 clicks.
+
+5. **Color-distinctive links are weighted higher than blend-in text links.** Make your links visually distinct. The patent literally says click-probability estimates use visual features.
+
+Bill Slawski's full patent breakdown: [seobythesea.com/2010/05/googles-reasonable-surfer](https://www.seobythesea.com/2010/05/googles-reasonable-surfer-how-the-value-of-a-link-may-differ-based-upon-link-and-document-features-and-user-data/)
+
+### Core Web Vitals (The Actual Thresholds)
+
+Google's published thresholds for "Good" Core Web Vitals:
+
+| Metric | Good | Needs Improvement | Poor |
+|--------|------|-------------------|------|
+| Largest Contentful Paint (LCP) | < 2.5s | 2.5–4.0s | > 4.0s |
+| Interaction to Next Paint (INP) | < 200ms | 200–500ms | > 500ms |
+| Cumulative Layout Shift (CLS) | < 0.1 | 0.1–0.25 | > 0.25 |
+
+**INP replaced FID as a Core Web Vital in March 2024.** Most older guides still reference FID. INP is stricter — it measures the worst interaction on the page, not the first.
+
+**Practical optimizations that move the needle:**
+
+1. **Compress images.** Use WebP or AVIF format. Most sites have 2-5MB of unoptimized images. Compressing to 200-500KB drops LCP by 1-2 seconds.
+
+2. **Defer non-critical JavaScript.** Analytics, chat widgets, marketing pixels — all should load after the main content. Use `defer` or `async` attributes.
+
+3. **Preload your hero image.** Add `<link rel="preload" as="image" href="hero.webp">` in `<head>`. This often drops LCP by 500ms+.
+
+4. **Eliminate layout shift.** Set explicit width/height on images. Reserve space for ads/embeds. CLS issues are almost always caused by content loading after the page renders and pushing things around.
+
+5. **Don't ship a CSR-only React/Vue site for SEO content.** Client-side rendering means Google sees a blank page on first crawl. Use Next.js, Astro, Nuxt, SvelteKit, or any framework that supports SSR/SSG.
+
+### Schema Markup (The Hidden Lever)
+
+Schema markup is structured data that tells Google explicitly what your content is. It's the difference between Google guessing and Google knowing.
+
+**The schema types that matter for indie shippers:**
+
+1. **Article** — for blog posts. Enables "Article" search features.
+2. **Organization** — for your business entity. Foundation of entity recognition.
+3. **Person** — for the founder. Builds personal brand entity.
+4. **SoftwareApplication** — for apps. Enables app-specific rich results.
+5. **Product** — for products with reviews/pricing.
+6. **FAQ** — for Q&A sections. Can earn FAQ rich results in SERPs.
+7. **HowTo** — for tutorials. Can earn step-by-step rich results.
+8. **BreadcrumbList** — for navigation hierarchy.
+
+**Implementation:** JSON-LD format, in `<script type="application/ld+json">` tags. Can be in `<head>` or anywhere on the page.
+
+**Test your schema:** Use [Google's Rich Results Test](https://search.google.com/test/rich-results) before publishing.
+
+### The Technical SEO Non-Negotiables
+
+A minimum viable technical SEO setup:
+
+```
+☐ HTTPS enabled (free SSL via Let's Encrypt or hosting provider)
+☐ XML sitemap auto-generated and submitted to GSC
+☐ robots.txt allows JS/CSS crawling (common WordPress mistake)
+☐ One canonical URL per page (self-canonical by default)
+☐ Schema markup on homepage minimum (Organization + WebSite)
+☐ Mobile-responsive (test on actual phone, not just dev tools)
+☐ Core Web Vitals "Good" status in GSC
+☐ No broken internal links (run Screaming Frog crawl quarterly)
+☐ Internal linking audit (no orphan pages)
+☐ Hreflang tags if multi-language
+☐ 301 redirects (not 302) for permanent moves
+☐ 404 page returns proper 404 status (not 200)
+```
+
+That's it. If you nail these 12 items, you're more technically sound than 90% of websites.
+
+---
+
+<a id="chapter-7"></a>
+## Chapter 7: Content Strategy — Passage Indexing + Freshness
+
+### Passage Indexing (Section-Level Ranking)
+
+Google announced Passage Indexing in October 2020 (live 2021). The change: individual passages within a page can rank independently for queries the overall page doesn't target.
+
+Mechanism: dense vector retrieval. Each passage gets its own embedding, compared against query embeddings separately from the page-level signal.
+
+**What this unlocks:** A single comprehensive 5,000-word post can rank for 50+ queries if each H2/H3 section is structured as a self-contained, direct-answer unit.
+
+### The Passage Structure That Captures Rankings
+
+```markdown
+## [Question phrased as the user would type it]
+
+[40-60 word direct answer — complete standalone sentence, no "as mentioned above"]
+
+[Supporting explanation, 200-400 words]
+
+[Optional: example, screenshot, data point]
+```
+
+**Why this works:**
+
+1. The H2 question matches the search query (relevance signal)
+2. The 40-60 word direct answer is what AI Overviews and Featured Snippets pull
+3. The standalone phrasing means the passage works out of context (no "as mentioned earlier")
+4. The supporting explanation provides depth for engaged readers
+
+**Example — Bad:**
+```markdown
+## Page Speed
+Page speed is important for SEO. We talked about this earlier in the technical chapter, but here are some more details. Various factors affect page speed including images, scripts...
+```
+
+**Example — Good:**
+```markdown
+## How fast should a website load for SEO?
+
+A website should load in under 2.5 seconds (LCP threshold for Google's "Good" Core Web Vitals rating). Sites loading in 1-2 seconds rank higher and convert 40% better than sites loading in 4+ seconds.
+
+The 2.5-second target comes from Google's published Core Web Vitals documentation. Specifically...
+```
+
+### People Also Ask (PAA) Optimization
+
+PAA appears in 65% of all queries (Semrush, 2025). The PAA system is fed by the same passage-indexing infrastructure.
+
+**To get into PAA:**
+1. Use explicit question H2s ("How does X work?", "What is Y?", "Why is Z important?")
+2. Provide direct answers immediately after the question
+3. Keep answers concise (40-60 words for the lead, expand below)
+4. Use simple language (PAA prefers plain explanations)
+
+**Bonus:** PAA inclusions correlate 90%+ with AI Overview citations (same source data). One structure feeds both channels.
+
+### Freshness — Query Property, Not Site Property
+
+Google's "Query Deserves Freshness" (QDF) signal, introduced 2007 by Amit Singhal: freshness weighting is applied per query, not uniformly. Topics with spiking search volume get temporary recency boosts. Most topics don't.
+
+**What doesn't work:**
+- Updating only the published date without changing content (Google maintains its own first-crawl timestamps)
+- "Refreshed for 2026!" with no actual refresh (manual action risk)
+- Republishing old content as new
+
+**What actually triggers freshness signals:**
+- Adding new statistics with cited sources (re-crawl detects substantive change)
+- Adding a new section answering a question the original didn't cover
+- Referencing recent events that didn't exist when original was published
+
+**The freshness strategy that works:**
+
+Write evergreen content, then make it easy to add a "2026 Update" section at the bottom annually:
+
+```markdown
+[... original 5,000-word evergreen content stays exactly as written ...]
+
+## 2026 Updates
+
+### What changed since publishing:
+- [New stat with citation]
+- [New section: Why X is now Y]
+- [New tool/tactic that emerged]
+
+### Still works in 2026:
+- [Confirmation that original points hold]
+```
+
+The rest of the page stays stable. Google sees genuine additive change. Your evergreen rankings don't risk losing position from over-editing.
+
+### Content Length: When Long Wins
+
+The data on content length is misread constantly. The correlation isn't "longer content ranks better." The correlation is "comprehensive content ranks better, and comprehensiveness usually requires length."
+
+**Practical guide:**
+
+| Query type | Target length |
+|-----------|---------------|
+| Definition / quick answer | 800-1,500 words |
+| How-to guide | 2,000-3,500 words |
+| Comprehensive guide | 4,000-8,000 words |
+| Comparison / vs. | 1,500-3,000 words |
+| Listicle | 2,500-5,000 words |
+| Case study | 1,000-2,500 words |
+
+Don't pad to hit a word count. Cover the topic completely; the length follows.
+
+---
+
+<a id="chapter-8"></a>
+## Chapter 8: AI Overviews and LLM Citation Strategy
+
+### The State of AI Overviews (As of 2026)
+
+Current data:
+- **AI Overviews show on ~25.8% of US searches** (Stackmatix, January 2026)
+- **Informational queries trigger AI Overviews ~39.4% of the time**
+- **E-commerce queries trigger them ~4% of the time**
+- **Zero-click searches went from 56% → 69%** between May 2024 and May 2025 (Semrush)
+- **Organic CTR dropped 61%** on queries with AI Overviews — from 1.76% to 0.61% (Dataslayer/Ahrefs)
+- **Getting cited inside an AI Overview: +35% organic CTR, +91% paid CTR** (Semrush)
+
+**The implication:** Ranking #1 organically is no longer enough on informational queries. You need to be cited inside the AI Overview.
+
+### How AI Overviews Choose Citations
+
+Semrush tracked AI Overview citation overlap with organic top-10 results from May to September 2024. Overlap grew from 32% to 54%.
+
+**The primary prerequisite:** Rank in the organic top 10 for the query. AI Overviews don't pull from page 5 — they pull from results Google already considers authoritative.
+
+**Secondary factors that earn citations:**
+1. **Direct, citable factual statements** with specific numbers
+2. **Definitional structure** ("X is...", "X works by...")
+3. **Original data** (surveys, experiments, primary research)
+4. **Author bios with credentials** (E-E-A-T signal)
+5. **Recent publication or update date**
+
+### The Citation Optimization Framework
+
+For every page, include:
+
+**Element 1: A 40-60 word factual lead**
+```
+"Topical authority is a Google ranking signal that scores 
+sites based on coverage completeness within a single topic 
+cluster. A new site can rank competitively for a topic if 
+it covers all subtopics comprehensively, even with low 
+domain authority. Documented case: 0 to 128,000 monthly 
+visits in 123 days, no backlinks."
+```
+This format is what AI Overviews lift directly.
+
+**Element 2: Specific stats with attribution**
+```
+"AI Overviews now show on 25.8% of US searches as of 
+January 2026 (Stackmatix data)."
+```
+LLMs cite primary sources. Be the primary source.
+
+**Element 3: Definition-style headers**
+- "What is [topic]?"
+- "How does [topic] work?"
+- "Why does [topic] matter?"
+- "When should I use [topic]?"
+
+**Element 4: Author bio with credentials**
+```html
+<author>
+  <h3>About the author</h3>
+  <p>Daniel Castellani has shipped 100+ websites at 
+  publishd.app. Former Amazon engineer. Specializes in 
+  conversion-focused web design for indie founders.</p>
+</author>
+```
+Author entities transfer expertise to content.
+
+**Element 5: Original data**
+You don't need a research team. Original data can be:
+- A survey of your customers
+- An analysis of your own client data
+- A documented experiment ("I tested X for 30 days...")
+- A comparison of competitors you actually ran
+
+LLMs heavily favor primary sources over re-reporters.
+
+### Tracking LLM Mentions
+
+Tools that track when AI systems cite your site:
+- [Profound](https://profound.market) — LLM visibility tracker
+- [Otterly.ai](https://otterly.ai) — AI search monitoring
+- [AthenaHQ](https://athenahq.ai) — brand mentions across LLMs
+
+ChatGPT, Perplexity, and Gemini citations correlate strongly with traditional rankings. Same authoritative sources get pulled across all LLMs.
+
+### Kevin Indig's Mid-Length Query Insight
+
+From Kevin Indig's [Growth Memo](https://www.kevin-indig.com/): mid-length queries (6-9 words) are the fastest-growing segment of search.
+
+Why: AI assistants and voice search shifted user behavior toward conversational queries. People search "how do I rank a new site without backlinks in 2026" instead of "SEO tips."
+
+**Practical application:** Optimize for specificity, not head terms. A page targeting "how to rank a new site without backlinks in 2026" will outperform one targeting "SEO tips" for the same effort.
+
+---
+
+<a id="chapter-9"></a>
+## Chapter 9: Programmatic SEO — The Indie Hacker Unfair Advantage
+
+### What Is Programmatic SEO?
+
+Programmatic SEO is generating large numbers of pages from a structured dataset, where each page targets a specific long-tail query.
+
+**Famous examples:**
+- **Zapier** — "[App A] + [App B] integration" pages (10,000+ pages, ranks for thousands of queries)
+- **Wise** — "Convert [Currency A] to [Currency B]" pages (hundreds of pages, dominates currency conversion queries)
+- **Nomad List** — "Best places to live in [Country]" pages (city-by-city pages)
+- **G2** — "Best [software category]" pages (programmatic + reviews)
+
+The pattern: one template + a dataset = N pages targeting N variations of a query.
+
+### Why It Works for Indie Shippers
+
+You can't beat Forbes on broad terms. But you can ship 500 highly specific pages overnight that target queries Forbes will never bother with.
+
+**The math:** If each page gets 10 visitors/month, 500 pages = 5,000 monthly organic visitors. From content you wrote once and templated.
+
+### The Programmatic SEO Playbook (Indie Hackers Version)
+
+**Step 1: Identify a templatable query pattern**
+
+Look for queries with consistent structure:
+- "[App] alternatives"
+- "How to [task] in [language/tool]"
+- "[Currency A] to [Currency B] conversion"
+- "Best [tool category] for [use case]"
+- "[X] vs [Y] comparison"
+
+**Step 2: Build the structured dataset**
+
+Pick a specific pattern. For each variation, you need data points the page will use:
+- Names and IDs
+- Descriptive content
+- Stats or comparison data
+- Images or screenshots
+- Unique value-add per page (CRITICAL — see Step 4)
+
+Example: For "[App] alternatives" pages, your dataset has:
+- App name
+- App description
+- Top 5 alternatives (with their data)
+- Pros/cons of each alternative
+- A unique data point (price comparison, feature matrix, etc.)
+
+**Step 3: Build the page template**
+
+The template needs:
+- Dynamic title tag using the variable
+- Dynamic H1
+- Dynamic meta description
+- Schema markup populated dynamically
+- Canonical tag pointing to itself
+- Unique content sections (not just data dump)
+
+Example title: `"{app_name} Alternatives: 5 Better Options in 2026"`
+
+**Step 4: Add unique value per page**
+
+This is where most programmatic SEO fails. Google's August 2025 spam update specifically targeted "scaled AI content abuse" — pages that are technically unique but provide no unique value.
+
+Each page needs at least one of:
+- An original screenshot
+- A unique data point
+- A comparison table built specifically for that variation
+- A user testimonial relevant to that specific case
+- A custom infographic
+
+If your pages are 95% template + 5% data, you'll hit the spam filter. If they're 60% template + 40% unique-per-page value, you'll rank.
+
+**Step 5: Ship 50-500 pages, monitor, prune**
+
+Indie hacker consensus: ship a meaningful batch (50+ pages) and monitor:
+- Which clusters get crawled
+- Which get indexed
+- Which start ranking
+- Which get zero traffic after 90 days
+
+After 90 days, kill the dead clusters. Keep what works. Expand the winners.
+
+### When Programmatic SEO Fails
+
+- **No unique value per page** → spam filter
+- **Targeting queries with zero search volume** → indexed but no traffic
+- **Bad CSR-only setup** → Google can't crawl the dynamic pages
+- **No internal linking between programmatic pages** → orphan content
+- **Bad data quality** → users bounce, NavBoost penalizes you
+
+### Source
+
+Full playbook: [Indie Hackers — Complete Guide to Programmatic SEO](https://www.indiehackers.com/post/a-complete-guide-to-programmatic-seo-a8a096f76b)
+
+---
+
+<a id="chapter-10"></a>
+## Chapter 10: Free Tools as Link Magnets
+
+### Why Free Tools Outrank Blog Posts
+
+Free, single-purpose tools earn backlinks 5-10x more than blog posts in indie hacker case studies. Three reasons:
+
+1. **They get cited as "use this to do X"** in tutorials, Reddit posts, forum answers
+2. **They rank for high-intent queries** ("calculator", "checker", "tester", "generator")
+3. **AI Overviews recommend them** ("here's a tool that does X")
+
+### Tools That Have Built Companies
+
+- **Ahrefs** — Free SERP checker, backlink checker (lead-magnet for paid Ahrefs)
+- **Smallpdf** — Each tool (compress PDF, merge PDF) ranks separately
+- **Hemingway Editor** — Free writing analyzer drives 100K+ monthly visitors
+- **Word Counter** — A counter ranks #1 for "word count" with millions of monthly searches
+
+### The Indie Tool Playbook
+
+**Step 1: Find a tool query with traffic and weak competition**
+
+Use Google Search Console + Keyword Surfer:
+- "[task] calculator"
+- "[task] generator"
+- "[task] checker"
+- "[task] converter"
+- "[task] tester"
+
+You're looking for queries with 1K-10K monthly searches where the top results are basic, ad-heavy tools.
+
+**Step 2: Build something better in a weekend**
+
+Don't overthink. The first version should be:
+- Single-purpose (one job, done well)
+- Fast (loads in < 1 second)
+- No signup required
+- No ads
+- Mobile-responsive
+- Beautiful enough to feel premium
+
+**Step 3: SEO the tool page**
+
+Your tool page should have:
+- The tool itself above the fold
+- Clear H1 matching the search query
+- 800-1,500 words explaining what the tool does and how to use it
+- FAQ section answering common questions
+- Schema markup (`SoftwareApplication` or `WebApplication`)
+- Internal links to related tools/content
+
+**Step 4: Promote to relevant communities**
+
+- Product Hunt launch
+- Hacker News (Show HN)
+- Reddit (relevant subreddit only — don't spam)
+- Twitter/X with a video demo
+- Indie Hackers showcase
+
+Each launch generates initial backlinks. Good tools then accumulate organic links over time.
+
+### What Tools Should Publishd Build?
+
+For your audience (founders shipping apps):
+- **Website conversion audit tool** (input URL, get a clarity score)
+- **SEO audit checker** (run automated checks, output report)
+- **Landing page copy analyzer** (paste copy, get feedback)
+- **Free site speed checker** (PageSpeed Insights wrapper with cleaner UX)
+- **Domain age checker** (paste URL, get age + early signals)
+
+Each of these is a separate page that ranks separately, captures a separate query, and has a separate backlink profile.
+
+---
+
+<a id="chapter-11"></a>
+## Chapter 11: "Alternatives to X" Plays for SaaS
+
+### The Conversion Data
+
+Comparison-style queries convert at **8.43% on average** ([Powered by Search](https://www.poweredbysearch.com/learn/best-saas-comparison-pages/)) — among the highest-converting page types in SaaS.
+
+Why: when someone searches "Mailchimp alternative," they've already decided they want to leave Mailchimp. They're at the bottom of the funnel.
+
+### The Three Comparison Patterns
+
+**Pattern 1: "[Competitor] alternative"**
+- Query: "Mailchimp alternative"
+- Intent: Active churn from competitor
+- Conversion: Highest
+- Difficulty: Moderate (lots of incumbents)
+
+**Pattern 2: "[Competitor A] vs [Competitor B]"**
+- Query: "Mailchimp vs ConvertKit"
+- Intent: Active comparison
+- Conversion: High
+- Difficulty: High (G2/Capterra dominate)
+
+**Pattern 3: "Best [category] for [use case]"**
+- Query: "Best email marketing for ecommerce"
+- Intent: Research stage
+- Conversion: Medium
+- Difficulty: Variable (depends on use case specificity)
+
+### The Piggyback Strategy
+
+From [Powered by Search](https://www.poweredbysearch.com/blog/competitor-comparison-landing-pages-for-saas/): a route-optimization SaaS called Circuit ranked #1 for "Postmates vs OnFleet" — a query about two competitors that don't include Circuit.
+
+How: They built a three-way comparison page titled "Postmates vs OnFleet vs Circuit" — inserting themselves into a high-intent comparison query.
+
+This works because:
+- The query has commercial intent (someone shopping)
+- Existing pages are duels (A vs B), not three-ways
+- Three-way pages are more comprehensive (better passage indexing)
+- Google's relevance algorithms reward the most useful answer
+
+**Action for indie shippers:** Find two competitors who are commonly compared. Build a three-way comparison putting yourself between them. Be objective and honest — don't fake the comparison.
+
+### Avoiding the "G2 Dump" Mistake
+
+A common error: shipping 50 comparison pages against tools nobody searches for.
+
+Don't ship comparison pages for:
+- Tools with < 100 monthly searches
+- Tools that don't actually compete with you
+- Tools that aren't on the path your customers consider
+
+**Instead:** Ship 3-5 high-quality comparison pages against actual market leaders. Each should be:
+- 2,000-3,500 words
+- Honest (acknowledge competitor strengths)
+- Specific (concrete feature comparisons, not vague claims)
+- Updated annually
+- Schema-marked with `Comparison` data
+
+### The Comparison Page Template
+
+```markdown
+# [Your Product] vs [Competitor]: Honest Comparison [Year]
+
+[40-60 word lead summarizing the key difference]
+
+## Quick Verdict
+- **Choose [Your Product] if:** [3 specific scenarios]
+- **Choose [Competitor] if:** [3 specific scenarios]
+
+## Feature-by-Feature Comparison
+[Table comparing 10-15 features honestly]
+
+## Pricing Breakdown
+[Detailed pricing comparison with examples]
+
+## Use Case Walkthroughs
+[3-5 specific scenarios with which tool wins each]
+
+## Real User Reviews
+[Quotes from G2/Capterra/Trustpilot — both products]
+
+## Migration Guide (if applicable)
+[How to switch from competitor to you, if relevant]
+
+## FAQ
+[Common questions about both products]
+
+## Final Recommendation
+[Your honest take, with caveats]
+```
+
+The honesty matters. Pages that obviously favor your product without acknowledging competitor strengths get bounced (`badClicks`). NavBoost will demote them.
+
+---
+
+<a id="chapter-12"></a>
+## Chapter 12: Link Building Without a Budget
+
+### The Skyscraper Technique 2.0
+
+Brian Dean's original Skyscraper Technique generated a 110% traffic lift in 14 days for one of his case studies ([backlinko.com/skyscraper-technique](https://backlinko.com/skyscraper-technique)).
+
+Original method:
+1. Find content that's getting links
+2. Build something significantly better
+3. Email people who linked to the original
+
+**The 2.0 update:** Don't just analyze *what* people linked to. Analyze *why* they linked. Then your outreach can speak to motivation, not just topic.
+
+Outreach conversion: 2-3x higher when you reference the specific reason someone linked vs. generic "I built a better version" pitches.
+
+### HARO Replacement Tools
+
+HARO (Help a Reporter Out) shut down in 2024. Replacements:
+- [Qwoted](https://qwoted.com)
+- [Featured.com](https://featured.com)
+- [Help A B2B Writer](https://helpab2bwriter.com)
+
+These are quote-driven backlinks. Journalists post requests for sources. You respond with expertise. If quoted, you get a backlink from a publication that's typically DR 60+.
+
+**The pitch format that works:**
+```
+Hi [Reporter],
+
+Re: Your request for [topic].
+
+I've shipped 100+ websites at publishd.app. Specifically 
+on [the specific question you asked]:
+
+[Direct answer in 100-200 words. Specific, quotable, 
+data-driven. No fluff.]
+
+Happy to expand if useful. Bio for byline:
+
+Daniel Castellani, founder of publishd.app, ships 
+conversion-focused websites for indie founders.
+[Link to your site]
+
+Thanks,
+Daniel
+```
+
+Hit rate: 5-15% if you respond fast (within 2 hours of request) and stay specific.
+
+### Podcast Guesting (Underpriced)
+
+Podcast hosts are constantly looking for guests. Most podcasts have a podcast page that links to guests. Many have show notes that link to your site.
+
+**One decent podcast guest spot = a DR 50+ backlink + distribution to that audience.**
+
+How to land guest spots:
+1. Find 20 podcasts in your niche (use [Podchaser](https://podchaser.com))
+2. Listen to 2-3 episodes of each (so you can pitch with context)
+3. Pitch with a specific episode angle, not "I'd love to come on your show"
+4. Mention what value you'll bring (data, story, contrarian take)
+
+**Pitch template:**
+```
+Subject: [Specific topic] for [Podcast name]?
+
+Hi [Host],
+
+I've listened to your episodes on [topic 1] and [topic 2]. 
+The point about [specific insight from their episode] was 
+exactly right.
+
+I have a related angle I think your audience would dig: 
+[Your specific topic with a hook].
+
+For example, [one concrete data point or story from your 
+proposed topic].
+
+I shipped 100+ websites at publishd.app and have specific 
+data on [your angle].
+
+If interested, here's my one-sheet: [link]
+
+— Daniel
+```
+
+Hit rate: 10-30% if you're specific and have a real hook.
+
+### Free Tools as Link Magnets
+
+(See Chapter 10.) Free tools earn 5-10x more backlinks than blog posts.
+
+### Industry Directories and Citation Sites
+
+For local businesses: get listed on Google Business Profile, Yelp, Bing Places, Apple Maps.
+
+For SaaS: G2, Capterra, Product Hunt, AlternativeTo, Slant.
+
+For services: Clutch, GoodFirms, DesignRush, UpCity.
+
+Citation consistency matters: same name, address, phone (or "NAP") across all listings. Tools like Yext or BrightLocal automate this — or do it manually for free.
+
+### What Doesn't Work
+
+- **Buying backlinks** — Google detects this and penalizes you
+- **Link exchanges** — "I'll link to you if you link to me" detected as patterns
+- **PBNs (Private Blog Networks)** — directly violates spam policies
+- **Comment spam** — links from comments are typically nofollow anyway
+- **Low-quality directory submissions** — 50 listings on random directories add zero value
+- **"Guest posts" on content farms** — Google deprecated low-quality guest post networks
+
+### What Works (Summary)
+
+- Free tools that earn organic citations
+- Original research that gets quoted
+- Podcast guesting with real content
+- HARO/Qwoted/Featured responses
+- Skyscraper outreach with motivation analysis
+- Industry directory listings (real ones)
+- Building relationships with 5-10 site owners in your niche
+
+The pattern: real value → real links. Anything else is either fragile or risky.
+
+---
+
+<a id="chapter-13"></a>
+## Chapter 13: The 90-Day Ranking Plan
+
+### The Honest Timeline
+
+Rankings don't happen overnight. Realistic expectations:
+
+| Phase | Timeline | What's Happening |
+|-------|----------|------------------|
+| **Foundation** | Months 1-3 | Site indexed, content published, no rankings yet |
+| **Early Traction** | Months 3-6 | Long-tail keywords start ranking, 50-200 visitors/month |
+| **Momentum** | Months 6-12 | Mid-tail keywords climbing, 200-1,000 visitors/month |
+| **Authority** | Months 12-24 | Competitive keywords ranking, 1,000-10,000 visitors/month |
+| **Compounding** | Months 24+ | Topical authority pays off, multi-keyword rankings |
+
+The 90-day plan below gets you through Foundation and into Early Traction.
+
+### Days 1-7: Audit and Setup
+
+**Day 1: Run the audit**
+- Sign up for Google Search Console (free)
+- Sign up for Google Analytics 4 (free)
+- Run [PageSpeed Insights](https://pagespeed.web.dev) on your homepage
+- Run [Mobile-Friendly Test](https://search.google.com/test/mobile-friendly)
+- Run [Rich Results Test](https://search.google.com/test/rich-results)
+- Document current state: traffic, rankings, technical issues
+
+**Day 2-3: Fix critical technical issues**
+- HTTPS enabled? (If not, fix immediately)
+- Mobile responsive? (Test on actual phone)
+- Core Web Vitals score? (If poor, this is your priority)
+- Submit XML sitemap to Search Console
+- Verify robots.txt allows JS/CSS crawling
+
+**Day 4-5: Set up entity foundation**
+- Add `Organization` schema to homepage
+- Add `Person` schema to about page
+- Claim Google Business Profile (if applicable)
+- Update LinkedIn, Twitter, GitHub with consistent info
+- Submit to Wikidata (free)
+
+**Day 6-7: Plan the topical map**
+- Pick your topic cluster (narrow!)
+- Brainstorm 50-80 article ideas
+- Identify head term, mid-tail, long-tail, adjacent, use-case
+- Pick the pillar page topic
+- Document the topical map in a spreadsheet
+
+### Days 8-30: Build the Foundation
+
+**Week 2: Write the pillar page**
+- 4,000-8,000 words
+- Comprehensive coverage of the topic
+- Strong passage-indexing structure (question H2s, direct answers)
+- Schema markup (Article)
+- 10+ internal links to future cluster posts (placeholder URLs okay)
+
+**Weeks 3-4: Write 4 cluster posts**
+- 2,000-3,500 words each
+- Each targets a specific subtopic from the topical map
+- Each links UP to the pillar
+- Each links SIDEWAYS to 3-5 other cluster posts
+- Schema markup on each
+
+**By end of Day 30:**
+- Pillar page published
+- 4 cluster posts published
+- All internally linked
+- All submitted to Google Search Console for indexing
+- Title tags optimized for CTR
+- Meta descriptions are compelling ad copy
+
+### Days 31-60: Expand and Promote
+
+**Week 5-6: Continue cluster expansion**
+- Write 4 more cluster posts (8 total now)
+- Update pillar page with links to new posts
+- Add author bios to all posts (entity signal)
+
+**Week 7: Outreach begins**
+- Identify 20 potential link partners (sites in your niche)
+- Send 5 HARO/Qwoted responses (specific, fast, helpful)
+- Pitch 3 podcast hosts
+- Submit to 5 industry directories
+- Share content on Twitter/LinkedIn (drives chromeInTotal signal)
+
+**Week 8: Monitor and adjust**
+- Check Search Console for indexing status
+- Look at "striking distance" keywords (positions 11-20)
+- Refresh title tags on any post showing impressions but low CTR
+- Add more internal links if any post is orphaned
+
+### Days 61-90: Iterate and Scale
+
+**Week 9-10: Continue cluster expansion**
+- 4 more cluster posts (12 total)
+- Expand pillar with new sections
+- Add a "2026 Update" section to the oldest post (test freshness signal)
+
+**Week 11: Build a free tool**
+- Identify a tool query in your niche
+- Build a single-purpose tool over a weekend
+- Ship it with full SEO optimization (schema, content, internal links)
+- Promote on Product Hunt, Hacker News, Reddit
+
+**Week 12: Audit and double down**
+- Pull Search Console data: which posts are gaining impressions?
+- Pull GA4 data: which posts have lowest bounce rate?
+- Identify your 3 best-performing posts
+- Expand each: add depth, add internal links, add schema
+- Plan next 90 days based on what's working
+
+### What to Measure
+
+After 90 days:
+
+| Metric | Target | What it means |
+|--------|--------|---------------|
+| Indexed pages | 12+ | Foundation built |
+| Search Console impressions | 1,000+/month | Google sees your content |
+| Search Console clicks | 50+/month | Some queries ranking |
+| Average position | 25-50 | Long-tail traction |
+| Striking distance keywords (pos 11-20) | 5+ | Ready for next push |
+
+If you hit these targets, months 4-6 will see meaningful traffic. If you fall short, the issue is usually:
+1. Topic too broad (lower topical authority)
+2. Content too thin (under 1,500 words on competitive queries)
+3. Technical issues blocking crawl
+4. No internal linking structure
+
+### What Makes 90 Days Fail
+
+The single biggest reason 90-day plans fail: **inconsistency**.
+
+You need 12 cluster posts published in 90 days. That's one per week. Most people start strong (4 posts in week 1) and burn out by week 4.
+
+The fix: schedule it like a job. 1 post per week, on the same day, for 12 weeks. No more, no less. Consistent output beats heroic sprints.
+
+---
+
+<a id="chapter-14"></a>
+## Chapter 14: When to Stop DIY and Hire Help
+
+### When DIY SEO Works
+
+DIY is the right call if:
+- Your niche has low competition (long-tail keywords with < 1,000 monthly searches)
+- You have 5-10 hours/week for content
+- You enjoy the work or want to learn
+- You have technical skills (or your site doesn't have technical issues)
+- Your business doesn't depend on ranking in the next 90 days
+
+### When DIY Won't Work
+
+DIY hits a ceiling when:
+
+**Issue 1: You're competing in a high-volume niche**
+- Top results have DR 70+ domains
+- Top results have 8,000+ word content with original research
+- Top results have been live for 5+ years
+
+You can still niche down (smaller topic cluster), but you'll never rank for the head term without significant authority.
+
+**Issue 2: Technical issues require real expertise**
+- Site speed below 50 PageSpeed score
+- JavaScript-heavy single-page app
+- Migration disasters (lost rankings after redesign)
+- Schema markup needed but you don't write code
+
+**Issue 3: You don't have time**
+- Need 5-10 hours/week for content
+- Need 2-4 hours/week for technical maintenance
+- Need 1-2 hours/week for monitoring and adjustment
+
+If your business demands your full attention, SEO becomes the thing that never gets done.
+
+**Issue 4: Site architecture is fundamentally broken**
+- Built on Wix or Squarespace (real SEO ceiling)
+- No CMS, hard to publish content
+- Site structure makes internal linking impossible
+- Mobile experience is broken
+
+In this case, you need a rebuild before any SEO work helps.
+
+### What to Hire (And What to Pay)
+
+| Need | Hire | Cost Range |
+|------|------|------------|
+| Strategic audit | SEO consultant (one-time) | $1,000-$5,000 |
+| Ongoing strategy + tracking | SEO consultant (monthly) | $2,000-$5,000/month |
+| Content production | Content writer (per post or monthly) | $200-$1,500/post |
+| Technical fixes | Technical SEO specialist | $3,000-$10,000/month |
+| New site build | Web designer/developer | $999-$50,000 |
+| Comprehensive SEO + design | Specialized agency | $5,000-$50,000+/month |
+
+### When Publishd Makes Sense
+
+I built Publishd specifically for the gap I noticed running 100+ projects:
+
+**You hire Publishd if:**
+- Your existing site has serious SEO/conversion problems
+- You need a custom-built site that ranks (not a template)
+- You want fast turnaround (4-6 weeks, not 6 months)
+- You want transparent pricing (not "starts at $5,000, ends at $50,000")
+- You want to own the code (no vendor lock-in)
+- You want direct founder access (no account managers, no relays)
+
+Pricing:
+- **Starter:** $499 — Single landing page, conversion-focused, SEO-ready
+- **Pro:** $999 — Multi-page site with blog/CMS, full schema setup, technical SEO baked in
+- **Custom:** $1,999+ — Larger scope (e-commerce, programmatic SEO setup, multi-section sites)
+
+What's included on every tier:
+- Custom design (not template)
+- Schema markup setup (Organization, Person, Article)
+- Technical SEO foundations (Core Web Vitals "Good")
+- Mobile-responsive
+- 6-hour response time during build
+- Full code ownership at handoff
+- Documentation
+
+You're not hiring me to "do SEO." You're hiring me to ship a site that ranks. Different thing.
+
+### What I Don't Do
+
+Honest disclosure of where I'm not the right fit:
+- **Pure content production at scale** — I build sites; I don't run a 50-post-per-month content factory.
+- **Enterprise SEO** — I don't have the team for $50K/month engagements.
+- **Black-hat or grey-hat SEO** — Won't buy links, won't churn AI content, won't take shortcuts that risk your domain.
+- **Paid ads** — Not my specialty. Hire someone who lives in Google Ads daily.
+
+If you need any of the above, I'll tell you and recommend someone better.
+
+---
+
+<a id="appendix"></a>
+## Appendix: The 24-Point Audit Checklist
+
+Print this. Run through it monthly.
+
+### Technical SEO (10 points)
+```
+☐ HTTPS enabled (🔒 in URL)
+☐ Mobile-responsive (test on actual phone)
+☐ Core Web Vitals "Good" status in Search Console
+☐ XML sitemap submitted to GSC
+☐ robots.txt not blocking JS/CSS
+☐ Schema markup on homepage (Organization minimum)
+☐ Schema markup on key page types (Article, Product, etc.)
+☐ Canonical tags set (self-canonical by default)
+☐ No broken internal links (run Screaming Frog quarterly)
+☐ No orphan pages (every page has internal links pointing to it)
+```
+
+### Content SEO (8 points)
+```
+☐ Topical map documented (50+ article ideas)
+☐ Pillar page exists (4,000+ words, comprehensive)
+☐ At least 8 cluster posts published
+☐ All cluster posts link to pillar; pillar links to all clusters
+☐ Title tags optimized for CTR (not just keywords)
+☐ Meta descriptions are compelling ad copy (160 char)
+☐ Passage-indexing structure (question H2s, 40-60 word direct answers)
+☐ Author bios on every post (entity signal)
+```
+
+### Authority + Behavioral (6 points)
+```
+☐ Google Business Profile claimed (if applicable)
+☐ Listed on Wikidata
+☐ Consistent NAP across 5+ directory listings
+☐ At least 5 backlinks from real sites (not paid/spam)
+☐ Active brand search (people searching your name)
+☐ Direct traffic source (newsletter, social, etc.)
+```
+
+---
+
+## Tools Referenced (All Free or Freemium)
+
+**Google's own tools:**
+- [Google Search Console](https://search.google.com/search-console) — free, mandatory
+- [Google Analytics 4](https://analytics.google.com) — free
+- [PageSpeed Insights](https://pagespeed.web.dev) — free
+- [Rich Results Test](https://search.google.com/test/rich-results) — free
+- [Mobile-Friendly Test](https://search.google.com/test/mobile-friendly) — free
+
+**Keyword research:**
+- [Google Keyword Planner](https://ads.google.com/home/tools/keyword-planner/) — free with Google Ads account
+- [Keyword Surfer](https://surferseo.com/keyword-surfer-extension/) — free Chrome extension
+- [AnswerThePublic](https://answerthepublic.com) — free tier
+- [Bing Webmaster Tools](https://www.bing.com/webmasters) — free, has keyword data
+
+**LLM citation tracking:**
+- [Profound](https://profound.market) — paid
+- [Otterly.ai](https://otterly.ai) — paid
+- [AthenaHQ](https://athenahq.ai) — paid
+
+**Backlink/competitor analysis:**
+- [Ahrefs Free Tools](https://ahrefs.com/free-seo-tools) — free tier
+- [Ubersuggest](https://neilpatel.com/ubersuggest/) — free tier
+
+**Outreach:**
+- [Qwoted](https://qwoted.com) — free for sources
+- [Featured.com](https://featured.com) — free for sources
+- [Help A B2B Writer](https://helpab2bwriter.com) — free
+- [Podchaser](https://podchaser.com) — free podcast database
+
+---
+
+## Sources (Every Citation in This Guide)
+
+**Google leak + algorithm research:**
+- [iPullRank — Full Google Leak Analysis](https://ipullrank.com/google-algo-leak)
+- [Search Engine Land — Unpacking the Leak](https://searchengineland.com/unpacking-googles-massive-search-documentation-leak-442716)
+- [xpert.digital — DOJ Testimony](https://xpert.digital/en/newly-revealed-google-ranking/)
+
+**Behavioral signals:**
+- [Search Engine Journal — CTR Ranking Factors](https://www.searchenginejournal.com/ranking-factors/click-through-rate/)
+
+**Topical authority:**
+- [Holistic SEO — Topical Authority](https://www.holisticseo.digital/theoretical-seo/topical-authority/)
+
+**Entity SEO:**
+- [SEO by the Sea — Entity Connections](https://www.seobythesea.com/2014/11/insightful-connections-entities-googles-knowledge-graph/)
+- [SEO by the Sea — Reasonable Surfer Patent](https://www.seobythesea.com/2010/05/googles-reasonable-surfer-how-the-value-of-a-link-may-differ-based-upon-link-and-document-features-and-user-data/)
+- [Kalicube](https://kalicube.com)
+
+**AI Overviews data:**
+- [Semrush AI Overviews Study](https://www.semrush.com/blog/semrush-ai-overviews-study/)
+- [Stackmatix AI Overview SEO Impact](https://www.stackmatix.com/blog/google-ai-overview-seo-impact)
+- [Dataslayer — AI Overviews CTR Impact](https://www.dataslayer.ai/blog/google-ai-overviews-the-end-of-traditional-ctr-and-how-to-adapt-in-2025)
+
+**Google's own documentation:**
+- [Google Search Essentials](https://developers.google.com/search/docs/essentials)
+- [Google SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
+- [March 2024 Core Update + Spam Policies](https://developers.google.com/search/blog/2024/03/core-update-spam-policies)
+- [Site Reputation Abuse Policy](https://developers.google.com/search/blog/2024/11/site-reputation-abuse)
+- [Search Quality Rater Guidelines](https://guidelines.raterhub.com/searchqualityevaluatorguidelines.pdf)
+
+**Practitioner sources:**
+- [Backlinko — Skyscraper Technique](https://backlinko.com/skyscraper-technique)
+- [Aleyda Solis — AI Search Trends](https://www.aleydasolis.com/en/search-engine-optimization/ai-search-trends/)
+- [Kevin Indig — Growth Memo](https://www.kevin-indig.com/)
+
+**Indie / SaaS-specific:**
+- [Indie Hackers — Programmatic SEO Guide](https://www.indiehackers.com/post/a-complete-guide-to-programmatic-seo-a8a096f76b)
+- [Powered by Search — SaaS Comparison Pages](https://www.poweredbysearch.com/learn/best-saas-comparison-pages/)
+- [Powered by Search — Competitor Comparison Pages](https://www.poweredbysearch.com/blog/competitor-comparison-landing-pages-for-saas/)
+
+**Lead magnet + Trustpilot data:**
+- [Amra & Elma — Lead Magnet Conversion Statistics](https://www.amraandelma.com/lead-magnet-conversion-statistics/)
+- [GetResponse — Lead Magnet Study](https://www.getresponse.com/blog/best-lead-magnets-study)
+- [Trustpilot — Review Conversion Tactics](https://business.trustpilot.com/blog/browsers-to-buyers/five-creative-ways-to-encourage-reviews-and-increase-conversions)
+
+---
+
+## Closing Note
+
+If you've made it this far, you have more applied SEO knowledge than 95% of business owners. You also have more than most "SEO experts" who haven't read the leak documentation.
+
+The honest truth: ranking is a long game. The principles in this guide are mechanical — they work because they reflect how Google's algorithm actually operates. But mechanical doesn't mean instant. You'll see meaningful results in 3-6 months and compounding results over 1-2 years.
+
+If you do the work, you'll rank. Most people won't do the work. That's why ranking is still possible.
+
+If you want me to build the site that runs all of this for you, either [start a kickoff](/kickoff) or jump straight to the [`website design page`](/website-design). Flat fee, you own the code, no lock-in.
+
+If you want to do it yourself, this guide is everything I'd tell a friend over coffee.
+
+Either way — go ship something.
+
+— Daniel Castellani  
+[publishd.app](https://publishd.app)
+
+---
+
+*Last updated: 2026. This guide is updated annually with new algorithm research, case studies, and tactics. If you found it useful, [leave a Trustpilot review](https://www.trustpilot.com/review/publishd.app) — it helps other founders find this guide.*

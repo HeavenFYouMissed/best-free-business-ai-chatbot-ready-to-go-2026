@@ -1,0 +1,69 @@
+---
+title: "Why Your Firebase Bill Exploded"
+description: "Month 1: $5. Month 2: $300. Month 3: unlimited. Firebase pricing is a trap."
+slug: "why-your-firebase-bill-exploded"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["Firebase", "pricing", "infrastructure", "costs"]
+draft: false
+---
+
+You launched your app on Firebase. First month: `$5`. You're happy. Second month: `$300`. What happened? Third month: you're setting a spending limit before it goes higher.
+
+Welcome to Firebase pricing. The bill isn't proportional to your users. It's proportional to your *operations*. And one inefficient query can cost you thousands.
+
+## How Firebase Pricing Works
+
+Firebase charges per *operation*, not per user.
+
+- **Read operation:** `$0.06` per 100K reads
+- **Write operation:** `$0.18` per 100K writes
+- **Storage:** `$0.18` per GB per month
+
+Sounds cheap until one unindexed query triggers 100K reads on a 100K-row table.
+
+## Why Your Bill Exploded (Pick One)
+
+- **Infinite loop:** A background function makes database calls every second = `$6/second`
+- **Unindexed queries:** Firebase scans whole table = `$600/operation`
+- **Real-time listeners left open:** 1,000 users * 10 reads/second = `$6/second`
+- **N+1 queries:** Fetch 1,000 orders then fetch user for each = 1,001 reads per cycle
+
+## When Firebase Makes Sense
+
+- Hobby projects (< 1,000 daily users)
+- Prototypes (when speed > cost)
+- Light, predictable usage
+
+## When Firebase Kills You
+
+- High-traffic apps (10K+ daily users)
+- Data-heavy apps (lots of reads/writes)
+- Real-time listeners everywhere
+- Unoptimized queries (no indexes, N+1, full table scans)
+
+## How to Stop the Bleeding
+
+1. Set a spending cap (Firebase cuts off writes when you hit it)
+2. Add database indexes (free, prevents runaway queries)
+3. Paginate everything (20 items at a time vs. 100K)
+4. Close listeners when done (don't keep them open forever)
+5. Cache aggressively (reduce database hits by 100x)
+
+## When to Migrate Off Firebase
+
+If your bill is `$200+/month` and climbing, it's time to move.
+
+**Supabase:** Postgres-based, more predictable, `$25–$100/month`
+**DynamoDB:** More efficient than Firebase, `$50–$200/month`
+**Traditional Backend + DB:** Most control, `$100–$300/month`
+
+Cost of migration: 2–4 weeks dev time (`$3K–$8K`)
+
+Break-even: 20 months if Firebase is costing `$500/month`
+
+Firebase's simplicity is its strength and its trap. You move fast until you hit scale. Then the bill hits you.
+
+If you're on Firebase and your bill is out of control, [let's talk about a migration plan.](/kickoff)

@@ -1,0 +1,83 @@
+---
+title: "Why Cursor Can't Ship to App Store"
+description: "Cursor writes code. It doesn't sign certificates, handle provisioning, or submit to App Store. Here's the gap."
+slug: "why-cursor-cant-ship-to-app-store"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["shipping", "app-store", "cursor", "native-apps"]
+draft: false
+---
+
+You built your whole iOS app in Cursor. The code works. You run it on your device and it's solid. You're ready. You go to submit to the App Store and realize: Cursor did nothing to help with this part.
+
+You're staring at certificate signing, provisioning profiles, bundle IDs, and App Store Connect. Cursor can't touch any of it.
+
+Here's the truth: **Cursor is a code editor with AI. It's not a shipping tool.**
+
+## What Cursor Is vs. What It Isn't
+
+Cursor is VSCode with ChatGPT built in. It helps you write code faster. It's genuinely useful for APIs, logic, UI components.
+
+But shipping an app to the App Store requires:
+- iOS certificates (cryptographic files that prove you own your app identity)
+- Provisioning profiles (configuration files that map your code to your certificate)
+- Signing your app binary with those certificates
+- Uploading to App Store Connect
+- Handling signing certificate renewals and expiry
+- Managing bundle IDs and team IDs
+- Building and bundling your app into the `.ipa` file format
+
+**Cursor does none of this.** It wrote your Swift code. It can't sign it.
+
+## Where Cursor Stops
+
+Let me be direct. Cursor gets you ~40% of the way to shipping. Then you hit a wall.
+
+**Code to local execution:** Cursor helps here. You write Swift, you run it in Xcode simulator. Works.
+
+**Local to production build:** This is where Cursor stops. You need Xcode (Apple's IDE). You need to:
+- Create an Apple Developer account (`$99/yr`)
+- Generate signing certificates in the Apple Developer portal
+- Create a provisioning profile for your app
+- Configure your Xcode project with your team ID and bundle ID
+- Build your app for release (not debug)
+- Sign it with your certificate
+
+Cursor can't do any of this. It's not a limitation of AI—it's that these are *system-level* operations that require Xcode, the Developer portal, and security keys. They're not code. They're infrastructure.
+
+**Production build to App Store:** You export a signed `.ipa` file. You upload it to App Store Connect. You fill out metadata, screenshots, pricing, privacy policy, keywords. You submit for review. Apple takes 24–48 hours. You wait. You might get rejected (privacy violations, UI issues, etc.). You fix it. You resubmit.
+
+Cursor can't do this either. It's a human process (Apple reviews for policy compliance).
+
+## What Actually Helps Cursor Users Ship
+
+If you've built something in Cursor and you want to ship it to iOS:
+
+**Option 1: Learn Xcode yourself (20–40 hours).**
+Read Apple's "Distributing Your App for Beta Testing and Releases" guide. Follow it step-by-step.
+
+Cost: your time
+
+**Option 2: Use Capacitor or React Native (if applicable).**
+If you built a web app in Cursor, you can wrap it with Capacitor. This handles some of the iOS-specific bundling.
+
+Cost: `$0–$5K`
+
+**Option 3: Hire a developer for the last 20%.**
+You have working code. You need someone to handle signing, bundling, and submission. This takes ~20–40 hours.
+
+Cost: `$2K–$4K`
+
+In practice, I recommend Option 1 (learn it) + Option 4 (hire for the parts you're stuck on). You'll ship faster and understand your own app.
+
+## The Frame Shift
+
+Stop thinking of Cursor as a "shipping tool." It's a *coding tool*. It accelerates the parts where you write code. Everything else—testing, profiling, signing, deployment—you do separately.
+
+Cursor writes code. You ship the system.
+
+---
+
+If you've built something in Cursor and hit the "how do I actually submit this?" wall, [let's walk through it together.](/kickoff)

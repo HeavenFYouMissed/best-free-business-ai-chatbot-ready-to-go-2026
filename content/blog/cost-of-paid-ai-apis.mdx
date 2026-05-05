@@ -1,0 +1,235 @@
+---
+title: "The Real Cost of Paid AI APIs: When Self-Hosted Wins"
+description: "Your AI API bill is climbing fast. Here's the math on when to switch to self-hosted and how much you actually save."
+slug: "cost-of-paid-ai-apis"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["ai", "costs", "apis", "openai", "self-hosted"]
+draft: false
+---
+
+You launched an AI feature using OpenAI's API. Week one with 100 users: `$47` total spend. You think, "That scales fine."
+
+Week eight with 1,000 users: `$3,200` monthly. Week twelve with 5,000 users: `$15,000` monthly. You're now running that AI feature at a loss, and your margin keeps shrinking.
+
+This post is the math on when that happens—and when switching to self-hosted (Ollama, local GPUs, or hybrid) actually saves money.
+
+## How API Pricing Actually Works (Token Counting)
+
+Most founders don't understand tokens. They see "OpenAI costs `$0.05` per 1K tokens" and assume it's per-request. It's not.
+
+**What's a token?**
+- Roughly 1 token = 4 characters of English text
+- `"The quick brown fox"` = 4 tokens
+- `1,000 tokens` ≈ 750 words
+
+**Here's the real cost:**
+
+OpenAI's GPT-4 (as of April 2026):
+- **Input**: `$0.03` per 1K tokens
+- **Output**: `$0.06` per 1K tokens
+
+Claude 3.5 Sonnet (Anthropic):
+- **Input**: `$0.003` per 1K tokens
+- **Output**: `$0.015` per 1K tokens
+
+Claude is cheaper. But let's use OpenAI as the example because most people use it.
+
+## Real-World Query Costs
+
+A typical user interaction:
+
+**Scenario: Summarize a Blog Post**
+- User pastes 2,000-word article (input): ~2,500 tokens at `$0.03` = `$0.075`
+- You ask for 300-word summary (prompt): ~150 tokens at `$0.03` = `$0.0045`
+- API returns summary (output): ~300 tokens at `$0.06` = `$0.018`
+- **Total per query: `$0.0975` (call it `$0.10`)**
+
+**Scenario: Chat with Context**
+- Previous conversation (input): ~3,000 tokens at `$0.03` = `$0.09`
+- User's new message (input): ~100 tokens at `$0.03` = `$0.003`
+- Response (output): ~500 tokens at `$0.06` = `$0.03`
+- **Total per query: `$0.123` (call it `$0.12`)**
+
+**Scenario: Code Generation**
+- Code request + examples (input): ~2,000 tokens at `$0.03` = `$0.06`
+- Generated code (output): ~1,500 tokens at `$0.06` = `$0.09`
+- **Total per query: `$0.15`**
+
+## Scaling to Real Numbers
+
+Now apply this to users:
+
+**100 users, 5 queries per day, average `$0.12` per query:**
+- Per user per month: 150 queries = `$18`
+- Total: 100 × `$18` = `$1,800/month`
+
+**1,000 users, same pattern:**
+- Total: `$18,000/month`
+
+**5,000 users:**
+- Total: `$90,000/month`
+
+You see the problem. This is why companies suddenly wake up to a massive API bill.
+
+## Where Hidden Costs Stack Up
+
+Pricing isn't the only cost. Here's what kills your margin:
+
+**Retries & Failures**
+- API fails 2% of the time on average. You retry. Double charge.
+- Solution: Implement exponential backoff + caching. Prevents 50% of retries.
+- Savings: `~1%` of bill
+
+**Rate Limiting Workarounds**
+- OpenAI enforces rate limits. You hit them with 500+ concurrent users.
+- You implement queuing + fallback API. This costs engineering time.
+- Cost: 40–80 hours of engineering per quarter to maintain
+
+**Monitoring & Alerting**
+- You need to monitor API spend, failures, latency.
+- Tools like Langsmith or custom logging: `$200–800/month`
+
+**Data & Context Window**
+- Including conversation history bloats tokens fast. A 20-message conversation adds `~3,000` tokens to every query.
+- Caching reduces this (Anthropic and OpenAI both support caching now), but setup takes time.
+- Without caching: `~30%` higher token cost
+
+**Real example: A founder with 2,000 users**
+
+Base math: `$36,000/month` on OpenAI
+
+But:
+- 2% of queries retry (not in base cost): +`$720`
+- Rate limiting means queue overhead: +`$500/month` in engineering time
+- Monitoring services: +`$400/month`
+- Data context bloat (conversations with history): +`~$8,000`
+- **Actual cost: `$45,620/month`** (not `$36,000`)
+
+That's a `27%` hidden premium just from not optimizing.
+
+## When Self-Hosted Actually Makes Sense
+
+Self-hosted = running a model locally using Ollama, vLLM, or similar.
+
+**Setup costs:**
+- GPU instance (AWS p3.2xlarge or equivalent): `~$3/hour` on-demand, `~$1/hour` reserved
+- Yearly reserved: `~$8,760` for one GPU
+- Two GPUs (load balanced, redundancy): `~$17,520/year`
+- Engineering to set up + monitor: 40–80 hours (`$4K–$8K` depending on your rate)
+
+**Operating costs:**
+- GPU instance running 24/7: `$730–$1,460/month`
+- Storage + networking: `~$200/month`
+- Engineering (monitoring, updates, fixes): `~$800/month` ongoing
+- **Total: `~$1,730–$2,460/month`**
+
+**What models do you get?**
+- Llama 2, Mistral 7B (open source, good for general tasks)
+- Not as smart as GPT-4, but decent for: summarization, classification, simple code gen
+- For complex reasoning (advanced code, nuanced writing), you'll still need OpenAI
+
+## When Self-Hosted Breaks Even
+
+**Hybrid approach (my recommendation):**
+- Use self-hosted for cheap tasks (classification, summarization, simple extraction)
+- Use API for expensive tasks (code gen, complex reasoning, streaming chat)
+
+Example split for 2,000 users:
+- 60% of queries → self-hosted (Llama 2): `$0`
+- 40% of queries → OpenAI (GPT-4): `$0.15/query average`
+
+Math:
+- Self-hosted cost: `$2,000/month`
+- API cost: 2,000 users × 5 queries/day × 30 days × 40% × `$0.15` = `$1,800/month`
+- **Total: `$3,800/month`**
+
+Compared to:
+- All API (with hidden costs): `$45,620/month`
+- **Savings: `$41,820/month`** for 2,000 users
+
+At what user count does hybrid break even?
+
+**Self-hosted break-even user count:**
+- Self-hosted monthly fixed cost: `$2,000`
+- Per-user API cost (60% offloaded): `$10.80/month`
+- Break-even: `2,000 ÷ 10.80` ≈ **~185 users**
+
+If you have more than 200 active users running AI features consistently, self-hosted + hybrid is cheaper.
+
+## The Real Catch (Engineering Cost)
+
+Self-hosted isn't free engineering.
+
+You need to:
+1. Set up load balancing (if you run 2+ instances)
+2. Monitor GPU health and restart failed containers
+3. Update models quarterly
+4. Handle inference timeouts and queue management
+5. Debug why inference is slow on some requests
+6. Plan for scale (more GPUs, distributed inference)
+
+This is 4–8 hours per month of operational work. At `$100/hour`, that's `$400–$800/month` in hidden cost.
+
+Plus: self-hosted Llama 2 is not as smart as GPT-4 for creative work, reasoning, or edge cases. You'll still need OpenAI as fallback for 10–20% of queries where Llama fails.
+
+## Framework: Should You Self-Host?
+
+Ask yourself:
+
+1. **Current monthly API spend:** `$_____`
+2. **If under `$3,000/month`:** Stick with API. Not worth the engineering.
+3. **If `$3K–$8K/month`:** Consider hybrid. Self-hosted for 50% of load.
+4. **If over `$8K/month`:** Self-host + hybrid. You'll ROI in 2–3 months.
+5. **Do you need real-time reasoning?** (Advanced coding, open-ended writing) If yes, keep OpenAI as primary. If no, self-host works fine.
+
+## The Tactic: Optimize First, Self-Host Second
+
+Before you spin up a GPU:
+
+1. **Add caching:** Deduplicate repeated queries. Typical saving: 15–30% of bill.
+2. **Batch requests:** Queue non-urgent queries and process at 2 AM. Saving: 10–20%.
+3. **Compress context:** Only include recent conversation history, not full history. Saving: 10–25%.
+4. **Use cheaper models:** Switch from GPT-4 to Claude 3.5 Haiku for simple tasks. Saving: 40–60% on those queries.
+5. **Monitor waste:** Retry storms, malformed requests, user errors cause 10–20% of cost.
+
+These 5 tactics together cut your bill by 40–60% without any infrastructure change.
+
+Run the optimization pass first. If you're still spending over `$5K/month` after optimization, then self-host.
+
+## Real Number: Shipped Product
+
+We built an AI search tool (search essays, get AI summaries). 400 active users, 8 searches per user per month.
+
+**Costs before optimization:**
+- OpenAI API: `$2,100/month`
+- Monitoring: `$200/month`
+- Total: `$2,300/month`
+
+**Costs after optimization (caching + batch + context compression):**
+- OpenAI API: `$900/month`
+- Total: `$900/month`
+
+**After hybrid (self-hosted Llama 2 for summaries, OpenAI for ranking):**
+- Self-hosted: `$2,000/month` (one p3.2xlarge)
+- OpenAI API: `$300/month` (only for ranking, which needs GPT-4)
+- Total: `$2,300/month`
+
+Wait—that's the same. Why? Because with 400 users, we don't have enough volume to amortize the GPU cost. Self-hosted only won when we hit 1,200 users.
+
+**At 1,200 users:**
+- API only: `$7,500/month`
+- Hybrid: `$2,300/month`
+- **We saved `$5,200/month`** by switching
+
+## What To Do
+
+1. **Calculate your current spend.** Grab your OpenAI bill and multiply by 1.27 (accounting for hidden costs).
+2. **If under `$2K/month`:** Stay with API. Optimize later.
+3. **If `$2K–$5K/month`:** Run the optimization pass (caching, batching, compression). Usually cuts it by 50%.
+4. **If over `$5K/month`:** Start the hybrid architecture. Self-hosted for cheap queries, API for complex ones.
+5. **If over `$15K/month`:** You're leaving money on the table. Hybrid + aggressive optimization is urgent.
+
+If you need help building the hybrid architecture or optimizing your AI costs, [let's talk.](/kickoff)

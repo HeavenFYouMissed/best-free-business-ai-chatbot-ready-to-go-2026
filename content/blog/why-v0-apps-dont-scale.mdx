@@ -1,0 +1,61 @@
+---
+title: "Why v0 Apps Don't Scale"
+description: "v0 shipped your MVP in 2 weeks. Now you have 1,000 users and it's slow. Here's why and what to do."
+slug: "why-v0-apps-dont-scale"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["scaling", "v0", "performance", "mvp"]
+draft: false
+---
+
+v0 shipped your MVP to market in 2 weeks. You were shipping before your competitor even started. You're proud. You got 1,000 signups in week one.
+
+Now you have 1,000 users and things are slow. Your homepage loads in 3 seconds instead of 0.5. Pages with data hang. Users in Europe see even worse latency. Your costs are climbing. You're asking: "What went wrong?"
+
+The answer: **v0 was never meant for scale. It's optimized for speed-to-market, not production load.**
+
+## Why v0 Hits a Wall
+
+v0 is Vercel's AI code generator. It spits out React + Next.js components. Fast. Good enough for prototypes. It ships on Vercel infrastructure, which is great for low-traffic sites but not for thousands of concurrent users.
+
+The architecture breaks under load in predictable ways:
+
+**1. No built-in query optimization.** v0 generates code that queries your database on every page load. With unoptimized queries, this is slow.
+
+**2. No caching strategy.** Every request is fresh. No in-memory cache. No Redis. No static page generation.
+
+**3. No CDN edge caching.** Without it, a user in Tokyo waits for a response from a US server. That's latency.
+
+**4. No rate-limiting or throttling.** One user does a stupid thing, they can hammer your database.
+
+**5. Cold starts destroy performance.** Vercel Functions have cold starts. First request after idle time takes 500ms–2s extra.
+
+## How to Solve It
+
+You have three paths forward:
+
+**Path 1: Optimize v0 in place** (2–4 weeks, buys 3–6 months)
+- Add database caching (Redis, ~`$50–$100/mo`)
+- Index your database properly
+- Enable Vercel's ISR (Incremental Static Regeneration)
+- Add pagination to long lists
+
+**Path 2: Migrate to Real Infrastructure** (3–6 weeks, permanent)
+- Keep UI components (v0 generated good React)
+- Rebuild API layer with proper caching, pagination, indexing
+- Move database to dedicated Postgres (Supabase, Railway)
+- Add Redis for session and query caching
+
+**Path 3: Hybrid Approach (Recommended)**
+- Optimize v0 for the next 6 months while planning migration
+- Fix worst bottlenecks now (caching, indexing, pagination)
+- Keep shipping features in v0
+- Migrate to Next.js + Postgres when optimized v0 hits ceiling
+
+## One More Thing
+
+v0 isn't bad. It's a *tool*. It's perfect for landing pages, content sites, quick prototypes, dashboards with fewer than 500 users. It's not built for production SaaS with thousands of concurrent users. If you're growing past that point, you need a different architecture.
+
+If you're at the point where v0 is slow and you need to scale, [let's talk about the best path forward.](/kickoff)

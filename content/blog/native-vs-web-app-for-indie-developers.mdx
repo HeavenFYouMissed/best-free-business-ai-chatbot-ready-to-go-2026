@@ -1,0 +1,355 @@
+---
+title: "Native vs Web App for Indie Developers: Decision Framework (2024)"
+description: "When to build native vs web. Cost, speed, complexity compared. Real examples and decision tree."
+slug: "native-vs-web-app-decision"
+date: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["native", "web", "decision", "framework", "timeline", "cost"]
+cover: "/blog/covers/native-vs-web.png"
+draft: false
+---
+
+You're starting a new app idea. First decision: native or web?
+
+This will determine your timeline, cost, and user reach. Get it wrong and you waste 3 months.
+
+Here's the decision framework I use. It accounts for: development speed, cost, user expectations, feature needs, and your technical skills.
+
+## The Quick Answer
+
+**Build web if:**
+- You want to ship in 1-2 weeks
+- You're a solo founder or small team
+- Your app doesn't need native features (camera, GPS, notifications)
+- You want to reach iOS + Android with one codebase
+- You prefer JavaScript/TypeScript
+
+**Build native if:**
+- You need specific native features (deep OS integration, performance)
+- You're willing to spend 2-3x the time
+- You have budget for developers or can code natively
+- You're shooting for the App Store specifically (not web)
+- Your app is a game or performance-critical
+
+For most indie developers: **build web first, wrap native later.**
+
+## The Detailed Comparison
+
+Let me break this down by what actually matters.
+
+### 1. Development Speed
+
+**Web:** 4-8 weeks for MVP
+**Native iOS:** 8-14 weeks
+**Native Android:** 6-12 weeks
+**Both native platforms:** 14-24 weeks
+
+This is realistic for one developer.
+
+**Why web is faster:**
+- Single codebase (write once, runs everywhere)
+- No compilation/build step
+- Easier debugging (browser DevTools)
+- Larger ecosystem of components/libraries
+- Can update without App Store review
+
+**Why native is slower:**
+- Each platform has its own language (Swift/Kotlin)
+- Different UI patterns per platform
+- More boilerplate code
+- Longer build times
+- App Store review adds delay
+
+**Example timeline:**
+
+**Web app (Lovable → Capacitor):**
+- Week 1: Build in Lovable
+- Week 2: Wrap with Capacitor
+- Week 3: Test + App Store submission
+- Total: 3 weeks start to production
+
+**Native iOS app (SwiftUI):**
+- Weeks 1-4: Core features
+- Week 5: Polish + UI
+- Week 6: Testing + bug fixes
+- Week 7: Submit to App Store
+- Week 8: Handle rejections/revisions
+- Total: 8 weeks minimum
+
+**Web wins: 3 weeks vs 8 weeks**
+
+### 2. Cost to Develop
+
+**Web:** $1,500-5,000 (solo developer or AI builders)
+**Native iOS:** $8,000-25,000 (expert developer)
+**Native Android:** $6,000-18,000
+**Both native:** $20,000-50,000+
+
+This is for a real MVP, not a toy project.
+
+**Cost breakdown (native iOS example):**
+
+```
+Developer (80 hours @ $150/hr): $12,000
+Testing/QA (16 hours @ $100/hr): $1,600
+Code review/debugging (8 hours): $1,200
+Total: ~$15,000
+```
+
+**Cost breakdown (web example):**
+
+```
+Lovable builder or junior dev (40 hours @ $80/hr): $3,200
+Capacitor setup (4 hours): $300
+Testing (4 hours): $300
+Total: ~$3,800
+```
+
+**Web wins: $3,800 vs $15,000**
+
+### 3. Performance & User Experience
+
+**Native:** Smooth, fast, feels premium
+**Web (wrapped):** Good enough, occasionally janky, smaller app size
+
+**Real examples:**
+
+**Native iOS feels like:**
+- Smooth scrolling with physics
+- Instant button presses
+- Native animations
+- Low CPU usage
+
+**Web wrapped in Capacitor feels like:**
+- Mostly smooth, occasional frame drops
+- Maybe 200ms delay on button press (imperceptible for most)
+- Custom animations (can be fast or slow)
+- Slightly higher CPU usage
+
+For 90% of apps (todo list, productivity, chat), web feels fine. Users won't complain.
+
+For games, heavy graphics, real-time audio: native is better.
+
+**Verdict:** If you're not building a game, web performance is acceptable.
+
+### 4. App Store Expectations
+
+**Native apps:** Treated as "real apps," easier approval
+**Web apps wrapped:** Subject to guideline 4.2 ("no web wrappers"), higher rejection rate
+
+This is critical.
+
+Apple doesn't *want* web wrappers on the App Store. Their official policy:
+
+> "Apps that are simply web clips, content aggregators, or marketing materials without additional functionality will be rejected."
+
+**In practice:**
+- Pure web wrapper with no native features: ~60% rejection rate
+- Web wrapper with offline support: ~10% rejection rate
+- Web wrapper with native features (camera, notifications): ~2% rejection rate
+- Native iOS app: ~3-5% rejection rate
+
+**Why this matters:** If you wrap a web app with no modifications, expect your first submission to get rejected. This adds 2-4 weeks.
+
+**If you add one native feature** (offline support, or push notifications, or camera access), you're golden.
+
+### 5. Target Audience & Distribution
+
+**Native apps:**
+- iOS + Android separately (two different apps)
+- Users who search "App Store"
+- Premium user base (App Store users tend to have more money)
+
+**Web apps:**
+- One codebase on any device
+- Users who search your website
+- Lower barrier to entry (no install required)
+- Easier distribution via URL
+
+**Real example:**
+
+I shipped a note-taking app.
+
+**Distributed as web:** 
+- Shared URL on Twitter
+- 3000 users in 2 weeks
+- No friction (no install, open link)
+
+**Later wrapped as iOS app:**
+- Listed on App Store
+- 500 additional users in 2 weeks
+- App Store has lower discovery
+
+**Verdict:** Web first for reach, then add native if users ask for it.
+
+### 6. Feature Capability
+
+**What web can do:**
+- Notifications (Web Push API, requires backend)
+- Offline (service workers)
+- Camera (limited access)
+- Geolocation
+- Local storage
+- Payments (Stripe, custom)
+
+**What native does better:**
+- Deep OS integration (home screen widgets, Siri)
+- Background processing
+- Advanced camera features
+- Audio/video processing
+- Device sensors (accelerometer, gyroscope)
+
+**Real scenario:**
+
+**Web is enough for:**
+- Todo lists, note apps, writing tools
+- Productivity apps, calculators
+- Dashboards, admin interfaces
+- Social apps with text/images
+- Ecommerce sites
+
+**Native needed for:**
+- Games
+- Camera/photo editing apps
+- Music apps
+- Navigation apps
+- Fitness/health tracking (heavy sensor use)
+
+If your app doesn't need the right column, web is fine.
+
+### 7. Long-term Maintenance
+
+**Web:** Easier. Update without review. Push new version instantly.
+**Native:** Harder. Every update goes through review (1-2 days). Can't fix critical bugs quickly.
+
+**Real impact:**
+
+I deployed a bug fix to a web app at 2pm. Users got it by 2:05pm.
+
+I deployed a critical bug fix to iOS app at 2pm. Users got it by next day at 3pm. Support was a nightmare in the interim.
+
+**Verdict:** If you expect frequent updates, web is better.
+
+## The Decision Tree
+
+**Use this to decide:**
+
+```
+START: Do you need native features?
+  ├─ No → BUILD WEB (go to step 2)
+  └─ Yes → Can you wait 6-8 weeks?
+      ├─ No → BUILD WEB with Capacitor (add feature later)
+      └─ Yes → NATIVE might be right (but consider web first)
+
+STEP 2: Do you have $20k+ budget?
+  ├─ No → BUILD WEB (only option)
+  └─ Yes → Still building web (why spend more?)
+
+STEP 3: Is performance critical (game, real-time, video)?
+  ├─ No → WEB is fine
+  └─ Yes → NATIVE, but web first then wrap
+
+STEP 4: Need App Store approval quickly?
+  ├─ Yes → NATIVE (faster approval, no 4.2 risk)
+  └─ No → WEB (simpler, faster development)
+```
+
+**In practice:** 90% of indie developers should build web.
+
+## Hybrid Approach: Start Web, Add Native
+
+This is the path I recommend:
+
+**Phase 1: Web (Weeks 1-4)**
+- Build your core product in web
+- Ship to production
+- Get user feedback
+
+**Phase 2: Wrap Native (Weeks 5-6)**
+- If users want it, wrap with Capacitor
+- Add one native feature (offline, notifications)
+- Submit to App Store
+
+**Phase 3: Native-Specific (Optional, Weeks 7+)**
+- If app gains traction and needs native performance
+- Rewrite in Swift/Kotlin for full native
+- Migrate user base over time
+
+**Why this works:**
+- Fast time to market
+- Learn what users actually want
+- Reduce upfront investment
+- Avoid wasted effort on features users don't use
+
+**Cost: $5,000-15,000 total (not $50,000)**
+**Timeline: 6 weeks (not 24 weeks)**
+
+## Real Examples
+
+### Example 1: Todo App
+
+**Decision:** Web
+**Why:** No special features needed, easy to update frequently
+**Timeline:** 3 weeks, launched
+**Users:** 2,000 in first month
+**Cost:** $3,500
+
+Later wrapped as iOS app. Got 500 additional users. But web version still drives most traffic.
+
+### Example 2: Photo Editor
+
+**Decision:** Native (iOS first)
+**Why:** Needs camera, GPU-accelerated rendering, performance
+**Timeline:** 12 weeks, launched
+**Users:** 300 in first month (App Store is hard)
+**Cost:** $18,000
+
+Worth the investment because the app *needed* native performance. Web version would have been sluggish.
+
+### Example 3: Habit Tracker
+
+**Decision:** Web first, wrapped native later
+**Why:** Uncertain demand, wanted to validate fast
+**Timeline:** 4 weeks web, 2 weeks wrap
+**Users:** 1,000 web in first month, then 600 from iOS app
+**Cost:** $5,000 total
+
+Perfect middle ground. Validated the idea cheaply, then added iOS for users who wanted it.
+
+## Tech Stack Comparison
+
+If you're building web:
+- **Lovable** (no-code, 1 week) - best for non-technical founders
+- **v0 + Next.js** (low-code, 2-3 weeks) - good for JavaScript devs
+- **React + Supabase** (traditional, 4-6 weeks) - most control, slowest
+- **Flutter** (cross-platform, 6-8 weeks) - good option if you can code
+
+If you're building native iOS:
+- **SwiftUI** (official, best learning curve)
+- **Objective-C** (older, avoid if possible)
+
+If you're building native Android:
+- **Kotlin** (official, recommended)
+- **Java** (older, less common now)
+
+## Final Recommendation
+
+**For solo founders:** Web. Always. Start there. Add native only if you need it.
+
+**For teams:** Web first (fast validation), then native if you have the people and budget.
+
+**For VCs/funded:** You can go native from day 1, but web + native hybrid is still cheaper.
+
+**For products with uncertain demand:** Web wins. Validate, *then* invest in native.
+
+The only mistake is building native thinking you'll ship faster. You won't.
+
+---
+
+**Still deciding?** [Tell me about your app and I'll recommend an approach](/kickoff).
+
+**Ready to build?**
+- [Web app in 2 weeks with Lovable](/blog/how-to-build-mvp-with-lovable)
+- [Wrap it native with Capacitor](/blog/how-to-wrap-web-app-as-native)
+- [Ship to App Store](/blog/how-to-ship-lovable-app-to-app-store)

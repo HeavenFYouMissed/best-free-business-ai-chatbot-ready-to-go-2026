@@ -1,0 +1,151 @@
+---
+title: "Why Cheap Freelancers Can't Ship Apps"
+description: "You found a developer at $15/hr. Here's why that savings disappears the moment Apple rejects your app."
+slug: "why-cheap-freelancers-cant-ship-apps"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "freelancer-trust"
+tags: ["hiring", "cost", "app-shipping", "freelancers"]
+draft: false
+---
+
+You need an app shipped to the stores. You check Publishd's pricing—`$399` seems steep when you're bootstrapped. Then you scroll through Upwork.
+
+There it is: a freelancer, `5` stars, `$15/hr`. "Expert in iOS. Ready to start today."
+
+You think: How hard can app shipping be?
+
+I'm going to walk you through exactly what happens next.
+
+## What You're Actually Buying
+
+Here's the thing about app shipping that nobody tells you: **it's not 80% coding and 20% admin. It's backwards.**
+
+When someone ships an app to the App Store and Google Play, the breakdown looks like this:
+
+- **40% admin work:** Certificates, provisioning profiles, compliance forms, metadata, screenshots in 20+ sizes, privacy policies, App Store Connect setup, Google Play Console setup, app signing, build configs.
+- **30% the actual code:** Building the thing (though usually you're not starting from scratch).
+- **20% handling rejections:** Appeals, understanding why Apple said no, fixing the actual issue, resubmitting.
+- **10% communication and project management.**
+
+A `$15/hr` freelancer can do the coding part. They've probably done it before. They can't do the rest of it at that price point, and more importantly, they don't have the experience to do it *right*.
+
+Here's the real difference between a cheap freelancer and someone who ships apps for a living:
+
+**Experience with rejections.** A cheap freelancer has shipped 1–2 apps. Maybe 3. They've probably never been rejected by Apple. If they have, they don't know how to appeal it. They've never seen a 4.2 violation (business model changes). They don't know what "minimum functionality" means to Apple. They don't know that you can't use "pro" features to monetize in a free tier app.
+
+**Timezone and communication.** You ask a question at 9am PT. If they're in Eastern Europe or South Asia, they answer at midnight your time. You need a fix by EOD? They won't see your message for 12+ hours. A complex back-and-forth that should take 4 hours takes 4 days.
+
+**Zero accountability.** When Apple rejects your app, a cheap freelancer says, "That's Apple's problem, not mine." Or they disappear entirely. No number to call. No escalation path. Your app is stuck, you're losing time, and they're already working on the next job at `$15/hr`.
+
+**No war stories.** I've shipped 11+ apps to both stores. I've seen rejections for reasons that seem insane until you read Apple's guidelines carefully. I've appealed rejections and won. I've fixed privacy policy issues, metadata violations, and cryptography violations. A freelancer who's shipped 2 apps hasn't.
+
+Let me give you a real example from someone I talked to last year:
+
+"I hired a freelancer for `$1,200` to ship my app. He said 2 weeks. The app got rejected for a payment-related issue I didn't understand. He told me to 'talk to Apple support.' That didn't help. I hired someone else to fix it. Final cost: `$5,000`."
+
+That's what happens when you hire for cheap.
+
+## Where It Falls Apart
+
+Let's walk through the exact sequence of events.
+
+**Week 1:** Freelancer says he's "starting on the submission." You're excited.
+
+**Week 2:** He says the app is "almost ready." You send test feedback. He says he'll fix it in the next build.
+
+**Week 2.5:** App is submitted. You feel relieved. Only 1–2 more weeks until it's live, right?
+
+**Week 3:** Email from Apple. **Rejected.** Guideline 4.2: "Apps with bugs, crashes, or minimal functionality will be rejected."
+
+The app has a crash on a particular device size. The freelancer didn't test it thoroughly. He says, "Can you send me the crash logs?" You don't have them. Neither does he. Now you're in a technical debugging loop that should take 2 hours but takes 4 days because of timezones.
+
+**Week 4:** App resubmitted. Another rejection. This time it's metadata-related. The app description says "free forever" but the freelancer set up in-app purchases wrong. Apple sees a contradiction.
+
+The freelancer says, "That's not a real issue; Apple is being weird." No. Apple's rules are clear. You need to either remove in-app purchases or change the description. The freelancer doesn't want to admit he messed up the setup.
+
+You hire someone else to fix it. That someone else costs `$500` to do 4 hours of work. You're at `$1,700` now.
+
+**Week 5:** App is submitted again. Approved.
+
+Total timeline: 5 weeks instead of 2. Total cost: `$1,700` instead of `$1,200`. And you've burned 4 weeks of your own time managing the back-and-forth.
+
+If your app needed to launch on a specific date, you missed it. If you're competing with someone else, you lost.
+
+## The Real Cost Breakdown
+
+Let's do the math without the marketing.
+
+**Scenario 1: Cheap Freelancer**
+- Rate: `$15/hr`
+- Estimated hours: 100 hours (they always underestimate)
+- Actual hours: 200 hours (rejection loops, communication gaps, fixes)
+- Cost: `$3,000`
+- Timeline: 5–8 weeks
+- Rejection handling: Your problem
+- Your time managing: 40+ hours (`$2,000–$5,000` in opportunity cost)
+- **Total cost: `$5,000–$8,000`**
+- **Probability of needing a fix after approval: 60%**
+
+**Scenario 2: Publishd (flat-fee service)**
+- Cost: `$399`
+- Timeline: 3–5 business days
+- Rejection handling: Included
+- Your time managing: 30 minutes onboarding
+- **Total cost: `$399`**
+- **Probability of approval on first submission: 95%+**
+
+**Scenario 3: Mid-tier US Freelancer**
+- Rate: `$50–75/hr`
+- Estimated hours: 100 hours
+- Actual hours: 150 hours (still some communication overhead)
+- Cost: `$7,500–$11,250`
+- Timeline: 3–4 weeks
+- Rejection handling: Usually included, but you'll negotiate it
+- Your time managing: 20 hours
+- **Total cost: `$7,500–$13,000`**
+- **Probability of approval on first submission: 80%**
+
+**Scenario 4: Build It Yourself**
+- Cost: Free
+- Timeline: 6–8 weeks (learning curve is steep)
+- Rejection handling: You deal with it
+- Your time: 200+ hours (you're not a shipping expert)
+- Opportunity cost: `$6,000–$12,000` (if your time is worth anything)
+- **Total cost: `$6,000–$12,000`**
+- **Probability of approval on first submission: 40%**
+
+The data is clear: cheap looks cheap until rejection happens. Then it gets expensive fast.
+
+## What Changes the Equation
+
+There are a few cases where hiring a cheap freelancer makes sense:
+
+**You're not on a deadline.** If your app can take 3 months and you genuinely don't care, the hourly rate is lower risk.
+
+**You're building just the code part, not shipping.** If you hire someone to write the app and you handle submission yourself, cheap is less dangerous. You'll catch mistakes before they hit Apple.
+
+**You have technical depth.** If you understand provisioning profiles, certificate signing, and App Store guidelines, you can catch problems before they become expensive.
+
+**It's a throwaway side project.** If the app fails and disappears, the cost of rejection is lower.
+
+For everyone else—anyone building a real product with a deadline—cheap freelancers are a false economy. You pay less upfront and more overall.
+
+## The Path Forward
+
+If you've already been burned by cheap freelancers, there are a few ways forward:
+
+**Hire someone with real shipping experience.** Ask them, "How many apps have you shipped?" If the answer is less than 5, keep looking. Ask them, "Show me an app you shipped that got rejected." If they've never been rejected, they haven't shipped much.
+
+**Use a flat-fee service.** This is why I built Publishd. `$399` isn't the cheapest option, but it's the most predictable. You know what you're paying. You know the timeline. You know rejections are handled.
+
+**Do it yourself, but learn first.** Set aside 2–3 weeks. Read Apple's guidelines. Understand provisioning profiles. Do a test build. It's not as bad as hiring the wrong person, but it costs time.
+
+The decision comes down to this: Do you want to save `$300` upfront and risk `$5,000` in corrections? Or do you want certainty?
+
+That's the cheap freelancer question answered.
+
+---
+
+**Worried about getting it right the first time?** [Here's what to actually ask before hiring anyone](/why-you-should-never-hire-for-app-shipping-without-vetting). And if you're ready to skip the hiring altogether, [let's ship it](/kickoff).

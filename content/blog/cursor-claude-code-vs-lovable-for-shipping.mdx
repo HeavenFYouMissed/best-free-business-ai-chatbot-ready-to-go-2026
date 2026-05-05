@@ -1,0 +1,177 @@
+---
+title: "Cursor and Claude Code beat Lovable when you actually have to ship"
+description: "AI builders are fast for prototypes, slow for production. Real editors with Cursor, VS Code, and Claude Code give you the same speed plus the things that actually decide whether you ship — debugging, native APIs, long-running context, and ownership."
+slug: "cursor-claude-code-vs-lovable-for-shipping"
+date: "2026-04-29"
+updated: "2026-04-29"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["cursor", "claude code", "vscode", "lovable", "developer tools", "workflow"]
+cover: "/blog/covers/cursor-vs-lovable.png"
+draft: false
+---
+
+There's a moment in every project where the AI builder hits its ceiling. The prompts get longer, the regenerations break things that worked yesterday, and you realize the thing slowing you down is the tool, not your idea.
+
+When that happens, you graduate. You move to a real editor — Cursor, VS Code, or Claude Code — with an LLM in the loop. And the second you do, three things happen:
+
+1. You get faster, not slower (counterintuitive).
+2. You can actually ship to native platforms.
+3. You stop fighting the tool over architecture.
+
+Below is the case for that move, the workflow that replaces "vibe coding," and the specific things real editors do that Lovable, Bolt, and v0 can't.
+
+## Where AI builders are unbeatable
+
+I want to be fair before I'm critical. Lovable and friends are genuinely the best tool on the planet for:
+
+- **Prototypes you'll show in under 48 hours.** Speed of zero-to-something is unmatched.
+- **Greenfield projects with no opinions.** When you don't know what you want, the defaults are good guesses.
+- **Founders who can't or won't open a terminal.** This is real and it's a huge market.
+- **Single-page utilities.** A landing page, a calculator, a small CRUD app. Done in a sitting.
+
+If your project is one of those, stay where you are. The rest of this post is for people who hit the ceiling.
+
+## Where the ceiling is
+
+The pattern I see, project after project:
+
+- Days `1–3` in Lovable: incredible velocity, app feels built.
+- Days `4–7`: prompts to fix bugs are starting to take longer than the bugs would.
+- Days `8–14`: you're fighting the model over architecture decisions you don't fully understand because you didn't write the code.
+- Day `15+`: you need a native iOS feature, an obscure API, or to debug something the model can't see, and you stop.
+
+The ceiling isn't the model's intelligence. It's the surface area of what the tool can see and touch. AI builders run inside a sandbox; real editors run in your project.
+
+## What changes when you move to Cursor or Claude Code
+
+Three concrete things, in order of how much they matter:
+
+### 1 — The model can see your whole project
+
+In Cursor, the model has a working set of every file in your repo. In Claude Code, you can `@-mention` files, drop in screenshots, and it'll read whatever's relevant. In Lovable, the model has a window. The window is smart, but it's a window.
+
+When you ask "why is the avatar component breaking on the settings page?", a real editor can read all `~50` files involved and give you a real answer. A windowed builder will guess based on the prompt and probably guess wrong.
+
+### 2 — You can run the build, hit native APIs, ship binaries
+
+This is the showstopper. AI builders simulate. Real editors run.
+
+When you need to:
+
+- Wrap with **Capacitor** for the App Store ([here's the playbook](/blog/ship-lovable-app-to-app-store)).
+- Run **EAS Build** to produce iOS binaries.
+- Hook up **Apple push notifications**.
+- Wire **Stripe webhooks** to a real backend.
+- Run a database migration.
+- Profile a memory leak.
+
+…you're at a terminal. AI builders don't have one. Real editors do. The work of shipping is `~30%` writing code and `~70%` running and inspecting things. AI builders skip the `70%`.
+
+### 3 — Long-running context, owned by you
+
+Lovable conversations have memory but it lives inside Lovable. Cursor and Claude Code conversations live in your project — `claude-context.md`, `cursor-rules.md`, an `AGENTS.md`, whatever you call it. You own the context. You can version it, share it, fork it.
+
+For a project that goes longer than `2 weeks`, this matters more than most people realize. The "rules of this codebase" file becomes a real artifact. New contributors (human or AI) come up to speed on it. It's the difference between a project and a prompt history.
+
+## A workflow that ships
+
+Here's what mine looks like for a typical "ship a Lovable app to the App Store" project. It uses Lovable for what it's good at and Cursor / Claude Code for the rest.
+
+### Day 1–2: Build in Lovable
+
+Use Lovable like a prototype factory. Don't worry about polish. Get the data model right. Get the auth flow working. Get one happy-path user journey end to end. Export to GitHub.
+
+```bash
+git clone git@github.com:you/your-app.git
+cd your-app
+npm install
+npm run dev
+```
+
+You're now done with Lovable for this project. Maybe forever.
+
+### Day 3: Open in Cursor (or VS Code + Claude Code)
+
+Set up the rules file. This is the most underrated `30 minutes` you'll spend.
+
+```markdown
+# AGENTS.md / .cursorrules
+
+## Stack
+- Next.js 15 (App Router)
+- Supabase for auth + DB
+- Tailwind v4
+- Capacitor for iOS/Android wrap
+
+## Conventions
+- All UI in `components/ui/*`
+- Server actions in `app/(actions)/*`
+- Database types generated via `supabase gen types`
+- Never use `any` — strict TS
+
+## What I want from you
+- Direct, terse responses
+- Real fixes, not workarounds
+- Tell me when a refactor is needed before doing it
+```
+
+Cursor reads this on every conversation. Claude Code reads it on session start. The model now knows your project. Every prompt afterward gets smarter answers.
+
+### Day 4: Real debugging
+
+Now run the app. Open Safari Web Inspector against the iOS simulator. Profile the slow page. Drop the model a flame graph screenshot and ask "what's hot here?" It'll read the screenshot, find the components in your repo, and propose a memoization pattern.
+
+This is the loop that AI builders can't run. The model + the running app + your terminal + your full file tree. All four matter.
+
+### Day 5+: Capacitor, signing, store
+
+You're in Xcode now. The model in Cursor / Claude Code can read the `Info.plist`, the `Podfile`, the `entitlements` file. It can answer "why is this Capacitor plugin not finding the camera?" by reading your project's actual config.
+
+Lovable can't open Xcode. Bolt can't run on an iPhone. v0 can't sign a binary. This is where the real editor stops being a nice-to-have and starts being the only option.
+
+## The "vibe coding" trap
+
+There's a meme in the AI-builder world where you describe what you want and the model does it. It's called vibe coding. It's fun for under 2 hours. It collapses the moment your project has over 100 files` or you need to debug something specific.
+
+The replacement isn't "code by hand." The replacement is **directed AI** — you tell the model what to do, you read what it produced, you run it, you adjust. The model is your fastest typist, not your decision-maker.
+
+Cursor and Claude Code are designed for this loop. AI builders are designed for vibe coding. Both are tools. Pick the right one for your stage.
+
+## Specific features real editors give you
+
+Things I use almost every day, that AI builders don't have:
+
+- **Multi-file refactor**: rename a function across `~30` files in a single command. No regenerations, no context drift.
+- **Real diff review**: see exactly what the model changed, accept or reject hunks. AI builders force you to take or leave the whole regen.
+- **Inline runs**: select a function, run it against a test case, see the output. Then prompt against that output.
+- **Image and screenshot drops**: drag a Figma screenshot into Cursor; it reads the image and writes matching CSS. Drag a stack trace screenshot; it finds the bug.
+- **Local model fallbacks**: when the cloud model is slow, swap to a local one for trivial edits without breaking flow.
+- **Native platform tools**: Xcode, Android Studio, Postman, the database GUI of your choice — all open simultaneously, all drivable.
+
+These aren't gadgets. They are the tools you need when something doesn't work and you have a timeline.
+
+## When to switch
+
+The honest tipping point:
+
+- **Stay in the AI builder if**: project is `< 2 weeks`, no native target, no third-party integrations beyond Stripe + Auth.
+- **Move to Cursor / Claude Code if**: project is `> 2 weeks`, you'll be on the App Store, you're integrating `> 3` external systems, or you've already had a "regeneration broke something" moment.
+
+For most of my client work, I switch on Day `2`. I prototype in Lovable for a single afternoon, then I'm in Cursor with Claude Code for the rest.
+
+## What this means for hiring
+
+If you're hiring a freelancer who insists on staying in Lovable for a real shipping project, you have a problem. They're optimizing for their speed in the early days at the cost of your shipping later. The right answer is "I'll prototype in Lovable, then move to Cursor for the build." Anyone who can't articulate that probably hasn't shipped past the ceiling.
+
+That's the rubric. Use it on me too. {/* DANIEL: link out to a screenshot or short video of your own Cursor + Claude Code workflow if you want to make this post even stronger. */}
+
+## TL;DR
+
+- AI builders are unbeatable for the first `~2 days` of a project.
+- Real editors with AI in the loop are unbeatable for the rest.
+- The switch is `~30 minutes` if you set up a rules file.
+- Shipping to the App Store, debugging real bugs, integrating third parties, and owning the long-tail of the project all happen in the editor.
+- Vibe coding is fun. Directed AI ships.
+
+If you'd rather not run this loop yourself, [tell me about your project](/kickoff). The whole reason [Publishd](/) exists is that the last `30%` of a real project is the part that decides whether you ship.

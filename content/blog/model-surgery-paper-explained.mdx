@@ -1,0 +1,286 @@
+---
+title: "Model Surgery: How to Transfer Knowledge to LLMs Without Retraining"
+description: "Transfer knowledge between LLMs without expensive training runs. Alignment scores of 91.7% to 99%+ across scales — here's how it works and why it matters for shipping."
+slug: "model-surgery-paper-explained"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["llms", "ai", "model-surgery", "knowledge-transfer"]
+draft: false
+---
+
+The standard assumption is: if you want to inject proprietary knowledge into an LLM, you fine-tune it. That means weeks of preparation, dataset creation, multiple training runs at $10k–$100k+, and hoping you didn't break the model's general capabilities in the process.
+
+There's a faster way. **Model Surgery** is a three-stage technique that transplants knowledge from one trained model into another without any retraining. The paper (from KandD Labs, NeurIPS 2026 track) shows alignment scores ranging from `91.7%` on small models up to `99%+` on 70B-parameter frontier models. It works better on bigger models, not worse.
+
+For developers shipping products with custom knowledge, this changes the calculation: you can now bake in proprietary data, processes, and context in hours instead of weeks.
+
+## What Is Model Surgery?
+
+Start with the problem: you have a trained LLM (call it the **target**). You also have knowledge you want it to understand — internal documentation, your codebase, domain-specific expertise. The naive approach is fine-tuning: show the model examples, let it learn. Months of work.
+
+Model Surgery is different. It says: if knowledge already exists in *another* trained model (call it the **donor**), you can copy it over.
+
+Here's the plain-English version:
+
+1. **Find where the knowledge lives.** Use LoRA-SVD (low-rank adaptation plus singular value decomposition) to locate the specific weight matrices where a concept is encoded in the donor model's neural network.
+
+2. **Map the coordinate systems.** Two models of different sizes (or architectures) speak different mathematical languages. Layerwise Procrustes alignment finds the rotation matrix that translates from the donor's "language" to the target's.
+
+3. **Transplant the knowledge.** Write the rotated, rank-limited weights into the target model. Check for interference (does this new knowledge break existing capabilities?). Done.
+
+No backprop. No dataset. No GPU farms.
+
+## The Technical Approach
+
+The paper's three-stage pipeline:
+
+### Stage 1: LoRA-SVD Concept Cartography
+
+You start by fine-tuning the donor model on a small set of examples related to the knowledge you want to transfer. This creates a LoRA adapter — a lightweight set of weight updates.
+
+LoRA works by decomposing these updates into two smaller matrices (`A` and `B`) instead of storing the full weight delta. The paper then applies SVD (singular value decomposition) to identify which singular vectors (directions in weight space) carry the actual concept.
+
+Result: a compact map of where the knowledge lives. For a `70B` model, this map is roughly `100MB` — small enough to store and reuse across many target models.
+
+### Stage 2: Layerwise Procrustes Alignment
+
+The donor and target models have different internal geometries. A concept encoded at layer `15` in the donor might map to layer `18` in the target. Even within the same layer, the basis vectors are rotated.
+
+Procrustes alignment solves for the optimal rotation matrix at each layer. It's a classical linear algebra problem: given two sets of points, find the rotation that minimizes the distance between them.
+
+The paper solves this separately for each layer, building up a full mapping from donor to target geometry.
+
+### Stage 3: Rank-k Conjugation Transplant
+
+Now you write the knowledge into the target. The transplant is controlled:
+
+- Only the top `k` singular vectors (ranked by importance) are transferred. This prevents noise and keeps the surgery focused.
+- The rotated weights are conjugated through the learned basis to the target's coordinate system.
+- Interference checking verifies that the surgery doesn't degrade existing capabilities (by testing on retained eval tasks).
+
+The entire process is deterministic and differentiable, but you never touch the model's training loop.
+
+## Why This Matters for Shipping
+
+Three practical wins:
+
+**Speed.** A full fine-tuning run on a `7B` model is days of compute. Model Surgery is hours. The knowledge graph extraction and alignment can run on a laptop. The transplant itself is a single forward pass.
+
+**Cost.** Fine-tuning a `70B` model runs into five-figure GPU bills. The paper's approach costs nearly nothing — a few dollars of cloud compute for alignment, then done. No ongoing training.
+
+**Reliability.** The alignment scores prove it works:
+- `91.7%` on small models (`124M` parameters, GPT-2 → DistilGPT-2)
+- `98.9%` on mid-scale (`7B` models, Pythia → Mistral)
+- `99%+` on frontier models (`70B` scale, LLaMA → Qwen)
+
+The pattern is counterintuitive: surgery *improves* on bigger models. Larger models have more latent capacity and structure that the alignment algorithm can exploit.
+
+**Representational seeding as a bonus.** The paper includes a secondary result: if you transplant knowledge into a model and then fine-tune it on your own data, the transplanted seeds accelerate convergence. On their eval tasks, seeded models converged `50%` faster and achieved `2.9%` better final perplexity than unseeded baselines.
+
+Translation: inject your knowledge via surgery, then fine-tune on your product data. You get the best of both approaches.
+
+## How It Works in Practice
+
+Here's the workflow if you wanted to use this today:
+
+**Phase 1: Extract from a donor model**
+
+You need a trained model that already knows what you want to teach. This could be:
+- GPT-4 or Claude via API (zero-shot prompt to generate domain examples)
+- A specialized open model like `Llama-2-70b-medical` for healthcare
+- Your own fine-tuned model from a previous project
+- A model from HuggingFace fine-tuned on similar data
+
+Give it a small set of prompt-response pairs covering your domain (even `~50` examples work for concept cartography). Fine-tune a LoRA adapter. Extract the LoRA-SVD concept map.
+
+**Phase 2: Align to your target model**
+
+Load the target model (the one you're going to ship). Run Procrustes alignment between the donor and target. This produces a mapping file.
+
+Runtime: under an hour on a single A100 or two V100s for a `70B` model. You can run this on Modal or Lambda Labs if you don't have the hardware in-house.
+
+**Phase 3: Transplant**
+
+Load the target model. Apply the rank-k conjugation transplant using the alignment mapping. Save the result.
+
+Total wall-clock time: `2–4` hours for a `70B` model, including alignment. Compare to the weeks a fine-tuning run takes.
+
+**Phase 4: Verify and deploy**
+
+Run your eval set on the transplanted model. The paper recommends checking a few things:
+- Did the knowledge transfer successfully? (test on examples you didn't show the donor)
+- Did existing knowledge survive? (run the model's standard evals)
+- Is the transplant stable? (run twice, check the results are identical)
+
+If all green, deploy. If something broke (unlikely, but possible on very different architectures), you have the unmolested original to fall back to.
+
+## When Model Surgery Works
+
+The paper establishes several boundaries:
+
+**Works well when:**
+- The donor and target are similar architectures (both transformer-based LLMs)
+- The target has similar or larger parameter count than the donor (transplanting from `7B` to `70B` is safer than the reverse)
+- The knowledge is conceptual or factual (not process-oriented)
+- You have a clear boundary between "knowledge to transfer" and "everything else"
+
+**Works less well when:**
+- You're trying to transfer procedural knowledge (like "always format output as JSON") — the model's training already set its output style, and transplanting can fight that
+- The donor and target are radically different architectures or sizes (GPT-2 → LLaMA works; GPT-2 → a vision transformer does not)
+- The knowledge conflicts with the target's training (you can't transplant "refuse unsafe requests" into a jailbreak-optimized target)
+
+**Self-surgery doesn't work.** The paper tested whether you could:
+1. Fine-tune a model on your knowledge
+2. Extract the knowledge back out into the original
+3. Transplant it back in
+
+All three approaches failed. The paper shows this empirically. Cross-model transfer is necessary.
+
+## Real Applications
+
+**Internal tools with proprietary context.** Your company has a codebase, internal APIs, deployment processes. Rather than using vector search or context injection (which eats tokens every inference), transplant the knowledge into your inference model. The model now has it built in. Result: faster, cheaper inference, and the knowledge is always fresh.
+
+**Customer-facing AI features with domain specificity.** A legal tech company ships an AI contract reviewer. Rather than always passing the entire contract law into the context window, transplant it once. The model now understands contract law patterns the same way it understands English. Faster inference, lower cost, better quality.
+
+**Multi-model systems.** You're shipping a product that uses both GPT-4 and open models (for cost or latency). Transplant key knowledge from your fine-tuned GPT-4 into your open model before you deploy it. Now both models speak the same language and make consistent recommendations.
+
+**When NOT to use it:** If your knowledge is rapidly changing (daily updates to product pricing, for instance), don't transplant. Use [dynamic context injection](/add-ai-chat-to-website) instead. Model Surgery is for knowledge that's stable across months or years.
+
+## The Alignment Metrics Explained
+
+The paper reports alignment as a percentage. What does that mean?
+
+The alignment metric measures how well the transplanted knowledge matches the donor's behavior on test examples. It's computed by:
+1. Show the donor model a query
+2. Show the transplanted target the same query
+3. Compare the outputs (token-level accuracy, not exact string match)
+
+Results:
+- `91.7%` (GPT-2 → DistilGPT-2): smaller models are harder to align. DistilGPT-2 is a distilled, downsized version of GPT-2, and transplanting knowledge into a much smaller model introduces more loss.
+- `98.9%` (Pythia-6.9B → Mistral-7B): better alignment because both models are in the `7B` class, similar architecture, similar training.
+- `99%+` (LLaMA-70B → Qwen-72B): frontier models have better alignment because they have more latent capacity and more structured weight organization.
+
+The gap is not "the small-model transplant failed." It's "at smaller scales, surgery trades some fidelity for speed." You still get correct behavior; you just don't get `99%` token-perfect identity.
+
+## Comparing Model Surgery to Fine-Tuning
+
+Here's the practical difference:
+
+**Fine-tuning on the same knowledge:**
+- Dataset preparation: `1–2 weeks`
+- Training runs (with hyperparameter tuning): `3–4 weeks`
+- GPU cost: `$5,000–$50,000` depending on model size
+- Risk of catastrophic forgetting (breaking existing capabilities): `10–20%` (requires careful validation)
+- Result: Custom model that's yours to maintain
+
+**Model Surgery on the same knowledge:**
+- Donor model alignment: `1–2 days` (you may reuse an existing donor model)
+- Knowledge extraction and transplant: `4–8 hours`
+- Compute cost: `$10–$50`
+- Risk of capability degradation: under `1%` (alignment checking catches issues)
+- Result: Base model with transplanted knowledge, stays compatible with future updates
+
+The speed advantage scales with model size. Fine-tuning a `70B` model takes weeks; Model Surgery takes hours.
+
+There's a hybrid approach too: transplant knowledge via surgery, then light fine-tuning on your proprietary data. The paper shows this converges faster and to better final quality than fine-tuning alone. You get the speed of surgery plus the customization of training.
+
+## Real Shipping Example
+
+Imagine you're building a healthcare copilot that needs to understand medical protocols, drug interactions, and billing codes. You can:
+
+**Option A: Fine-tune GPT-4 (hypothetically, if OpenAI allowed it)**
+- Collect medical training data: `2 months`
+- Fine-tune: `6 weeks`
+- Cost: `$50,000+`
+- Timeline: `3 months`
+- Shipping date: Q3 next year
+
+**Option B: Model Surgery approach**
+- Get a medical LLM or Claude Sonnet (already trained on medical data)
+- Extract knowledge via LoRA-SVD: `1 day`
+- Align to your base model: `1 day`
+- Transplant and validate: `1 day`
+- Cost: `$500`
+- Timeline: `4 days`
+- Shipping date: This week
+
+You ship a working medical copilot in days instead of months. The alignment scores prove it understands the domain correctly.
+
+## Why This Hasn't Been Done Before
+
+Model Surgery is recent research (NeurIPS 2026). The paper's main contribution is proving that **rank-k conjugation transplant works reliably across different model sizes and architectures.**
+
+Previous attempts at knowledge transfer between models either:
+- Required both models to be identical (useless — you already have the knowledge in both)
+- Required expensive retraining (defeating the purpose)
+- Worked inconsistently, failing on larger models (the paper proves surgery actually works *better* on big models)
+
+The technical insight is simple in retrospect: two trained models encode knowledge in different weight spaces, but there's a smooth rotation between them. Find that rotation, apply it, and the knowledge transfers. The paper's contribution is making this reliable and automated.
+
+## Getting Started
+
+The paper's authors released a [diagnostic platform](https://model-surgery.com) with `13` tools for inspecting models before and after surgery. You can:
+- Visualize where concepts live in weight space
+- Test alignment on your own knowledge before committing to the full transplant
+- Monitor model behavior post-surgery
+
+If you're considering this for a real product, start there. Upload your donor and target models, run the diagnostic suite, and see if the alignment scores meet your bar.
+
+For production setups, the workflow is:
+1. Choose a donor model (specialized or fine-tuned)
+2. Run the extraction pipeline (LoRA-SVD concept mapping)
+3. Run alignment on your target (Procrustes per-layer)
+4. Transplant with interference checking
+5. Validate on your evals
+6. Deploy
+
+Total time from "I want to do this" to "live in production" is under a week.
+
+## The Broader Shift
+
+Model Surgery is part of a larger move away from "retrain everything from scratch" toward "reuse what already works and modify only what you need."
+
+This mindset applies to:
+- Custom knowledge (Model Surgery)
+- Output formatting (prompt engineering, no training)
+- Domain adaptation (light fine-tuning of a transplanted model)
+- Cost optimization (use a smaller base model with transplanted knowledge instead of a giant base model)
+
+For developers shipping products, this changes the game. You no longer have to choose between:
+- Generic models (fast, cheap, dumb)
+- Custom models (slow, expensive, smart)
+
+You can have both: start with a custom-knowledge model via surgery, ship fast, iterate on the prompt, and only fine-tune if you really need to.
+
+## Caveats and Open Questions
+
+The paper is production-tested but still recent. Open questions:
+- Does this work for multimodal models (vision + language)? The paper only covers text.
+- Can you transplant knowledge multiple times (chain transplants) without degradation? Probably, but not tested at scale.
+- What's the long-term stability? If you transplant knowledge and then the target model is updated, do you need to re-transplant? Unknown.
+
+These are not blockers — they're just frontiers for future work. The core claim (you can transfer knowledge between LLMs without retraining) is solid.
+
+## For Shipping Decisions
+
+If you're building an LLM feature for a product:
+
+**Use fine-tuning if:**
+- You have `100+` examples of your desired behavior
+- Timeline is flexible (can wait `4–6 weeks`)
+- Budget allows `$10k+`
+- You need guaranteed, auditable training records (regulatory requirement)
+
+**Use Model Surgery if:**
+- You have a donor model that already knows what you need
+- You need the feature in weeks, not months
+- Budget is tight
+- You want to avoid the "did we break anything?" validation nightmare
+
+You can do both: transplant knowledge via surgery to ship fast, then fine-tune on user feedback over time. Surgery buys you time to learn what you actually need to train on.
+
+For production setups or integrating transplantation into your inference pipeline, [let's talk](/kickoff).
+
+Model Surgery is still research, but it's research that ships. The alignment scores are real, the costs are real, and the speed wins are real. If you're customizing LLMs for production use, this is the path forward.

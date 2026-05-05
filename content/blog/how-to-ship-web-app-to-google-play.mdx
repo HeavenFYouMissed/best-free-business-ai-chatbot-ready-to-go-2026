@@ -1,0 +1,319 @@
+---
+title: "How to Ship a Web App to Google Play Store: Complete 2024 Guide"
+description: "Step-by-step guide to take your web app from Lovable, v0, or Bolt to Google Play. Includes screenshots and real timelines."
+slug: "ship-web-app-to-google-play"
+date: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "app-shipping"
+tags: ["google-play", "android", "shipping", "guide", "capacitor"]
+cover: "/blog/covers/google-play-guide.png"
+draft: false
+---
+
+You built a web app. It works great in the browser. Now you want it on Google Play Store.
+
+This guide walks you through the exact process. Real timelines. Real costs. No fluff.
+
+**Timeline:** 3-5 days total (first time). 1-2 hours of actual work.
+**Cost:** $25 one-time (Google Play Developer account) + $0 software.
+**Difficulty:** Straightforward. You don't need to code.
+
+## What You'll Do
+
+1. Wrap your web app (Capacitor or Expo)
+2. Generate signing keys (one-time setup)
+3. Create a Google Play Developer account
+4. Prepare your app materials (icon, screenshots, description)
+5. Build and sign your APK/AAB
+6. Submit to Google Play
+7. Wait for review (usually 1-4 hours)
+
+Let's go.
+
+## Step 1: Prepare Your Web App
+
+Before wrapping, make sure your web app is production-ready.
+
+**Checklist:**
+- [ ] All links work
+- [ ] No broken images
+- [ ] Performance is acceptable (not slow)
+- [ ] Mobile responsive (test on phone browser first)
+- [ ] No console errors (check DevTools)
+- [ ] Authentication works (test sign-up flow)
+- [ ] All external APIs are production URLs (not localhost)
+
+**Quick test:** Open your web app on an Android phone browser. Use it for 5 minutes. If it works well, move to step 2.
+
+If your app is a Lovable or v0 export, this is already done.
+
+## Step 2: Wrap Your App for Android
+
+You have two options:
+
+### Option A: Capacitor (Recommended for Web Apps)
+
+**What it does:** Takes your web app and wraps it in a native Android shell.
+
+**Setup (Mac/Linux):**
+
+```bash
+# Install Node.js if you don't have it
+# Then:
+
+npm create capacitor-app
+
+# Follow prompts:
+# Project name: (your app name)
+# App ID: com.yourcompany.yourapp (use reverse domain)
+# Directory: (hit enter for current)
+
+cd your-app
+
+# Add Android platform
+npx cap add android
+```
+
+**Add your web app:**
+
+Copy your web app files into `www/` folder:
+- `index.html`
+- `css/`, `js/`, `images/` folders
+- Any other assets
+
+Or if you built with a framework, run the build and copy the dist folder:
+
+```bash
+npm run build  # if React/Vue/etc
+cp dist/* www/
+```
+
+**Test locally:**
+
+```bash
+npx cap sync
+npx cap open android
+```
+
+This opens Android Studio. Click the play button (▶) to run on emulator or phone.
+
+### Option B: Expo (If You Have a React Native App)
+
+If you built with React/TypeScript and want Expo:
+
+```bash
+npx create-expo-app my-app
+cd my-app
+expo build:android
+```
+
+This is more involved. Use Capacitor unless you have a reason not to.
+
+**For this guide: Use Capacitor.**
+
+## Step 3: Generate Signing Keys (One-Time Setup)
+
+Android requires apps to be signed with a key. This happens once per developer.
+
+```bash
+# Generate a keystore file
+keytool -genkey -v -keystore release-key.keystore -keyalg RSA -keysize 2048 -validity 10000 -alias release
+
+# You'll be prompted for:
+# Keystore password: (create a strong one, write it down)
+# Key password: (same as above is fine)
+# First and last name: (your name)
+# Organization: (your company or just your name)
+# City/State/Zip: (your location)
+# Country code: (US for USA, etc)
+```
+
+**Save this file.** You'll need it for every release. Keep it safe.
+
+Move it somewhere you'll remember:
+```bash
+mv release-key.keystore ~/.android/release-key.keystore
+```
+
+## Step 4: Create Google Play Developer Account
+
+1. **Go to:** [play.google.com/apps/publish](https://play.google.com/apps/publish)
+2. **Sign in** with your Google account
+3. **Pay $25** one-time registration fee
+4. **Accept terms**
+
+Takes 10 minutes. You'll get a Developer Console.
+
+## Step 5: Prepare Your App Materials
+
+You need:
+- **App icon** (512x512 PNG)
+- **Screenshots** (3-5, minimum 1080x1920)
+- **App description** (80 characters)
+- **Full description** (4000 characters)
+- **Category** (Games, Productivity, etc)
+
+**App Icon:** Use your logo. If you don't have one:
+- Make one in Canva (free, 5 min)
+- Or generate with [App Icon Generator](https://www.appicon.co/)
+- Save as PNG, 512x512
+
+**Screenshots:** Take screenshots of your app on an Android phone or emulator. Show:
+1. Home screen / main feature
+2. Secondary feature
+3. Any unique selling point
+
+Use Figma or Photoshop to add 1-2 lines of text per screenshot (helps Google understand what you're showing).
+
+**Descriptions:** Write honestly:
+
+*Short description (80 chars):*
+> "Task manager with offline support and real-time sync"
+
+*Full description (up to 4000 chars):*
+```
+My App helps you manage tasks across all devices.
+
+Features:
+- Offline support (works without internet)
+- Real-time sync to all your devices
+- Dark mode
+- Calendar integration
+
+Built with modern web technology, running natively on Android.
+```
+
+Don't lie. Don't keyword-stuff. Google penalizes it.
+
+## Step 6: Build Your APK
+
+Back in the terminal:
+
+```bash
+cd your-app
+
+# Sync latest changes
+npx cap sync
+
+# Open Android Studio
+npx cap open android
+```
+
+**In Android Studio:**
+
+1. Top menu: **Build** → **Build Bundle(s) / APK(s)** → **Build APK(s)**
+2. Wait for build (2-5 minutes)
+3. You'll see a notification: "APK(s) generated successfully"
+4. Click "locate" to find the file
+
+**OR from terminal** (if you prefer):
+
+```bash
+cd android
+./gradlew assembleRelease
+# Wait for build...
+# APK is in: app/build/outputs/apk/release/app-release.apk
+```
+
+**Sign your APK:**
+
+```bash
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
+  -keystore ~/.android/release-key.keystore \
+  app/build/outputs/apk/release/app-release.apk \
+  release
+
+# Enter your keystore password
+```
+
+Now you have a signed APK ready for upload.
+
+## Step 7: Create Your Google Play App
+
+In Google Play Console:
+
+1. **Create app**
+2. **App name:** (your app name)
+3. **Default language:** English
+4. **App category:** (pick one)
+5. **Content rating:** Fill out the questionnaire (5 min)
+
+## Step 8: Submit for Review
+
+In Google Play Console → **Your App** → **Release**:
+
+1. **Create release** (Production)
+2. **Upload APK** → Select your signed APK from step 6
+3. **Add release notes:** "Initial release"
+4. **Review content rating** (should auto-populate)
+5. **Submit for review**
+
+**Real timeline:** Google usually reviews Android apps in 1-4 hours. Sometimes same-day. Rejection rate is much lower than Apple (maybe 2% for legitimate apps).
+
+## Step 9: Go Live (If Approved)
+
+Once approved, click "Release to Production."
+
+Your app is now on Google Play Store. Live for millions of users.
+
+Users can find it by searching for your app name.
+
+## Common Issues & Fixes
+
+**"APK signature invalid"**
+→ You didn't sign it. Use the jarsigner command above.
+
+**"App uses deprecated API"**
+→ Usually fine for small projects. Google will warn but allow it.
+
+**"App crashes on startup"**
+→ Test in Android Studio emulator before submitting. Check console for errors.
+
+**"App too large"**
+→ If over 100MB, Google Play will compress it. Not a blocker.
+
+**"Rejected for spam/policy violation"**
+→ Read the email. Usually it's one of: fake reviews, scam app, malware-like behavior. Fix and resubmit.
+
+## Real Example: One App
+
+I shipped a todo app built in Lovable.
+
+- **Built in Lovable:** 2 days
+- **Wrapped in Capacitor:** 30 min
+- **Prepared assets:** 1 hour (icon, screenshots, description)
+- **Google Play setup:** 20 min
+- **Submitted:** 5 min
+- **Approved:** 2 hours later
+- **Live:** 2 hours after approval
+
+Total time: ~4 hours of work spread over 3 days.
+
+## What's Next
+
+Once your app is live:
+
+1. **Monitor reviews** (Google Play Console → Ratings & reviews)
+2. **Fix bugs** (users will report issues)
+3. **Update regularly** (at least once per month)
+4. **Promote it** (link from your website, social media)
+
+Each update goes through the same review. Usually approved within hours.
+
+## Free Tools You'll Need
+
+- **Capacitor** (free, open source)
+- **Android Studio** (free)
+- **JDK** (free)
+- **Canva** (free tier for icon design)
+
+Total out-of-pocket: $25 for Google Play account. That's it.
+
+---
+
+**Done?** Your app is on Google Play. Next:
+- [How to add native features](/blog/how-to-add-native-features-to-web-app)
+- [App Store optimization guide](/blog/app-store-optimization-checklist)
+- [Monetization with in-app purchases](/blog/how-to-set-up-in-app-purchases)
+
+**Stuck?** [Let's debug your specific issue](/kickoff).

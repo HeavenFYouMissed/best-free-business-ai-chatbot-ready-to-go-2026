@@ -1,0 +1,126 @@
+---
+title: "Lovable vs. Bolt vs. v0: which AI builder is actually shipping-ready?"
+description: "I've shipped real apps from all three. Here's what each one's actually good at, where they fall over, and which I'd pick for a project that has to ship to the App Store next month."
+slug: "lovable-vs-bolt-vs-v0"
+date: "2026-04-26"
+updated: "2026-04-26"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["lovable", "bolt", "v0", "comparison", "ai builders"]
+cover: "/blog/covers/lovable-vs-bolt-vs-v0.png"
+draft: false
+---
+
+Every week somebody emails me asking "should I build with Lovable, Bolt, or v0?" The answer depends entirely on what "build" means to them — proof-of-concept, paying customers, App Store submission, or something else.
+
+I've shipped client work from all three. So instead of a feature-grid post, I'll tell you what each one actually feels like to take from prompt to production.
+
+## The shape of each tool
+
+Quick framing so we're all using the same words:
+
+- **Lovable** — full-stack web app generator. Spits out a React+Tailwind+Supabase project you can clone, push, and deploy. The output is a real codebase.
+- **Bolt** (StackBlitz) — in-browser development environment with an LLM at the wheel. The output is a real project too, but the workflow nudges you toward iterating in the browser, not cloning out.
+- **v0** (Vercel) — component-first generator. Optimized for "give me this UI" rather than "build me a whole app." Output is React + shadcn/ui.
+
+Already you can see they're not really doing the same job.
+
+## What I evaluate them on
+
+Five things, because these are what actually matter when shipping:
+
+1. **Owns the code** — can I leave the platform and still have a working project?
+2. **Backend reality** — does it produce a real database/API or a demo that can't grow?
+3. **Mobile-readiness** — does the output work on a `375px` screen out of the box?
+4. **Iteration cost** — when I want to change one thing, does the model help or fight me?
+5. **Ship distance** — how many days from "first prompt" to "real users"?
+
+## Lovable
+
+**Best at**: full-stack apps where you want to own the code and ship fast.
+
+The thing I keep coming back to with Lovable is that it produces a project that feels like a project. The export is a real GitHub repo. The Supabase wiring is real. The auth flow is real. You can clone it, run it locally, and continue building without ever opening Lovable again.
+
+Tradeoffs I've actually hit:
+
+- The default UI is fine but generic. If you want a brand, you're going to spend `~30%` of the project on visual polish.
+- Database schemas drift if you regenerate too aggressively. I lock the schema down early and tell the model to stop touching it.
+- Mobile views are usually OK but I always check the `iPhone SE` (`375px`) breakpoint manually. About `1 in 3` projects have at least one busted screen there.
+
+**Ship distance for me**: `3–7 days` from "first prompt" to "App Store submission" for a Lovable project I'm wrapping. The bottleneck is rarely Lovable.
+
+## Bolt
+
+**Best at**: rapid iteration when you don't yet know what you're building.
+
+Bolt's superpower is the speed of the in-browser feedback loop. You can prompt, see, prompt, see — and the friction is almost zero. For exploration this is unmatched.
+
+Where I've watched it fall over:
+
+- Heavier projects choke the in-browser environment. The moment you have `~50` components, things get sluggish.
+- Backend integrations are more "you wire it up" than "Bolt did it for you." For a serverless DB or auth, you'll be in the weeds yourself.
+- Exporting and continuing locally is fine but not as smooth as Lovable's "here's a repo" handoff.
+
+I'd reach for Bolt if a client is still figuring out what they want. Once they know, I usually move to Lovable or hand-rolled code for the build.
+
+## v0
+
+**Best at**: component-level UI work, especially if you're already in shadcn/ui-land.
+
+v0 is not really competing with Lovable or Bolt — it's competing with "writing a UI from scratch." It excels at "I need a settings panel that looks like Linear's" and ships you exactly that.
+
+Where it's not the right tool:
+
+- Whole-app generation is not its lane. You can stitch v0 outputs into an app, but you're the integrator.
+- No backend opinion at all. You bring your own.
+- The Vercel-first defaults bias toward Next.js. Fine for me; might not be for you.
+
+I use v0 inside other projects, not as the project. It's the best component generator on the market and I'd be lying if I said I didn't use it almost daily.
+
+## Head-to-head: shipping a real app to the App Store
+
+Suppose you have `30 days` to ship a fitness-tracker app to iOS. Three founders pick three tools. What happens?
+
+| Stage | Lovable founder | Bolt founder | v0 founder |
+|---|---|---|---|
+| Day `1–3` | Working full-stack app, generic look | Working prototype in browser | Set of polished components |
+| Day `4–7` | Brand pass, mobile pass | Backend wiring (Supabase or similar) | Stitching components into pages |
+| Day `8–14` | Capacitor wrap, Apple paperwork | Capacitor wrap, Apple paperwork | Still building the app |
+| Day `15–21` | Listing, screenshots, submit | Listing, screenshots, submit | Brand pass, mobile pass |
+| Day `22–30` | In review, ship, iterate | In review, ship, iterate | Capacitor wrap, racing the clock |
+
+This is roughly what I see in real projects. The Lovable founder has the smoothest path because the most app is built earliest. The Bolt founder catches up if they're disciplined about exporting and stabilizing. The v0 founder ships if and only if they've shipped before and know how to assemble.
+
+## My current decision tree
+
+When a client asks "which one?" I run them through this:
+
+1. **Do you want to own a full codebase you can hand to any developer?** → Lovable.
+2. **Are you exploring and don't yet know the shape of the product?** → Bolt for the exploration, then port.
+3. **Do you already have a stack and just need beautiful pieces inside it?** → v0.
+4. **Are you a non-technical founder who'll never touch the code?** → Lovable + a shipping partner (this is most of my clients).
+5. **Are you optimizing for "lowest dev hours from idea to App Store"?** → Lovable, every time.
+
+## The architecture trap nobody warns you about
+
+All three of these tools will happily let you build something that won't scale past `~1,000` users. That's not their fault — they're answering the prompts they're given. But if your prompt is "build me a chat app," you're going to get an architecture that assumes `fewer than 100` concurrent users.
+
+The fix is to be specific in early prompts:
+
+- "Use Supabase Realtime with broadcast channels, not database listeners, for messages."
+- "Paginate the feed at 50 items, not infinite scroll without windowing."
+- "Use signed URLs for image uploads, not base64 in the database."
+
+I wrote a longer post on [the architecture trap](/blog) {/* DANIEL: replace with the actual architecture-trap post URL once that one is published. */} but the short version: tell the AI builder what good looks like, or it'll give you what works for a demo.
+
+## Where I'd put my own money
+
+If I were starting a consumer app today and had to pick one tool to be "the" tool: **Lovable**, with a v0 dependency for any UI piece I want to feel premium. Bolt is in my toolbox for client kickoffs and exploration but isn't my "build" tool.
+
+Your mileage will vary. The honest answer is "the tool you can iterate fastest in is the right one for you."
+
+## What this changes about hiring
+
+If you're hiring a freelancer to ship one of these for you, the tool matters less than the freelancer's ability to clean up after the tool. AI builders produce ~`70%` of an app fast. The remaining `30%` — the part that decides whether you ship or get rejected — is hand-craft. That's what I do.
+
+If you'd rather not learn this stack the hard way, [tell me about your project](/kickoff). I'll tell you which tool I'd reach for and what it would cost to ship it.

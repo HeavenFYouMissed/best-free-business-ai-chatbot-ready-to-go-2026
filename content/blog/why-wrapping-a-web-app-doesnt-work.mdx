@@ -1,0 +1,104 @@
+---
+title: "Why Wrapping a Web App Doesn't Work (Anymore)"
+description: "Wrapping your web app in Capacitor or Expo used to work. It doesn't. Here's why, and what actually works."
+slug: "why-wrapping-a-web-app-doesnt-work"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "app-shipping"
+tags: ["capacitor", "expo", "app-store-rejection", "web-wrapper"]
+draft: false
+---
+
+You built a web app. It's good. Traffic is fine. But then someone told you: "Just wrap it in Capacitor and submit to the App Store. Easy money."
+
+Sounds perfect. Ship to the App Store without hiring a developer. In theory, 2 weeks of work and you're on the store.
+
+In practice? You'll hit the App Store review wall. They'll reject you with Guideline 4.2. And you'll realize that "wrapping" solved zero problems—it just moved the deadline closer.
+
+I've seen this happen to dozens of founders. Each one thinks they're clever. None of them end up on the App Store. Let me explain why, what the real cost of wrapping actually is, and what genuinely works.
+
+## Why Wrapping Fails (And When It Failed)
+
+Wrapping used to work. Around 2015–2019, you could build a web app, wrap it in Cordova or PhoneGap, and submit to the App Store. Apple was looser about guidelines. Reviewers didn't scrutinize as heavily. You'd get on the store with a fairly simple web wrapper.
+
+Then Apple changed its approach. Around 2021, Apple tightened Guideline 4.2. They started rejecting web wrappers more aggressively. By 2023–2024, it became the most common rejection reason. And by now (2026), wrapping a web app is almost a guarantee of rejection.
+
+**Here's what changed:** Apple hired more reviewers, automated more of the review process, and decided that web wrappers lowered App Store quality. Fair or not, that's the rule now.
+
+## What Actually Happens When You Wrap
+
+You build a web app in React or Vue. You use Capacitor or Expo to create a native shell. The native shell is just a wrapper—it opens a WebView and displays your web app inside.
+
+From a technical standpoint, this works. Your app runs. It does everything the web version does.
+
+From Apple's standpoint, this fails immediately. Here's why:
+
+**Apple's reviewer opens your app.** They see:
+- A WebView displaying your web content
+- Standard web UI (not native iOS patterns)
+- No use of native APIs (camera, push notifications, etc.)
+- The exact same experience as visiting your website in Safari
+
+**The reviewer opens Safari. Navigates to your website. Compares them.**
+
+They're identical. Or nearly identical. The reviewer then thinks: "Why would anyone install this?"
+
+And rejects with 4.2.
+
+## The Real Cost of Wrapping
+
+You think wrapping saves money. It doesn't. Let me break down the actual timeline:
+
+**Week 1–2:** Wrap your web app in Capacitor.
+- Effort: Medium (depends on your web app's structure)
+- Cost: Your time (or `$2K–5K` if you hire someone)
+- Output: A wrapped app ready for submission
+
+**Week 3:** Submit to App Store.
+- Effort: Low (just submit)
+- Cost: `$99` (Apple Developer account)
+- Output: Rejection with 4.2 in 2–3 days
+
+**Week 4:** You realize wrapping didn't work.
+- Effort: High (you need to actually build native features now)
+- Cost: `$5K–15K` to add native functionality
+- Output: A partially native app
+
+**Total cost:** `$7K–20K`, 6–8 weeks
+
+**The honest truth:** Wrapping saved you nothing. You still spent money and time. You just approached it wrong.
+
+If you'd built a real React Native app from the start, you'd spend the same money and time, and you'd end up with a much better product.
+
+## When Wrapping CAN Technically Work
+
+If you're wrapping your web app AND using native APIs (camera, push notifications, location, biometrics), you might pass 4.2.
+
+The key: the native features need to be core to the experience, not bonus features.
+
+## What Actually Works
+
+**Option 1: Build a Real React Native App**
+
+Use Expo EAS or Expo Go. Write real React Native code. Use native components.
+
+Cost: `$15K–30K` for a simple app.
+Timeline: 4–8 weeks.
+Outcome: Real native app, passes 4.2 on first submission.
+
+**Option 2: Accept That Your App Should Stay on the Web**
+
+Most web apps don't belong on the App Store. If your app works great as a web app, if you have no core need for native features, if your users can reach it via URL or link—**keep it on the web.**
+
+You'll have zero rejections. You'll have instant updates. You'll grow faster because you're not locked behind Apple's review process.
+
+The App Store is great for discovery. It's terrible for everything else.
+
+## The Bottom Line
+
+Wrapping a web app doesn't work anymore. If you're trying to save money by wrapping, you're going to spend that money later, plus time. If you're committing to native, commit fully. Build real native apps from the start.
+
+There's no third path. No shortcut. No free lunch.
+
+Choose one. Commit. Ship.

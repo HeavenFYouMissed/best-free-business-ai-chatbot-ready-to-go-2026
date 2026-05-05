@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #14110d;
+    --surface: #1c1814;
+    --surface-2: #2a241d;
+    --border: rgba(236,228,210,0.06);
+    --fg: #ece4d2;
+    --muted: #7d7261;
+    --accent: #d4a574;
+    --accent-soft: rgba(212,165,116,0.08);
+    --accent-mid: rgba(212,165,116,0.15);
+    --green: #e8c79a;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .layout {
+    display: flex;
+    height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .sidebar-header {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sidebar-logo {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-logo .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(212,165,116,0.4);
+  }
+  .new-chat-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+  }
+  .new-chat-btn:hover { color: var(--fg); }
+  .sidebar-section {
+    padding: 14px 12px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px;
+  }
+  .chat-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .chat-item.active {
+    background: var(--accent-soft);
+    color: var(--fg);
+  }
+  .chat-item:hover:not(.active) {
+    background: rgba(255,255,255,0.03);
+  }
+  .sidebar-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #0088aa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--bg);
+  }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 13px; font-weight: 500; }
+  .user-plan { font-size: 11px; color: var(--muted); }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .chat-header {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chat-title {
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .model-badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── MESSAGES ── */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    scroll-behavior: smooth;
+  }
+  .message {
+    display: flex;
+    gap: 14px;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    animation: msgIn 0.3s ease;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .msg-avatar.ai {
+    background: var(--accent-mid);
+    color: var(--accent);
+  }
+  .msg-avatar.user {
+    background: var(--surface-2);
+    color: var(--muted);
+  }
+  .msg-content { flex: 1; min-width: 0; }
+  .msg-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .msg-time {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .msg-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(232,232,237,0.88);
+  }
+  .msg-text p { margin-bottom: 12px; }
+  .msg-text p:last-child { margin-bottom: 0; }
+  .msg-text code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12.5px;
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    margin: 12px 0 0;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'SF Mono', monospace;
+  }
+  .copy-btn {
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent); }
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 16px;
+    margin: 0 0 12px;
+    overflow-x: auto;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--fg);
+  }
+  .code-block .kw { color: #c792ea; }
+  .code-block .fn { color: #d4a574; }
+  .code-block .str { color: #e8c79a; }
+  .code-block .cm { color: #546e7a; }
+  .code-block .num { color: #f78c6c; }
+  .code-block .type { color: #ffcb6b; }
+
+  /* ── TYPING INDICATOR ── */
+  .typing-indicator {
+    display: none;
+    gap: 14px;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    animation: msgIn 0.3s ease;
+  }
+  .typing-indicator.show { display: flex; }
+  .typing-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding-top: 10px;
+  }
+  .typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: dotBounce 1.4s ease-in-out infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotBounce {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── INPUT ── */
+  .input-area {
+    padding: 16px 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .input-box {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px 4px 4px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .input-box:focus-within {
+    border-color: rgba(212,165,116,0.3);
+  }
+  .input-field {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--fg);
+    padding: 10px 0;
+  }
+  .input-field::placeholder { color: var(--muted); }
+  .send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--accent);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  .send-btn:hover { opacity: 0.9; }
+  .send-btn:disabled { opacity: 0.4; cursor: default; }
+  .send-btn svg {
+    width: 16px;
+    height: 16px;
+    color: var(--bg);
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="dot"></div>
+        NexusAI
+      </div>
+      <button class="new-chat-btn" onclick="clearChat()">+</button>
+    </div>
+    <div class="sidebar-section">Today</div>
+    <div class="chat-list">
+      <div class="chat-item active" id="current-chat">API rate limiting strategy</div>
+      <div class="chat-item">Stripe webhook handler</div>
+      <div class="chat-item">React Server Components</div>
+      <div class="sidebar-section" style="padding-left:4px">Yesterday</div>
+      <div class="chat-item">Auth middleware refactor</div>
+      <div class="chat-item">PostgreSQL indexing</div>
+      <div class="chat-item">Docker compose setup</div>
+      <div class="sidebar-section" style="padding-left:4px">Last Week</div>
+      <div class="chat-item">Next.js 15 migration</div>
+      <div class="chat-item">CI/CD pipeline debug</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-avatar">D</div>
+      <div class="user-info">
+        <div class="user-name">Daniel C.</div>
+        <div class="user-plan">Pro Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span id="header-title">API rate limiting strategy</span>
+        <span class="model-badge">Nexus-4o</span>
+      </div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="message">
+        <div class="msg-avatar user">D</div>
+        <div class="msg-content">
+          <div class="msg-name">You <span class="msg-time">2:34 PM</span></div>
+          <div class="msg-text">
+            <p>I need a rate limiter for my API routes using Redis. Should handle per-user limits and return proper 429 responses. Using Next.js API routes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="message">
+        <div class="msg-avatar ai">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M8 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM5 6.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm6 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM8 11.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+        </div>
+        <div class="msg-content">
+          <div class="msg-name">NexusAI <span class="msg-time">2:34 PM</span></div>
+          <div class="msg-text">
+            <p>Here's a sliding window rate limiter using Redis. It tracks requests per user with automatic expiry:</p>
+            <div class="code-header">
+              <span>rate-limiter.ts</span>
+              <span class="copy-btn" onclick="this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
+            </div>
+            <div class="code-block"><span class="kw">import</span> { <span class="type">Redis</span> } <span class="kw">from</span> <span class="str">'@upstash/redis'</span>
+
+<span class="kw">const</span> redis = <span class="fn">Redis</span>.<span class="fn">fromEnv</span>()
+
+<span class="kw">export async function</span> <span class="fn">rateLimit</span>(
+  userId: <span class="type">string</span>,
+  limit = <span class="num">60</span>,
+  window = <span class="num">60</span>
+) {
+  <span class="kw">const</span> key = <span class="str">`rate:</span>${userId}<span class="str">`</span>
+  <span class="kw">const</span> now = <span class="type">Date</span>.<span class="fn">now</span>()
+
+  <span class="kw">await</span> redis.<span class="fn">zremrangebyscore</span>(
+    key, <span class="num">0</span>, now - window * <span class="num">1000</span>
+  )
+
+  <span class="kw">const</span> count = <span class="kw">await</span> redis.<span class="fn">zcard</span>(key)
+
+  <span class="kw">if</span> (count >= limit) {
+    <span class="kw">return</span> { success: <span class="kw">false</span>, remaining: <span class="num">0</span> }
+  }
+
+  <span class="kw">await</span> redis.<span class="fn">zadd</span>(key, { score: now, member: now })
+  <span class="kw">await</span> redis.<span class="fn">expire</span>(key, window)
+
+  <span class="kw">return</span> { success: <span class="kw">true</span>, remaining: limit - count - <span class="num">1</span> }
+}</div>
+            <p>This gives you <code>60 requests per 60-second</code> sliding window per user. The sorted set stores each request timestamp, and old entries expire automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typing">
+      <div class="msg-avatar ai">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M8 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM5 6.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm6 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM8 11.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+      </div>
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-box">
+        <input class="input-field" id="input" type="text" placeholder="Ask a follow-up..." autocomplete="off">
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 2L14 8l-11.5 6V9.5L9 8 2.5 6.5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('input');
+const typingEl = document.getElementById('typing');
+const sendBtn = document.getElementById('sendBtn');
+
+const AI_RESPONSES = [
+  {
+    triggers: ['wrap', 'middleware', 'route', 'handler', 'how', 'use'],
+    text: `<p>Wrap your API route handler like this:</p>
+<div class="code-header"><span>app/api/data/route.ts</span><span class="copy-btn" onclick="this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</span></div>
+<div class="code-block"><span class="kw">import</span> { <span class="fn">rateLimit</span> } <span class="kw">from</span> <span class="str">'@/lib/rate-limiter'</span>
+<span class="kw">import</span> { <span class="fn">getUser</span> } <span class="kw">from</span> <span class="str">'@/lib/auth'</span>
+
+<span class="kw">export async function</span> <span class="fn">GET</span>(req: <span class="type">Request</span>) {
+  <span class="kw">const</span> user = <span class="kw">await</span> <span class="fn">getUser</span>(req)
+  <span class="kw">const</span> { success, remaining } = <span class="kw">await</span> <span class="fn">rateLimit</span>(user.id)
+
+  <span class="kw">if</span> (!success) {
+    <span class="kw">return</span> <span class="type">Response</span>.<span class="fn">json</span>(
+      { error: <span class="str">'Too many requests'</span> },
+      { status: <span class="num">429</span>,
+        headers: { <span class="str">'X-RateLimit-Remaining'</span>: <span class="str">'0'</span> } }
+    )
+  }
+
+  <span class="cm">// Your logic here</span>
+}</div>
+<p>The middleware checks the limit before any route logic runs. Failed requests get a <code>429</code> status with proper rate limit headers.</p>`
+  },
+  {
+    triggers: ['test', 'testing', 'unit', 'jest', 'vitest'],
+    text: `<p>Here's how to test your rate limiter with Vitest:</p>
+<div class="code-header"><span>rate-limiter.test.ts</span><span class="copy-btn" onclick="this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</span></div>
+<div class="code-block"><span class="kw">import</span> { describe, it, expect } <span class="kw">from</span> <span class="str">'vitest'</span>
+<span class="kw">import</span> { <span class="fn">rateLimit</span> } <span class="kw">from</span> <span class="str">'./rate-limiter'</span>
+
+<span class="fn">describe</span>(<span class="str">'rateLimit'</span>, () => {
+  <span class="fn">it</span>(<span class="str">'allows requests under limit'</span>, <span class="kw">async</span> () => {
+    <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">rateLimit</span>(<span class="str">'user-1'</span>)
+    <span class="fn">expect</span>(result.success).<span class="fn">toBe</span>(<span class="kw">true</span>)
+    <span class="fn">expect</span>(result.remaining).<span class="fn">toBeGreaterThan</span>(<span class="num">0</span>)
+  })
+})</div>
+<p>You'll want to mock Redis with <code>@upstash/redis</code> mock or use a test instance. I'd recommend an integration test with a real Redis for the sliding window logic.</p>`
+  },
+  {
+    triggers: ['window', 'fixed', 'token', 'bucket', 'algorithm', 'different'],
+    text: `<p>There are three main approaches for rate limiting:</p>
+<p><strong>1. Sliding Window</strong> (what we're using) — most accurate, uses sorted sets to track exact timestamps. Cost: 3 Redis operations per request.</p>
+<p><strong>2. Fixed Window</strong> — simpler, uses a counter that resets every N seconds. Downside: burst traffic at window boundaries can double throughput.</p>
+<p><strong>3. Token Bucket</strong> — allows bursts up to a max, then rate-limits. Good for APIs where occasional bursts are OK.</p>
+<p>The sliding window is the best default for most API rate limiting. If you need burst tolerance, switch to token bucket.</p>`
+  },
+  {
+    triggers: ['deploy', 'prod', 'production', 'cloudflare', 'vercel', 'edge'],
+    text: `<p>For production deployment on edge runtimes, use <code>@upstash/ratelimit</code> instead of rolling your own — it's optimized for Cloudflare Workers and Vercel Edge:</p>
+<div class="code-header"><span>middleware.ts</span><span class="copy-btn" onclick="this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1500)">Copy</span></div>
+<div class="code-block"><span class="kw">import</span> { <span class="type">Ratelimit</span> } <span class="kw">from</span> <span class="str">'@upstash/ratelimit'</span>
+<span class="kw">import</span> { <span class="type">Redis</span> } <span class="kw">from</span> <span class="str">'@upstash/redis'</span>
+
+<span class="kw">const</span> ratelimit = <span class="kw">new</span> <span class="type">Ratelimit</span>({
+  redis: <span class="type">Redis</span>.<span class="fn">fromEnv</span>(),
+  limiter: <span class="type">Ratelimit</span>.<span class="fn">slidingWindow</span>(<span class="num">60</span>, <span class="str">'60 s'</span>),
+})</div>
+<p>This handles connection pooling, uses efficient Lua scripts under the hood, and has built-in analytics. One less thing to maintain in production.</p>`
+  },
+  {
+    triggers: ['thanks', 'thank', 'cool', 'great', 'perfect', 'awesome', 'nice', 'good'],
+    text: `<p>Happy to help! A few things to keep in mind as you implement this:</p>
+<p>• Set up monitoring for your <code>429</code> response rate — a spike usually means a client is misconfigured, not malicious</p>
+<p>• Add <code>Retry-After</code> headers so well-behaved clients know when to retry</p>
+<p>• Consider different limits for different endpoints — auth routes should be much stricter than read-only endpoints</p>
+<p>Let me know if you need help with any of these.</p>`
+  }
+];
+
+const FALLBACK = `<p>That's a great question. For this specific use case, I'd recommend checking the <a href="#" style="color:var(--accent)">Upstash documentation</a> for the latest patterns. The core concept stays the same — track request counts per key in Redis with TTL-based expiry.</p>
+<p>Want me to walk through a specific implementation for your setup?</p>`;
+
+function getTimeStr() {
+  const d = new Date();
+  let h = d.getHours(), m = d.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return h + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+}
+
+function findResponse(text) {
+  const lower = text.toLowerCase();
+  for (const r of AI_RESPONSES) {
+    if (r.triggers.some(t => lower.includes(t))) return r.text;
+  }
+  return FALLBACK;
+}
+
+let isProcessing = false;
+
+function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text || isProcessing) return;
+
+  isProcessing = true;
+  inputEl.value = '';
+  sendBtn.disabled = true;
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'message';
+  userMsg.innerHTML = `
+    <div class="msg-avatar user">D</div>
+    <div class="msg-content">
+      <div class="msg-name">You <span class="msg-time">${getTimeStr()}</span></div>
+      <div class="msg-text"><p>${escapeHtml(text)}</p></div>
+    </div>`;
+  messagesEl.appendChild(userMsg);
+  scrollToBottom();
+
+  setTimeout(() => {
+    typingEl.classList.add('show');
+    scrollToBottom();
+  }, 400);
+
+  const responseText = findResponse(text);
+  const delay = 1200 + Math.random() * 800;
+
+  setTimeout(() => {
+    typingEl.classList.remove('show');
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'message';
+    aiMsg.innerHTML = `
+      <div class="msg-avatar ai">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M8 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM5 6.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm6 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM8 11.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+      </div>
+      <div class="msg-content">
+        <div class="msg-name">NexusAI <span class="msg-time">${getTimeStr()}</span></div>
+        <div class="msg-text">${responseText}</div>
+      </div>`;
+    messagesEl.appendChild(aiMsg);
+    scrollToBottom();
+
+    isProcessing = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
+  }, delay);
+}
+
+function scrollToBottom() {
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function clearChat() {
+  messagesEl.innerHTML = '';
+  const welcome = document.createElement('div');
+  welcome.className = 'message';
+  welcome.innerHTML = `
+    <div class="msg-avatar ai">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M8 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM5 6.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm6 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM8 11.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+    </div>
+    <div class="msg-content">
+      <div class="msg-name">NexusAI <span class="msg-time">${getTimeStr()}</span></div>
+      <div class="msg-text"><p>New conversation started. How can I help you?</p></div>
+    </div>`;
+  messagesEl.appendChild(welcome);
+  document.getElementById('header-title').textContent = 'New Chat';
+  document.getElementById('current-chat').textContent = 'New Chat';
+}
+
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+</script>
+
+</body>
+</html>

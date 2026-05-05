@@ -1,0 +1,312 @@
+---
+title: "App Developer Vetting Checklist: How to Hire Without Getting Scammed"
+description: "Red flags to catch before hiring. Framework for evaluating developers who ship apps. Checklist + real examples."
+slug: "vet-app-developers-checklist"
+date: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "freelancer-trust"
+tags: ["hiring", "vetting", "red-flags", "freelancer", "checklist"]
+cover: "/blog/covers/vetting-checklist.png"
+draft: false
+---
+
+You're hiring a developer to ship your app to the App Store.
+
+You've posted on Upwork. Got 40 responses. They all say they've "shipped 100+ apps." They all charge different rates. You don't know who to trust.
+
+Here's the vetting framework I use. It catches 90% of incompetent developers before you waste time.
+
+## The Reality About App Developers
+
+**Truth:** Most freelancers claiming "app shipping expertise" have never actually submitted to the App Store.
+
+What they've done:
+- Built internal apps for companies (not published)
+- Made hobby projects (never hit review)
+- Used no-code tools once (didn't ship)
+- Copied tutorials
+
+What they *haven't* done:
+- Handle App Store rejections
+- Deal with certificate issues
+- Navigate app review process
+- Ship a real app under review guidelines
+
+**Your job:** Separate the people who've actually done this from the people who've watched YouTube tutorials.
+
+## The Vetting Framework (Do This First)
+
+This takes 30 minutes. It answers: "Is this person even qualified?"
+
+### 1. Ask for App Store Links (Not Portfolio)
+
+**Your question:**
+> "Can you send me 3 apps you've shipped to the App Store or Google Play? I want to see real, published apps."
+
+**What to look for:**
+- ✅ Real apps with real reviews
+- ✅ Apps with recent updates (last 3 months)
+- ✅ Variety of complexity (not just single-screen apps)
+- ✅ Their name in the developer account or credits
+
+**Red flags:**
+- ❌ They can't name a single published app
+- ❌ "I've shipped apps but can't share them (NDA)"
+- ❌ Apps with 0 reviews and 1 download (probably their own test)
+- ❌ They show you GitHub repos instead (repos ≠ shipped apps)
+- ❌ "I shipped 50 apps but can only show you 2"
+
+**Why this matters:** Anyone can claim experience. Published apps are proof.
+
+### 2. Check the App Store Presence Yourself
+
+Don't just trust their word. Verify.
+
+**What to check:**
+
+**On App Store:**
+1. Go to [apps.apple.com](https://apps.apple.com)
+2. Search for the app they mentioned
+3. Look at the developer name
+4. Check if their name/company matches
+
+**On Google Play:**
+1. Go to [play.google.com/store](https://play.google.com/store)
+2. Search for the app
+3. Click the developer name
+4. See all their published apps
+
+**Red flags:**
+- ❌ App doesn't exist on the store they claimed
+- ❌ Developer name is completely different from their name
+- ❌ App was published 5 years ago and never updated
+- ❌ App has 1-star reviews complaining about crashes
+
+### 3. Download and Test Their Apps
+
+Spend 10 minutes actually *using* the apps they showed you.
+
+**Questions to answer:**
+- Does the app launch without crashing?
+- Is the UI polished or janky?
+- Does it have basic features (navigation, buttons working)?
+- If there's authentication, can you sign up?
+- Are there obvious bugs?
+
+**Red flags:**
+- ❌ App crashes on launch
+- ❌ Buttons don't work
+- ❌ UI is misaligned on your phone size
+- ❌ Can't sign up or authenticate
+- ❌ The app feels unfinished
+
+These are apps they're *showing you*. If they're buggy, what will they deliver for you?
+
+### 4. Ask Specific Technical Questions
+
+This separates experienced developers from people who watched tutorials.
+
+**Ask these questions directly:**
+
+**Question 1:** "Walk me through your app submission process. What was the hardest part?"
+
+**What experts say:**
+> "The hardest part is usually handling App Store rejections. On one app, we got rejected for guideline 4.2 initially. We added offline support with a service worker and appealed. That took about 4 hours and got approved on the second try."
+
+**What amateurs say:**
+> "I just uploaded it and it got approved. Pretty easy, honestly."
+> "Um... I'm not sure. The process was straightforward."
+
+**Red flag:** If they can't describe the process in detail, they haven't done it.
+
+---
+
+**Question 2:** "What's your process for handling App Store rejections?"
+
+**What experts say:**
+> "First, I read the rejection email carefully. Most are specific. If it's 4.2 (insufficient functionality), I add a native feature. If it's about missing privacy policy, I fix that. I appeal with a detailed response explaining what I changed."
+
+**What amateurs say:**
+> "I've never been rejected."
+> "I just resubmit and hope it works next time."
+
+**Red flag:** Everyone gets rejected eventually. If they claim they never have, they haven't shipped much.
+
+---
+
+**Question 3:** "What's your experience with Capacitor/Expo/React Native?"
+
+*If they claim to wrap web apps into native apps:*
+
+**What experts say:**
+> "For web apps, I use Capacitor. I'm familiar with signing apps, building APKs/AABs, and handling the signing key management. I also know when NOT to use Capacitor—like if you need heavy native features."
+
+**What amateurs say:**
+> "Yeah, I've used that. It's pretty easy."
+> "Um, I've heard of Capacitor."
+
+**Red flag:** If they're vague or haven't actually used it, they're improvising.
+
+---
+
+**Question 4:** "What's the typical timeline from 'ready to submit' to 'live on App Store'?"
+
+**What experts say:**
+> "Apple usually reviews in 24-48 hours. Google Play is 1-4 hours. I always leave 2 weeks before a deadline to account for rejections and revisions."
+
+**What amateurs say:**
+> "Usually a few days?"
+> "I'm not sure."
+
+**Red flag:** If they don't have realistic timelines, they'll overpromise and under-deliver.
+
+## The Evaluation Scorecard
+
+Use this to rate developers. Anything under 6/10 → don't hire.
+
+| Criteria | 0 pts | 1 pt | 2 pts | Score |
+|----------|-------|------|-------|-------|
+| **Can show 3+ real published apps** | Can't show any | Can show 1-2 | Shows 3+ on store | — |
+| **Apps are actually good** | Crashes/broken | Functional but buggy | Polished, working well | — |
+| **Can describe submission process** | Vague/can't explain | Generic description | Specific details + rejections handled | — |
+| **Technical questions answered well** | Deflects/guesses | Basic understanding | Deep knowledge | — |
+| **Realistic timelines** | "Super fast, guaranteed" | Vague | "Apple 24-48hrs, plan 2 weeks" | — |
+| **Communication quality** | Slow/unclear responses | Okay | Clear, detailed, responsive | — |
+
+**Scoring:**
+- 12 pts: Hire with confidence
+- 10-11 pts: Good hire, check references
+- 8-9 pts: Risky, negotiate lower rates
+- Below 8: Skip, find someone better
+
+## Red Flags That Disqualify Immediately
+
+If you see ANY of these, don't hire:
+
+1. **"I guarantee your app will be approved"**
+   - No one can guarantee App Store approval. Anyone claiming they can is lying.
+
+2. **"I've shipped 200+ apps but can only show you 1"**
+   - If they've shipped that many, they should have a portfolio. Vague numbers = vague experience.
+
+3. **"I'll have it done in 2 days"**
+   - App shipping takes time. Design, build, test, submit, revise. Rushing leads to rejections.
+
+4. **"I don't do revisions after submission"**
+   - Apps get rejected. If they won't handle revisions, don't hire them.
+
+5. **"I can ship for half of what everyone else charges"**
+   - Pricing that's too low usually means corners being cut or someone who hasn't done this before.
+
+6. **"I'll just wrap your web app with no modifications"**
+   - Unmodified web wrappers get rejected. They should know this.
+
+7. **No response for 24+ hours**
+   - If they're slow before you hire them, they'll be slower after.
+
+## Questions to Ask References
+
+If they offer references, ask these:
+
+1. **"Did they ship the app successfully?"** (Simple yes/no)
+2. **"Were there rejections? How did they handle them?"**
+3. **"Did the timeline match what they promised?"**
+4. **"Would you hire them again?"**
+5. **"What would you change if you hired them again?"**
+
+Listen to the hesitation. That tells you everything.
+
+## Interview Template
+
+Use this exact interview format:
+
+```
+Hi [Name],
+
+Thanks for applying. Quick questions:
+
+1. Can you send me 3 apps you've published to the 
+   App Store or Google Play? [Links]
+
+2. [Download and test them. Report back in 24 hrs]
+
+3. Can you walk me through how you'd ship MY app?
+   What's the exact process?
+
+4. Have you ever had an app rejected? How did 
+   you handle it?
+
+5. What's your timeline for getting this live?
+
+6. Can you provide 2 references from past clients 
+   who shipped apps?
+
+Based on your answers, I'll decide if we move forward.
+```
+
+Takes 30 minutes of their time. Filters 80% of unqualified developers.
+
+## What You Should Pay
+
+**Bad developers:** $40-60/hr (and deliver bad work)
+**Average developers:** $80-150/hr (competent, slow)
+**Good developers:** $150-300/hr (actually ship, handle problems)
+**Experts:** $300+/hr (rare, but worth it if you have budget)
+
+For **first app shipping**, I recommend:
+- Fixed price: $3,000-8,000 (caps their liability)
+- Hourly with cap: $150/hr, max 40 hours
+
+Don't go cheaper than $3k fixed price. You get what you pay for.
+
+## The Hiring Process (Start to Finish)
+
+1. **Post job** (Upwork, Angel List, or referral)
+2. **Collect responses** (you'll get 20+)
+3. **Run vetting checklist** (reject 80%)
+4. **Interview finalists** (maybe 2-3 left)
+5. **Check references** (quick calls)
+6. **Run paid trial** (give them a small task first, $200-500)
+7. **Hire winner**
+
+The paid trial is key. You find out if they actually deliver before committing to the full project.
+
+## What I Look For (Actual Hiring Criteria)
+
+I've hired 40+ developers for app shipping. The pattern:
+
+**They get hired if:**
+- Published apps on real stores
+- Can explain the process in detail
+- Have references who ship with them
+- Respond quickly and clearly
+- Price is $150+/hr (shows confidence)
+- Willing to do revisions
+
+**They don't get hired if:**
+- Can't show real apps
+- Vague on process
+- Cheap rates
+- Overpromise timelines
+- Slow communication
+- Won't handle rejections
+
+It's that simple.
+
+## Final Thought
+
+Hiring the wrong developer costs you:
+- $500-2000 in wasted money
+- 3-4 weeks of time
+- A broken app that doesn't work
+- Stress
+
+Spending an extra 2 hours vetting saves you all of that.
+
+Use the checklist. Ask the hard questions. Verify everything. Hire the person who's actually done this before.
+
+---
+
+**Need help evaluating a specific developer?** [Share their info and I'll review them](/kickoff).
+
+**Already hired someone?** [Use this post-hire checklist](/blog/post-hiring-app-developer-checklist) to make sure they're on track.

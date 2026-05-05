@@ -1,0 +1,158 @@
+---
+title: "Why Your AI Chatbot Seems Dumb"
+description: "You added a chatbot and it hallucinates answers. Here's why—and how to fix it without spending $50K."
+slug: "why-your-ai-chatbot-seems-dumb"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["ai", "chatbots", "rag", "customer-support"]
+draft: false
+---
+
+You added an AI chatbot to your site. Your investor said it was a good idea. You figured it'd save support costs. A user asks it a question, and it tells them you ship to Canada. You don't ship to Canada. The user is now angry.
+
+This isn't a failure of AI. It's a failure of how you're using it.
+
+## Why Your Chatbot Hallucinates
+
+Here's what most founders don't understand: **LLMs don't know things. They generate plausible-sounding text based on patterns.**
+
+When you drop Claude or GPT-4 on your site without training, you're handing a generic model a question. It has no idea what your business is. It hasn't read your docs, your FAQ, your shipping policy, or your product specs. It's trained on the entire internet, which means it knows 10,000 wrong answers about your business for every right one.
+
+Your chatbot hallucinates because it's *guessing*.
+
+A customer asks: "Do you offer phone support?" 
+
+The model thinks: "Most SaaS companies offer phone support. I'll say yes."
+
+Wrong. You don't. You offer email only.
+
+A customer asks: "What's your refund policy?"
+
+The model thinks: "Most SaaS companies have 30-day refunds. I'll say that."
+
+Wrong. You have 14 days.
+
+This is why off-the-shelf chatbots from Intercom, Drift, or Zendesk are only marginally better. They have better UX plumbing, but they still don't know your business without YOU telling them. And most founders don't. They install the widget, point it at their site's public HTML, and call it done.
+
+**That's not training. That's guessing faster.**
+
+The hard part isn't the AI model. It's *giving the AI access to the right information*. That requires work.
+
+## What Actually Works: RAG
+
+RAG stands for Retrieval Augmented Generation. Stop me if you've heard this before—but it matters.
+
+Here's the idea:
+
+1. **Feed the chatbot YOUR information.** Your docs, FAQs, knowledge base, product specs, policies. Real stuff about your business.
+2. **When a user asks a question, retrieve the relevant documents** from your knowledge base.
+3. **Send those documents + the user's question to the LLM.**
+4. **The LLM answers based on YOUR information**, not the internet.
+
+Now your chatbot says: "Do you ship to Canada?" and it actually knows the answer because you told it.
+
+This is tedious. It requires you to:
+- Write or extract docs in a structured format
+- Upload them to a vector database (Pinecone, Weaviate, Supabase pgvector)
+- Test the retrieval to make sure it's pulling the right docs
+- Monitor conversations and refine
+
+But it works.
+
+Real example from a company I worked with:
+- Chatbot without RAG: 2% user satisfaction
+- Chatbot with RAG + 3 weeks of refining docs: 78% user satisfaction
+
+The difference wasn't the model. It was feeding it real information.
+
+## Build vs. Buy: The Real Cost
+
+You have three paths here. Be honest about which fits you.
+
+**Buy (Intercom, Drift, Zendesk)**
+- Cost: $300–$1,200/month
+- Time to launch: 1 day
+- Quality: 50–70% of questions answered correctly
+- Effort to maintain: Low (updates happen automatically)
+- Best for: Teams with 10+ support reps, high traffic
+
+**Build (Supabase + OpenAI/Claude API + vector DB)**
+- Cost: $200–$500/month (depends on API usage and traffic)
+- Time to launch: 2–4 weeks
+- Quality: 80–95% (depends on your docs and training)
+- Effort to maintain: Medium (you own the training and updates)
+- Best for: Founders who want control and lower long-term costs
+
+**DIY Hack (Zapier + ChatGPT + manual prompts)**
+- Cost: $50–$150/month
+- Time to launch: 1 week (janky week)
+- Quality: 30–50% (barely usable)
+- Effort to maintain: High (lots of manual tweaking)
+- Best for: Desperate founders with no budget and lots of time
+
+Most founders should **buy** until:
+- Your support bill is $3K+/month (then build saves money)
+- You need specific business logic (then build is required)
+- You have the engineering time (then build is faster)
+
+If you're a solo founder or small team without a dedicated engineer, buy. Intercom's onboarding alone saves you 3 weeks of headaches.
+
+If you have an engineer and want to own the stack, build. You'll have a better product long-term.
+
+## The Real Gotcha
+
+Here's what no one tells you: **A good AI chatbot requires good training data.**
+
+If your docs are garbage, your chatbot will be garbage. If your FAQ is 3 years old, your chatbot will give outdated answers. If you're inconsistent about your policies, your chatbot will be inconsistent.
+
+Before you build or buy, ask yourself:
+- Do I have clear, documented answers to the top 50 questions customers ask?
+- Is that documentation current?
+- Do I have time to maintain it?
+
+If the answer to any of those is "no," your chatbot will fail. Not because the AI is bad. Because your information is bad.
+
+I've seen founders spend $15K building a perfect chatbot on top of a 2-year-old knowledge base. The chatbot was flawless. The information it was trained on was wrong. They looked dumb.
+
+## When to Ship It
+
+You're ready to launch a chatbot when:
+
+1. **You know the top 20–30 questions** users ask (from support tickets, user research, or your own experience).
+2. **You have documented answers** to those questions.
+3. **You have a fallback plan.** If the chatbot doesn't know, it should escalate to a human, not guess.
+4. **You're monitoring it.** Look at actual conversations. Refine. Repeat.
+
+If you're using a bought solution, set it up with human fallback enabled. It should be: "I'm not sure. Let me connect you to a human." Not: "I think the answer is X."
+
+If you're building, same rule. The chatbot should know when it doesn't know.
+
+## The Honest Cost
+
+If you want a chatbot that actually works:
+- Bought solution: $300–$1,200/month + your time to train it
+- Built solution: $200–$500/month + 2–4 weeks engineering time
+- Both: 1–2 hours/month maintenance (refining based on real conversations)
+
+That's the real number. Not the "AI solves everything" fantasy. The actual cost.
+
+Is it worth it? Only if:
+- You get 50+ support questions/day (chatbot saves real time)
+- Your customers are frustrated waiting for support
+- Your support costs are 10%+ of revenue
+
+If none of those are true, skip the chatbot. Spend that money on something that will actually move the needle for your users.
+
+## What's Next
+
+If you do want to build one, you need three things:
+
+1. **A vector database** (Supabase pgvector, Pinecone, or Weaviate)
+2. **An LLM API** (OpenAI, Anthropic Claude, or open-source)
+3. **Your training data** (docs, FAQs, knowledge base)
+
+The hard part is #3. Get that right, and the rest is glue code.
+
+If you want the stack we recommend for indie founders shipping AI features fast, [here's what we use](/kickoff). And if you want to explore building vs. buying with actual numbers for your situation, [let's talk](/kickoff).

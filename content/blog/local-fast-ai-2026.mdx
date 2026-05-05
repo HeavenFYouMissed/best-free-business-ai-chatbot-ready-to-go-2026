@@ -1,0 +1,166 @@
+---
+title: "Local AI That Actually Works: Ollama + Quantization in 2026"
+description: "Run LLMs locally without the slowdown. Quantization strategies, GPU acceleration, and when local AI actually makes sense."
+slug: "local-fast-ai-2026"
+date: "2026-04-28"
+updated: "2026-04-28"
+author: "Daniel Castellani"
+pillar: "ai-integration"
+tags: ["local-ai", "llms", "ollama", "quantization", "privacy"]
+draft: false
+---
+
+You want to run LLMs locally. No API dependency, no latency leaks to OpenAI, full privacy. You install Ollama. You run a model. It takes 15 seconds to generate a sentence.
+
+You close the terminal.
+
+Here's the honest version: local LLMs work. They're fast enough for real applications. But "fast" doesn't mean what you think it means, and most people set them up wrong. This post is the setup that actually works.
+
+## Why Local LLMs Matter
+
+Ollama is the de facto standard for running LLMs locally. It handles the plumbing—model downloads, quantization, GPU acceleration—so you don't have to compile GGML or debug CUDA on your Mac.
+
+The appeal is real:
+- **Privacy**: Your prompts never touch an API. Everything stays local.
+- **Cost**: After initial hardware, running inference is free. No per-token charges.
+- **Latency**: Once loaded, inference happens in milliseconds. No network roundtrip.
+- **Control**: You can modify the model, customize system prompts, or remove safety guardrails.
+
+But there are misconceptions:
+
+*Myth 1: Local LLMs are as smart as GPT-4.*
+False. They're not. A quantized 70B model is competent—good for summarization, code help, Q&A. It's not reasoning-level. Don't expect it.
+
+*Myth 2: Latency is instant.*
+False. "Latency" and "throughput" are different. The first token takes under 500ms on modern hardware. But generating a paragraph takes several seconds because LLMs generate one token at a time.
+
+*Myth 3: Any laptop can run this.*
+False. You need VRAM. A 7B model needs ~6GB. A 13B model needs ~12GB. A 70B model needs ~40GB. Without GPU acceleration, it's disk-swapped and unusable.
+
+Get the hardware right first. That's half the battle.
+
+## Why Local LLMs Are Slow (And It's Physics)
+
+Here's the technical reality: LLM inference is memory-bandwidth-bound, not compute-bound.
+
+Generating a token requires loading the entire model weights into memory and performing a matrix multiply. On a 70B model with fp16 weights, that's ~140GB of data moving per token. Your GPU memory bandwidth (even on an RTX 4090) is around 1TB/second. The math: 140GB / 1TB/s = 140ms per token, minimum.
+
+In practice: 100-200ms per token on high-end GPUs, 500ms+ on CPU, and slower on older hardware.
+
+You can't fix physics. But you can compress the model.
+
+## Quantization: Trading Accuracy for Speed
+
+Quantization reduces the precision of model weights. Instead of 16-bit floats (fp16), you use 8-bit integers (int8) or 4-bit integers (int4).
+
+A 70B fp16 model is 140GB. Quantized to int8, it's 70GB. Quantized to int4, it's 35GB.
+
+The consequence: the model generates slightly different (usually worse) outputs. How much worse depends on the quantization level and the model.
+
+**4-bit vs 8-bit in practice:**
+
+4-bit quantization reduces model size by 4x. On a 7B model, that's ~3.5GB. On a 13B model, ~6.5GB. Both fit comfortably on consumer GPUs and even some newer laptops.
+
+For most tasks (summarization, Q&A, creative writing), the quality difference between 8-bit and 4-bit is negligible. You won't notice it. The speed gain is substantial.
+
+8-bit is the middle ground: less compression than 4-bit, better quality, still fast.
+
+Token generation speed with quantization:
+- 7B int4 on RTX 4070: ~30-50 tokens/second (20-33ms per token)
+- 13B int4 on RTX 4090: ~50-80 tokens/second (12-20ms per token)
+- 70B int4 on RTX 6000: ~80-120 tokens/second (8-12ms per token)
+
+These are wall-clock numbers. On CPU, divide by 5-10x.
+
+**Choosing a model size:**
+
+- **7B models (Llama 2 7B, Mistral 7B)**: Fast, run on any GPU. Good for chat, classification, simple Q&A. Occasional reasoning failures.
+- **13B models (Llama 2 13B)**: Sweet spot. Noticeably smarter than 7B, still fast, fits on most consumer GPUs.
+- **70B models (Llama 2 70B)**: For serious work. Requires high-end GPU or multiple GPUs. Better reasoning, longer context.
+
+Start with 13B. If it's fast enough, you're done. If you need more capability and have hardware, go 70B. If you need to run on a laptop, use 7B.
+
+## Practical Setup: Docker + Ollama + GPU
+
+Here's the setup that actually works.
+
+**Step 1: Get Ollama running with GPU support.**
+
+On macOS with Apple Silicon:
+```bash
+brew install ollama
+ollama pull llama2:13b-chat-q4_K_M
+ollama serve
+```
+
+Ollama auto-detects Metal acceleration. No config needed.
+
+On Linux with NVIDIA GPU:
+```bash
+# Install CUDA if not present
+# Then:
+docker run --gpus all -d -v ollama:/root/.ollama -p 11434:11434 ollama/ollama
+docker exec -it $(docker ps -q) ollama pull llama2:13b-chat-q4_K_M
+```
+
+The `q4_K_M` quantization is 4-bit, optimized for speed and quality.
+
+**Step 2: Verify it works.**
+
+```bash
+curl http://localhost:11434/api/generate -d '{"model":"llama2:13b-chat-q4_K_M","prompt":"Explain quantization in one sentence"}'
+```
+
+If you get a response in under 5 seconds, your hardware is good. If it takes 30+ seconds, you're CPU-bound. Consider GPU acceleration or a smaller model.
+
+**Step 3: Integrate with your app.**
+
+For Python (LangChain):
+```python
+from langchain.llms import Ollama
+
+llm = Ollama(model="llama2:13b-chat-q4_K_M", base_url="http://localhost:11434")
+response = llm("What is quantization?")
+```
+
+For JavaScript (Node):
+```javascript
+const response = await fetch("http://localhost:11434/api/generate", {
+  method: "POST",
+  body: JSON.stringify({
+    model: "llama2:13b-chat-q4_K_M",
+    prompt: "What is quantization?",
+    stream: false
+  })
+});
+const data = await response.json();
+console.log(data.response);
+```
+
+That's it. Your local LLM is now callable from your app.
+
+## When Local AI Actually Makes Sense
+
+Not every LLM task needs a local setup. Be honest about the tradeoff.
+
+**Use local AI if:**
+- You process sensitive data (medical records, financial info, proprietary code) and can't send it to external APIs.
+- You're building for offline use or edge devices.
+- Your app makes hundreds of inference calls per day and API costs are prohibitive.
+- You need custom behavior (domain-specific guardrails, fine-tuned outputs) and fine-tuning is cheaper than API calls.
+
+**Use an API if:**
+- You need state-of-the-art reasoning (use GPT-4, Claude 3).
+- You're prototyping and want to avoid infrastructure setup.
+- Your inference load is sporadic.
+- Your latency requirements are under 500ms end-to-end (APIs are often faster than you think).
+
+Most production apps use both: local models for commodity tasks, APIs for reasoning-heavy work.
+
+## Next Steps
+
+Local AI is mature. It works. The setup is straightforward. The tradeoff is: you sacrifice a bit of quality and reasoning for privacy, cost, and control.
+
+If you're shipping an app that needs AI and you want full control, let's talk. I've built local LLM integrations for medical apps, legal analysis tools, and specialized code generation. The setup depends on your data, latency requirements, and hardware.
+
+[Start a kickoff call](/kickoff) to design your local AI stack.

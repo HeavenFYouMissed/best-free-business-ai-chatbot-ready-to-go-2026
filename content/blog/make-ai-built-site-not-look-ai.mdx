@@ -1,0 +1,158 @@
+---
+title: "How to make an AI-built website stop looking AI-built"
+description: "Lovable, Bolt, v0, and the rest leave the same fingerprints — same gradients, same hero, same Stripe-blue card stack. Here's the 9-step pass I run on every project to kill the 'AI smell' without rebuilding."
+slug: "make-ai-built-site-not-look-ai"
+date: "2026-04-30"
+updated: "2026-04-30"
+author: "Daniel Castellani"
+pillar: "web-apps"
+tags: ["lovable", "design", "branding", "polish", "ai builders"]
+cover: "/blog/covers/not-ai-looking.png"
+draft: false
+---
+
+You can spot a Lovable site, a Bolt site, or a v0-stitched site in about `~3 seconds`. Same hero with a centered headline and a soft gradient. Same Stripe-blue feature cards in a 3-column grid. Same testimonial section with avatars from a stock generator. Same "Built with ❤️" footer.
+
+None of this is the tools' fault. The defaults are good defaults. The problem is that everyone ships the defaults.
+
+Below is the pass I run on every AI-built site before it goes live. It's not a redesign — it's a polish loop. Most of these take about 30 minutes each. None of them require rebuilding the app.
+
+## The 9 fingerprints, in order of how much they cost you
+
+1. The default font stack (Inter or system + nothing else).
+2. The default gradient (cyan-to-purple or blue-to-violet).
+3. The default card grid (3 columns, equal weight, tiny icons up top).
+4. The default testimonial avatars.
+5. The default "as seen in" logo bar.
+6. The "all the same spacing" rhythm.
+7. Stock illustrations that match nothing.
+8. Centered everything.
+9. Animations that don't have a reason.
+
+If your site has all 9, you have a Lovable smell. If it has `3 or fewer`, it doesn't.
+
+## 1 — Pick a font that isn't Inter
+
+Inter is fine. Inter is everywhere. That's the problem. Open Google Fonts and pick one of: **Geist**, **Söhne** (paid), **General Sans**, **Manrope**, **Satoshi**, **Departure Mono** (for accents). Pair a sans with a mono and stop there. No serif body fonts unless your brand actually wants editorial.
+
+For Lovable's default Inter setup, switching to Geist is one config line in `tailwind.config.ts` (or the equivalent in v4). I've never had a project not improve from this single change.
+
+```ts
+fontFamily: {
+  sans: ["Geist", "ui-sans-serif", "system-ui"],
+  mono: ["Geist Mono", "ui-monospace"],
+}
+```
+
+Add monospace numbers wherever you have prices, dates, or stats. The visual texture difference is huge and it's `~5 minutes` of work.
+
+## 2 — Kill the cyan-to-purple gradient
+
+Gradients aren't the problem. The same two gradients in every AI app are the problem. The cyan-to-violet hero gradient and the pink-to-orange CTA gradient are visually associated with "AI tool default" now.
+
+Fix in order of effort:
+
+- **Lowest effort**: change one of the gradient stops to an off-brand color (a warm orange, a teal, a deep magenta). One stop different is enough to break the pattern recognition.
+- **Medium effort**: replace the gradient with a single flat brand color and move the visual interest somewhere else (a shader, a photograph, a typography moment).
+- **High effort**: replace the gradient with a real artifact — a screenshot, a real product photo, an animated chart.
+
+The "AI smell" lives in `~80%` saturation, `~60%` lightness gradients with two adjacent hues. Pick complementary or triadic instead of analogous. Or kill the gradient.
+
+## 3 — Break the 3-column feature grid
+
+Every AI builder gives you a "Features" section that's a 3-column grid of cards, each with a tiny icon, a `<h3>`, and `2 lines` of text. It's the most copy-pasted layout on the internet right now.
+
+Replacements that take the same time:
+
+- **Asymmetric grid** — `2 + 1` rows where one card is `2×` the size and contains the most important feature.
+- **Numbered list with prose** — drop the cards entirely. Just `01.`, `02.`, `03.` with a one-paragraph description and a small inline visual. This reads like editorial.
+- **Conversation flow** — "Step 1, then step 2, then step 3" laid out as actual steps with arrows or section breaks. Works great for product onboarding.
+
+The card grid isn't wrong. It's just everywhere. Pick something else `~1 in 3` times.
+
+## 4 — Replace the avatar testimonials
+
+The default testimonial section pulls avatars from a generator (or worse, leaves the placeholder avatars in). Real humans, real names, real companies, real photos. If you can't get one of those four, write the testimonial as a quote without an avatar — just text and attribution.
+
+Better: link to the source. A tweet screenshot with a working link, a Trustpilot block with a verified badge, a LinkedIn post embed. Anything that says "this is a real person you can verify."
+
+## 5 — Drop the "as seen in" logo bar (unless it's true)
+
+If you've genuinely been in TechCrunch and Product Hunt and YC, put the logos up. If you haven't, the placeholder logos that come in AI templates make the site feel fake the moment a visitor squints.
+
+Replace with: customer logos (with permission), tool logos you're built with, or nothing. "Nothing" is a real option.
+
+## 6 — Vary the section rhythm
+
+AI templates produce sections that all have the same vertical padding, the same max-width, the same heading-paragraph-button structure. The page reads as a metronome.
+
+Pick `2–3` sections to break the pattern:
+
+- One section with edge-to-edge content (full bleed image or color).
+- One section that's much shorter than the others (a single line of text, large).
+- One section with content that floats off-grid (an asymmetric layout).
+
+Variety in vertical rhythm is `80%` of why custom sites feel custom.
+
+## 7 — Cut the stock illustrations
+
+The Undraw / Storyset / Saly figures are doing nothing for your site. They were a 2018 trend and they read as filler now. If you can't replace an illustration with a real screenshot or photograph, delete it.
+
+If you really need a hero visual, options that don't trigger the AI smell:
+
+- A real product screenshot in a frame.
+- A WebGL shader (free, MIT-licensed effects abound).
+- A gradient mesh tied to your brand colors, not the default.
+- A typographic hero — just letters, big.
+
+## 8 — Stop centering everything
+
+AI templates default to centered headlines, centered paragraphs, centered buttons. It's a safe choice and it reads as "I didn't decide."
+
+Move at least one major section to left-aligned. Hero copy especially benefits from left alignment with a fixed measure (`~60ch` for body, `~14–22ch` for headlines). It feels editorial. It feels human.
+
+## 9 — Earn every animation
+
+Animations in AI templates are decorative — fade-in on scroll, hover lift on cards, stagger on lists. None of them tell the user anything new.
+
+Audit each animation by asking: **does this teach the user something?** If the answer is no, remove it. The site will feel faster and more confident.
+
+Animations that earn their keep:
+
+- **Reveals on data**: a number counts up to a stat. Tells the user "this is the moment you should focus."
+- **Transitions on state change**: a form moves from "filling out" to "submitted." Tells the user the system received their input.
+- **Cursor-aware effects**: hover causes a card to tilt subtly toward the cursor. Adds tactility.
+
+Decorative fade-ins on every section make the site feel slow. Cut them.
+
+## The 30-minute checklist
+
+Pull up your AI-built site. Open this list. Spend `30 minutes` per item, in order, and stop when you've done `5`:
+
+- [ ] Swap the font stack.
+- [ ] Replace or recolor the gradient.
+- [ ] Pick `1` non-grid layout for your features section.
+- [ ] Real testimonial sources or remove.
+- [ ] Logo bar audit (real or remove).
+- [ ] One section breaks the vertical rhythm.
+- [ ] Stock illustrations gone.
+- [ ] Hero left-aligned.
+- [ ] Every animation has a reason.
+
+After `5` of these, your site will not feel like an AI build. After `9`, people will assume you hired a designer.
+
+## A note on Lovable specifically
+
+Lovable's defaults have improved over time, but the fingerprint is still there in three places:
+
+1. **The hero** — gradient + centered text + a Stripe-blue button.
+2. **The pricing section** — `3` tiers, middle one highlighted, identical card structure.
+3. **The footer** — small social icons + "Made with Lovable" link (turn this off in settings).
+
+Replace those three sections specifically and your Lovable site will read as custom. {/* DANIEL: drop a screenshot here of a "before/after" Lovable site you've polished. */}
+
+## When to hire this out
+
+Polish is the part of the project where most freelancers (and most founders) bail. It's not glamorous, it doesn't ship a feature, and it's hard to measure. But it's what makes the difference between a site that converts and a site that gets bookmarked-but-never-bought.
+
+If you want a Lovable / Bolt / v0 site that stops smelling like AI, [tell me about it](/kickoff). I'll usually quote a flat fee for a polish pass and turn it around in `~3–5 days`. The whole point of [/built-for-you](/built-for-you) is that you keep the AI's productivity and lose its fingerprint.

@@ -1,0 +1,134 @@
+---
+title: "Why you shouldn't hire a random freelancer for app shipping (and why you should hire someone like me)"
+description: "Most app-shipping projects fail at handoff, not at code. Here's how I vet myself the way I'd want a client to vet me — and what to look for in anyone else you're considering."
+slug: "why-hire-freelancer-app-shipping"
+date: "2026-04-24"
+updated: "2026-04-24"
+author: "Daniel Castellani"
+pillar: "freelancer-trust"
+tags: ["hiring", "freelance", "app shipping", "trust"]
+cover: "/blog/covers/freelancer-trust.png"
+draft: false
+---
+
+I'm going to do the thing where I make the case for hiring me, but the actual content is a checklist for hiring _anyone_ — me included. If you read this and decide I'm not the right fit, that's fine. The point of the post is that you stop hiring the wrong person.
+
+There are roughly three buckets of freelancers in the "ship my app" market. Most projects that go badly went badly because the founder hired from the wrong bucket.
+
+## The three buckets
+
+**Bucket 1 — App-store-as-a-service shops.** They're cheap, they exist on Fiverr and Upwork, they advertise "iOS submission `$199`." What they actually do: take your build, upload it, and disappear. If review rejects you, they vanish or charge again to "fix" it.
+
+**Bucket 2 — Generalist freelance developers.** They're smart, they've shipped websites and APIs, they think the App Store is a few hours of paperwork. What they don't know: the unwritten Apple review heuristics, the privacy-label landmines, the iPad layout traps. They'll _figure it out_ at your cost and on your timeline.
+
+**Bucket 3 — Specialists.** People whose entire business is "your app, in the store, working." They've already eaten the rejections. They know the appeals. They charge more, they ship faster, and the reason they charge more is usually that they're the cheapest option once you count the cost of one rejection.
+
+I'm Bucket 3. Most of my clients have already tried Bucket 1 or 2.
+
+## What you're actually buying
+
+You aren't buying "App Store submission." You're buying:
+
+- **Pattern matching** on what reviewers will catch.
+- **A fixed price** so you stop budget-creeping every time something breaks.
+- **A rejection contingency** because there will probably be one.
+- **Someone who picks up the phone** when your app gets pulled at `9pm` on a Friday.
+
+If a freelancer's pitch is just "I'll upload it for you," they're selling the smallest part of the job.
+
+## The 5 questions that separate signal from noise
+
+I tell clients to ask me these. I'd ask any other developer the same.
+
+### 1. "How many apps have you shipped to both stores in the last 12 months?"
+
+Volume matters. Apple changes the rules subtly every few months — privacy labels, account deletion requirements, sign-in flows. If someone hasn't shipped in the last `~6 months`, they're operating on stale information.
+
+My answer: `11+ apps` shipped, the most recent within the last `30 days`. {/* DANIEL: keep this number current — set as variable later if we automate it. */}
+
+### 2. "What's your last rejection and what did you do about it?"
+
+This is the question that exposes everyone. A freelancer who's "never been rejected" has either shipped two apps or is lying. Apple rejects roughly `~30%` of submissions on first pass for first-time apps. The interesting answer is what they did next.
+
+The bad answer: "I haven't been rejected." (Lying or inexperienced.)
+The OK answer: "Yeah, last one was a `4.2` — I added more features." (At least it's true.)
+The good answer: "Last one was a `4.2`, here's the appeal letter I used, here's what I changed in the binary, here's the timeline from rejection to approval." (This is signal.)
+
+### 3. "Can I see a project you shipped end-to-end with proof?"
+
+Not "here's a screenshot of a homepage." Real proof: the App Store URL, the Google Play URL, and ideally a customer they shipped for who'll talk to you for `15 min`.
+
+If everything they show you is on Dribbble, you're being pitched design, not shipping.
+
+### 4. "What's your fixed price, and what's not included?"
+
+Anyone who can't quote a fixed price for "ship this app" hasn't shipped enough apps to know what it costs them. Fine for an exploratory build. Not fine for App Store submission, which is a known-shape job.
+
+What "not included" should look like:
+
+- Apple Developer account fee (`$99/yr`) — _your_ account, not theirs.
+- Major rewrites of your code — submission is the scope, refactor is a separate engagement.
+- Legal review of your privacy policy — that's a lawyer's job, not theirs.
+
+If "not included" includes "rejection appeals," walk away.
+
+### 5. "Where can I see reviews you didn't pay for?"
+
+Trustpilot, Google reviews, public testimonials with the customer's actual name and company. Not anonymous "John D." reviews.
+
+My Trustpilot has [`50+ five-star reviews`](https://www.trustpilot.com/review/publishd.app) {/* DANIEL: confirm exact count + correct URL. */}, all real, most with the customer's name and project. That's not me bragging — that's the bar I think you should set for anyone you hire.
+
+## What "fixed price" actually means
+
+A fixed price for app shipping should cover, end-to-end:
+
+- Wrapping the web app (or building from your repo) into iOS + Android binaries.
+- All `20+` icon sizes generated from your `1024×1024` source.
+- Screenshots in the required device sizes, framed and listing-ready.
+- App Store and Play Store listing copy (you can edit it; I draft it).
+- Privacy questionnaire answers that match what your app actually does.
+- One full review cycle on each store. If rejected, the appeal is mine to write and resubmit at no extra charge.
+- Final handoff: you own the developer accounts, the code, the certificates, the listings. I leave with nothing locked.
+
+What it doesn't cover, fairly:
+
+- Building you a new app from scratch (different scope; that's [/built-for-you](/built-for-you)).
+- Ongoing maintenance after the app is live (separate engagement).
+- A feature pivot mid-submission ("can we add notifications before we submit?" → no, that's a new project).
+
+## Why "the cheap option" usually costs more
+
+Real numbers from clients who came to me _after_ trying the cheap option:
+
+- **Founder A**: paid `$300` to a Fiverr shop, got rejected `4.2`, shop ghosted, founder lost `~6 weeks` re-doing the work. Total cost including time: `$5,000+` in opportunity cost, plus what they paid me.
+- **Founder B**: hired a generalist developer at `$80/hr`, "estimated" `40 hours`, actually billed `120 hours`, never shipped because the developer couldn't pass review. Total cost: `~$10,000`, no app in the store.
+- **Founder C**: hired me at the start. Shipped in `12 days`, fixed price, in the store, no drama. Cost: `< $500`. {/* DANIEL: confirm fixed-price example matches your pricing page. */}
+
+This is selection bias — I only hear from the people who didn't ship the first time. But the ratio is consistent enough that I've stopped being surprised.
+
+## What I'd ask of me
+
+If I were hiring myself, I'd send these in the kickoff form:
+
+1. "Show me three projects you shipped in the last `90 days`."
+2. "What's the fixed price for my exact scope, and what would cause it to change?"
+3. "What's your timeline, and what's the worst case if Apple rejects?"
+4. "If my app gets pulled in `6 months` over a policy change, are you reachable?"
+
+If I can't answer any of those clearly in under 24 hours, hire someone else.
+
+## The brand-name problem
+
+You'll see "agencies" with slick websites and `40` employees pitching app shipping. Be careful — most of them outsource the actual work and add a markup. You're paying for an account manager, not the person doing your build.
+
+The advantage of hiring me directly is that the person you're emailing is the person doing the work. That has tradeoffs (I'm not infinitely scalable; my schedule is real) but it means you're never a ticket in someone else's queue.
+
+## Bottom line
+
+You're hiring a freelancer for app shipping for one reason: to stop having to think about Apple and Google. If the freelancer makes you think about Apple and Google more, fire them.
+
+I make a living because most freelance developers are great at code and bad at the part of the job that has nothing to do with code. Apple's reviewer doesn't read your code. They read your screenshots, your privacy labels, your subtitle, your icon. That's the job.
+
+If that's the job you want done — [start a kickoff](/kickoff) and I'll send you a quote within `24 hours`. Or read the [pricing](/pricing) page first.
+
+Either way, ask the five questions. To me, to whoever else you're considering. The answers tell you which bucket you're hiring from.
