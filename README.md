@@ -26,14 +26,7 @@
 
 ## Watch it run (30 seconds)
 
-> **Drag your `.mp4` here when editing the README on GitHub** — GitHub will upload to its CDN and replace this line with a `<video src="...">` tag automatically.
-> Or: upload a `.mp4` to a [GitHub release](https://github.com/HeavenFYouMissed/best-free-business-ai-chatbot-ready-to-go-2026/releases/new) and paste the asset URL into the `src=""` below.
-
-<!--
-<video src="REPLACE_WITH_RELEASE_ASSET_URL.mp4" controls width="640" muted playsinline poster="docs/images/chat-widget-preview.png">
-  Your browser doesn't render embedded video — <a href="REPLACE_WITH_RELEASE_ASSET_URL.mp4">download the demo here</a>.
-</video>
--->
+https://github.com/user-attachments/assets/ed413ba6-3ba6-419f-80c7-5f354bf88c35
 
 ---
 
