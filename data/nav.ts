@@ -33,6 +33,12 @@ export const navItems: NavItem[] = [
         description: "Grounded chatbots from $399 that capture leads or take action.",
       },
       {
+        label: "Try the chat demo",
+        href: "/chat-demo.html",
+        description: "Live AI chat in an iPhone frame — same one I install on client sites.",
+        tag: "DEMO",
+      },
+      {
         label: "Web app → App Store & Play",
         href: "/ship-web-app-to-app-store",
         description: "Plain-language path from browser app to iOS and Android listings.",

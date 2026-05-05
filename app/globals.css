@@ -1021,6 +1021,10 @@ select.intake-field {
 .chat-bubble {
   position: relative;
   transition: box-shadow 320ms var(--ease-out-quint);
+  /* Hard-wrap long tokens (URLs, dollar amounts joined by punctuation, etc.)
+     so a stray no-break sequence can't push the bubble past max-w-[86%]. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .chat-bubble--bot {
   backdrop-filter: blur(18px) saturate(180%);

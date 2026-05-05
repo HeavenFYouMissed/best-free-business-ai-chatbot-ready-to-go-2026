@@ -194,7 +194,7 @@ export function ChatPanel({ open, onClose }: Props) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.96 }}
           transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-          className="chat-panel-dock fixed bottom-5 right-5 z-[95] flex h-[min(760px,86dvh)] w-[min(388px,calc(100vw-2.5rem))] flex-col overflow-hidden md:bottom-6 md:right-6"
+          className="chat-panel-dock fixed bottom-5 right-5 z-[95] flex aspect-[688/1348] h-[min(760px,86dvh,calc((100vw-2.5rem)*1348/688))] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden md:bottom-6 md:right-6"
         >
           <IphoneFrame fill alt="" className="min-h-0 flex-1" priority>
             <div className="chat-iphone relative flex h-full min-h-0 w-full flex-col overflow-hidden">
