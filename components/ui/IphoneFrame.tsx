@@ -34,6 +34,11 @@ type IphoneFrameProps = {
   className?: string;
   /** Tailwind sizes attr for the screenshot image */
   sizes?: string;
+  /**
+   * Fill the parent box instead of enforcing the device aspect ratio.
+   * Use for embedded UIs (e.g. chat panel) where the outer shell sets size.
+   */
+  fill?: boolean;
 };
 
 export function IphoneFrame({
@@ -43,11 +48,14 @@ export function IphoneFrame({
   children,
   className,
   sizes,
+  fill = false,
 }: IphoneFrameProps) {
   return (
     <div
       className={cn(
-        "relative inline-flex aspect-[688/1348] w-full select-none items-center justify-center",
+        fill
+          ? "relative block h-full min-h-0 w-full select-none"
+          : "relative inline-flex aspect-[688/1348] w-full select-none items-center justify-center",
         className,
       )}
     >

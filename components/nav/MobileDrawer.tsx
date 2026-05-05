@@ -235,7 +235,7 @@ export function MobileDrawer({ open, onClose }: Props) {
                           href={href}
                           onClick={onClose}
                           aria-current={isActive ? "page" : undefined}
-                          className="drawer-row relative flex min-h-[48px] items-center gap-3 overflow-hidden rounded-[var(--radius-md)] px-3 py-3 text-[15px] font-medium text-[var(--color-fg)] transition-colors"
+                          className="drawer-row relative flex min-h-[48px] items-start gap-3 overflow-hidden rounded-[var(--radius-md)] px-3 py-3 text-[15px] font-medium text-[var(--color-fg)] transition-colors"
                           style={
                             isActive
                               ? {
@@ -245,14 +245,21 @@ export function MobileDrawer({ open, onClose }: Props) {
                               : undefined
                           }
                         >
-                          <span className="drawer-row-index font-mono text-[10.5px] uppercase tracking-[0.2em]" style={{ color: "color-mix(in srgb, var(--color-accent) 70%, transparent)" }}>
+                          <span className="drawer-row-index mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.2em]" style={{ color: "color-mix(in srgb, var(--color-accent) 70%, transparent)" }}>
                             {indexLabel}
                           </span>
-                          <span className="relative z-[1]">{item.label}</span>
+                          <span className="relative z-[1] flex min-w-0 flex-1 flex-col gap-1">
+                            <span>{item.label}</span>
+                            {item.warning ? (
+                              <span className="font-mono text-[10px] font-normal uppercase leading-snug tracking-[0.14em] text-[#ff5f56]">
+                                {item.warning}
+                              </span>
+                            ) : null}
+                          </span>
                           {isActive && (
                             <span
                               aria-hidden
-                              className="ml-auto h-[6px] w-[6px] rounded-full"
+                              className="ml-auto mt-1.5 h-[6px] w-[6px] shrink-0 self-start rounded-full"
                               style={{
                                 background: "var(--color-accent)",
                                 boxShadow: "0 0 10px var(--color-accent)",

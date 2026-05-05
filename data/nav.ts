@@ -9,6 +9,8 @@ export type NavItem = {
   label: string;
   href?: string;
   children?: NavChild[];
+  /** Optional red hardware/GPU warning shown next to the label (desktop + drawer). */
+  warning?: string;
 };
 
 export const navItems: NavItem[] = [
@@ -72,6 +74,11 @@ export const navItems: NavItem[] = [
       { label: "Done for you premium", href: "/site#tier-premium", tag: "$699", description: "Expedited, full-service, 60-day support." },
       { label: "Studio — custom build", href: "/site#tier-studio", tag: "$2,999+", description: "Flagship. Custom from scratch." },
     ],
+  },
+  {
+    label: "Full site",
+    href: "/site",
+    warning: "GPU-heavy ride · best on new hardware",
   },
   { label: "Built for You", href: "/built-for-you" },
   {

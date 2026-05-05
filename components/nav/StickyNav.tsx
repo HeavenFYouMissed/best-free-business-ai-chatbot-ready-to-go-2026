@@ -76,7 +76,14 @@ export function StickyNav() {
                           }}
                         />
                       )}
-                      {item.label}
+                      <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                        {item.label}
+                        {item.warning ? (
+                          <span className="hidden max-w-[220px] font-mono text-[8.5px] uppercase leading-tight tracking-[0.14em] text-[#ff5f56] lg:inline">
+                            [ {item.warning} ]
+                          </span>
+                        ) : null}
+                      </span>
                       {isActive && (
                         <span
                           aria-hidden

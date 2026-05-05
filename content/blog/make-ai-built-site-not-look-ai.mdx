@@ -3,10 +3,10 @@ title: "How to make an AI-built website stop looking AI-built"
 description: "Lovable, Bolt, v0, and the rest leave the same fingerprints — same gradients, same hero, same Stripe-blue card stack. Here's the 9-step pass I run on every project to kill the 'AI smell' without rebuilding."
 slug: "make-ai-built-site-not-look-ai"
 date: "2026-04-30"
-updated: "2026-04-30"
+updated: "2026-05-05"
 author: "Daniel Castellani"
 pillar: "web-apps"
-tags: ["lovable", "design", "branding", "polish", "ai builders"]
+tags: ["lovable", "design", "branding", "polish", "ai builders", "prompts", "cursor"]
 cover: "/blog/covers/not-ai-looking.png"
 draft: false
 ---
@@ -140,6 +140,116 @@ Pull up your AI-built site. Open this list. Spend `30 minutes` per item, in orde
 - [ ] Every animation has a reason.
 
 After `5` of these, your site will not feel like an AI build. After `9`, people will assume you hired a designer.
+
+## Prompt pack — when you are still generating with AI
+
+The nine steps above fix a site that already exists. If you are **still in the tool** (Cursor, Claude, Copilot) and you want the model to ship something that does not read like Slack-default SaaS, you need **constraints on the session**, not just "make it look good."
+
+Below is a paste-ready scaffold plus workflow rules. The two parts that do the heavy lifting are **HARD BANS** (closes the easy-path exits) and the **SELF-CRITIQUE STEP** (forces a second pass). Without both, the model ships its first idea, which is always the safest, dullest one.
+
+### 1. The anti-Slack prompt template
+
+Fill the bracketed slots. The rest is what fights AI defaults.
+
+```txt
+ROLE
+You are the design director and senior frontend engineer for [brand].
+Output target: Awwwards Site of the Day caliber. If a reviewer at Linear,
+Vercel, Rauno Freiberg, or Stripe's marketing team would call this generic,
+you have failed.
+
+REFERENCE BENCHMARKS (study these before writing a single line)
+- linear.app  — typography rhythm, dense feature pages
+- vercel.com  — editorial restraint + bold moments
+- rauno.me    — asymmetry, monospace details, scroll choreography
+- arc.net     — playful but premium, custom illustrations
+- framer.com  — interaction polish, type-as-art
+- stripe.com/payments — feature page density without clutter
+
+HARD BANS (do not output any of these — they are AI tells)
+- Centered hero with [headline] [subhead] [two buttons] [phone mockup]
+- 3-column or 6-column "features grid" with icon + title + 2 lines of copy
+- Gradient buttons, glow on everything, "shimmer" decoration as content
+- Sparkle icons, checkmark glyphs, emoji as iconography (Lucide line icons OK)
+- Stock phrases: "empower", "unlock", "next level", "seamless", "elevate",
+  "supercharge", "revolutionize", "game-changing"
+- Lorem ipsum, fake avatars (UI Faces, Pravatar), fake company logos
+- Generic dashboards as filler; placeholder copy
+- "Trusted by" logo cloud unless logos are real and earned
+- Symmetry where asymmetry would read as edited / curated
+- Centered everything — hero, features, testimonials all center-aligned
+- The same vertical rhythm in every section (140px padding, 140px padding…)
+
+REQUIRED MOVES (every section must demonstrate at least 2)
+- Editorial typography: mixed weights (300/500/700), one display face used
+  with intent, monospace for numbers/timestamps/metadata
+- Asymmetric layout in at least 50% of sections
+- One "bold moment" per fold (a single arresting visual, not five)
+- Real content density (a Linear feature page has 600+ words; AI defaults
+  to 80 words and 6 icons)
+- Numbers, dates, version strings, code excerpts, terminal output where
+  natural — proof of craft
+- Negative space used aggressively; not everything has a card around it
+- At most one rounded-corner radius on the page (e.g. 12px); pick a system
+
+TONE
+Voice = [your actual voice — quote 3 sentences from existing copy].
+Not corporate. Not breathless. Specific over abstract. Show, don't claim.
+
+DEFINITION OF DONE
+- Section reads as if a human design director shipped it
+- Could be screenshotted as a portfolio piece
+- Removes all stock content; every word/asset is brand-specific
+- Mobile gets the same care as desktop, not a stripped-down version
+- Passes my self-critique below
+
+SELF-CRITIQUE STEP (you must do this before declaring done)
+After implementing, pretend you are Rauno Freiberg reviewing this PR.
+List 5 things you would reject and why. Then fix them. Show me the
+critique + the fixes in your reply.
+
+CONSTRAINTS
+[Paste your brand tokens, fonts, framework, available components]
+```
+
+### 2. Workflow tactics (matter more than the prompt)
+
+Do not say "build the homepage." That optimizes for **complete**, not **great**.
+
+- **Section by section, never in bulk.** Example: "Design the hero. One section. Show me three radically different directions before writing code."
+- **Force divergence first.** Ask for three distinct concepts in plain text or wireframe before any code. Reject the most obvious one. Pick one of the weirder two.
+- **Iterate on the bold moment.** Example: "The hero's centerpiece — give me five ideas that are not a phone mockup or a dashboard screenshot."
+- **Design critique loop.** After every section: "Pretend you are a senior designer at Apple. What would you reject here?" Then: "Fix all of those."
+- **Reference images, not adjectives.** "Make it look premium" is noise. Drop a screenshot of Linear's homepage and say "this density, this typography rhythm." Cursor and Claude can both ingest images.
+
+### 3. Model and mode
+
+This matters more than people admit.
+
+- **Claude Opus 4.x with high thinking** beats Sonnet for raw design taste; the thinking modes spend tokens critiquing their own output, which is what you want here.
+- **Agent mode** beats Ask/Chat for iterative work — the agent can snapshot the running page (browser MCP, Playwright), see what it built, and self-correct. Without sight, it is flying blind.
+- **GPT-5 high / Codex high** is strong for engineering polish (motion, performance) and slightly weaker on pure taste. A practical split: Opus for direction, GPT-class for refactors and perf.
+- **Avoid fast/cheap models for design work.** They are trained to please, which means safe, which means generic.
+
+### 4. Kill-the-AI-tell weapons
+
+Mid-session prompts that catch the model before it ships Slack-default UI:
+
+- "Show me your typography scale before you write JSX." Forces a system instead of random `text-lg` / `text-xl` / `text-2xl`.
+- "What is the one piece of friction in this section that would make a real user pause?" Forces specificity over polish.
+- "Rip out 30% of the content. Then 30% more. What survives?" Forces editorial restraint. Models add; they rarely remove.
+- "What is the single weirdest thing on this page?" If the answer is "nothing," reject and try again. Strong pages carry one weird, memorable, opinionated element.
+- "How does a competitor's mediocre version of this look? Now go in the opposite direction." Negative-space prompting.
+
+### 5. The reality check
+
+Even with all of the above, **AI cannot replace taste.** It can execute taste. The prompt's job is to give it taste-by-reference. The sites you name (Linear, Rauno, Vercel, Stripe, and so on) become the anchor for that session. Without them, the model averages every site it has seen — which is generic by definition.
+
+**One sentence to staple to every prompt:**
+
+> Default to the most opinionated, most asymmetric, most editorial choice that still ships in the timebox. If your output could appear on any SaaS website, throw it out and try again.
+
+That line alone moves output from "$5k freelancer safe" toward "$80k senior opinionated." The scaffold above pushes it the rest of the way.
 
 ## A note on Lovable specifically
 

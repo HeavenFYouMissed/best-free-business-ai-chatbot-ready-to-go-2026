@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp, Check, Mail, RotateCcw, X } from "lucide-react";
+import { IphoneFrame } from "@/components/ui/IphoneFrame";
 import { DynamicIsland } from "./DynamicIsland";
 import { StatusBar } from "./StatusBar";
 import { renderChatContent } from "./renderChatContent";
@@ -11,7 +12,7 @@ import { renderChatContent } from "./renderChatContent";
 /**
  * Pearl iridescence overlay — renders as a low-opacity tint over the
  * CSS-frosted screen. The real frost (blur of the site behind) is handled
- * by `backdrop-filter` on `.chat-iphone-screen` in globals.css.
+ * by `backdrop-filter` on `.chat-iphone-frost` in globals.css.
  */
 const ChatPanelBackdrop = dynamic(
   () => import("./ChatPanelBackdrop").then((m) => m.ChatPanelBackdrop),
@@ -193,186 +194,190 @@ export function ChatPanel({ open, onClose }: Props) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.96 }}
           transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-          className="chat-iphone fixed bottom-5 right-5 z-[95] flex h-[min(680px,82dvh)] w-[min(388px,calc(100vw-2.5rem))] flex-col md:bottom-6 md:right-6"
+          className="chat-panel-dock fixed bottom-5 right-5 z-[95] flex h-[min(760px,86dvh)] w-[min(388px,calc(100vw-2.5rem))] flex-col overflow-hidden md:bottom-6 md:right-6"
         >
-          {/* Untransformed frost layer — has to be a separate element from
-              the motion.div, because Safari (both desktop and iOS) refuses
-              to composite backdrop-filter on a transformed node. This is
-              what actually blurs the page behind the panel. */}
-          <div aria-hidden className="chat-iphone-frost" />
+          <IphoneFrame fill alt="" className="min-h-0 flex-1" priority>
+            <div className="chat-iphone relative flex h-full min-h-0 w-full flex-col overflow-hidden">
+            {/* Untransformed frost layer — has to be a separate element from
+                the motion.div, because Safari (both desktop and iOS) refuses
+                to composite backdrop-filter on a transformed node. This is
+                what actually blurs the page behind the panel. */}
+            <div aria-hidden className="chat-iphone-frost" />
 
-          {/* Pearl iridescent tint overlay — low-opacity shader layer on top
-              of the frost, screen-blended so pearl colors light up the
-              frosted glass without blocking the blur beneath. */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 z-0 opacity-[0.38]"
-            style={{ mixBlendMode: "screen" }}
-          >
-            <ChatPanelBackdrop className="h-full w-full" />
-          </span>
+            {/* Pearl iridescent tint overlay — low-opacity shader layer on top
+                of the frost, screen-blended so pearl colors light up the
+                frosted glass without blocking the blur beneath. */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 z-0 opacity-[0.38]"
+              style={{ mixBlendMode: "screen" }}
+            >
+              <ChatPanelBackdrop className="h-full w-full" />
+            </span>
 
-          {/* Neon paint wash while streaming */}
-          <span aria-hidden className="chat-neon-wash pointer-events-none absolute inset-0 z-[1]" />
+            {/* Neon paint wash while streaming */}
+            <span aria-hidden className="chat-neon-wash pointer-events-none absolute inset-0 z-[1]" />
 
-          {/* iPhone chrome: Dynamic Island + status bar */}
-          <div className="relative z-[2] shrink-0">
-            <DynamicIsland streaming={sending} />
-            <StatusBar />
-          </div>
-
-          {/* Header strip — Apple-orb + label + close */}
-          <div className="relative z-[2] flex shrink-0 items-center justify-between border-b border-[color-mix(in_srgb,#ffffff_15%,transparent)] px-4 py-2">
-            <div className="flex items-center gap-2">
-              <AppleOrbGlyph streaming={sending} />
-              <span className="chat-header-label text-[12.5px] font-medium tracking-[0.02em]">
-                Assistant
-              </span>
+            {/* iPhone chrome: Dynamic Island + status bar */}
+            <div className="relative z-[2] shrink-0">
+              <DynamicIsland streaming={sending} />
+              <StatusBar />
             </div>
-            <div className="flex items-center gap-1.5">
-              {messages.length > 0 && (
+
+            {/* Header strip — Apple-orb + label + close */}
+            <div className="relative z-[2] flex shrink-0 items-center justify-between border-b border-[color-mix(in_srgb,#ffffff_15%,transparent)] px-4 py-2">
+              <div className="flex items-center gap-2">
+                <AppleOrbGlyph streaming={sending} />
+                <span className="chat-header-label text-[12.5px] font-medium tracking-[0.02em]">
+                  Assistant
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {messages.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={resetChat}
+                    aria-label="New chat"
+                    className="chat-close grid h-9 w-9 place-items-center rounded-full border border-[color-mix(in_srgb,#c7b4ff_22%,transparent)] text-[color-mix(in_srgb,#ffffff_86%,transparent)] transition-colors hover:border-[color-mix(in_srgb,#c7b4ff_55%,transparent)] hover:text-[#ffffff]"
+                  >
+                    <RotateCcw className="icon h-3.5 w-3.5" />
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={resetChat}
-                  aria-label="New chat"
+                  onClick={onClose}
+                  aria-label="Close chat"
                   className="chat-close grid h-9 w-9 place-items-center rounded-full border border-[color-mix(in_srgb,#c7b4ff_22%,transparent)] text-[color-mix(in_srgb,#ffffff_86%,transparent)] transition-colors hover:border-[color-mix(in_srgb,#c7b4ff_55%,transparent)] hover:text-[#ffffff]"
                 >
-                  <RotateCcw className="icon h-3.5 w-3.5" />
+                  <X className="icon h-4 w-4" />
                 </button>
-              )}
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close chat"
-                className="chat-close grid h-9 w-9 place-items-center rounded-full border border-[color-mix(in_srgb,#c7b4ff_22%,transparent)] text-[color-mix(in_srgb,#ffffff_86%,transparent)] transition-colors hover:border-[color-mix(in_srgb,#c7b4ff_55%,transparent)] hover:text-[#ffffff]"
-              >
-                <X className="icon h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Message area */}
-          <div
-            ref={scrollRef}
-            data-lenis-prevent
-            data-lenis-prevent-touch
-            data-lenis-prevent-wheel
-            className="relative z-[2] flex-1 overflow-y-auto px-4 py-4 text-[14px] leading-relaxed"
-          >
-            {messages.length === 0 && (
-              <div className="space-y-4">
-                <div className="font-mono text-[12px] uppercase tracking-[0.22em] text-[color-mix(in_srgb,#c7b4ff_92%,white)]">
-                  <span className="mr-1 opacity-70">&gt;</span>
-                  {typed}
-                  <span className="chat-caret ml-0.5 inline-block align-[-2px]">_</span>
-                </div>
-                <p className="text-[13px] leading-relaxed text-[color-mix(in_srgb,var(--color-fg)_86%,transparent)]">
-                  Pricing, timelines, what&apos;s included, Apple rejections — anything.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {SUGGESTIONS.map((s, i) => (
-                    <ChatChip key={s} label={s} index={i} onClick={() => void handleSend(s)} />
-                  ))}
-                </div>
               </div>
-            )}
-
-            <ul className="space-y-3">
-              {messages.map((m, i) => (
-                <MessageRow
-                  key={i}
-                  message={m}
-                  streaming={i === streamingIndex}
-                  streamedCount={i === streamingIndex ? streamed : -1}
-                />
-              ))}
-            </ul>
-
-            {needsEmail && !dismissed && (
-              <EmailGate
-                draft={emailDraft}
-                onDraftChange={setEmailDraft}
-                onSubmit={captureEmail}
-                onDismiss={() => setDismissed(true)}
-              />
-            )}
-          </div>
-
-          {/* Summary-sent success pill */}
-          <AnimatePresence>
-            {summarySent && (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 6 }}
-                className="relative z-[2] mx-4 mb-1 flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,#7cf0d4_45%,transparent)] bg-[color-mix(in_srgb,#7cf0d4_12%,transparent)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.2em] text-[color-mix(in_srgb,#c8ffed_92%,white)]"
-              >
-                <Check className="icon h-3 w-3" aria-hidden />
-                summary en route · check your inbox
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Input bar — frosted pill */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              void handleSend();
-            }}
-            className="chat-input-bar relative z-[2] flex shrink-0 flex-wrap items-center gap-2 px-3 pb-4 pt-3"
-          >
-            <div className="chat-input-wrap relative flex min-w-0 flex-1 items-center">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={sending}
-                placeholder="Ask anything…"
-                className="chat-input chat-glass min-w-0 flex-1 rounded-full border border-[color-mix(in_srgb,#ffffff_18%,transparent)] px-4 py-3 text-[14px] text-[var(--color-fg)] outline-none placeholder:text-[color-mix(in_srgb,#ffffff_45%,transparent)]"
-                autoComplete="off"
-                spellCheck
-              />
             </div>
-            <button
-              type="submit"
-              aria-label="Send"
-              disabled={sending || !input.trim()}
-              className="chat-send group relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full text-white transition-[transform,opacity] active:scale-95 disabled:opacity-50"
+
+            {/* Message area */}
+            <div
+              ref={scrollRef}
+              data-lenis-prevent
+              data-lenis-prevent-touch
+              data-lenis-prevent-wheel
+              className="relative z-[2] flex-1 overflow-y-auto px-4 py-4 text-[14px] leading-relaxed"
+            >
+              {messages.length === 0 && (
+                <div className="space-y-4">
+                  <div className="font-mono text-[12px] uppercase tracking-[0.22em] text-[color-mix(in_srgb,#c7b4ff_92%,white)]">
+                    <span className="mr-1 opacity-70">&gt;</span>
+                    {typed}
+                    <span className="chat-caret ml-0.5 inline-block align-[-2px]">_</span>
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-[color-mix(in_srgb,var(--color-fg)_86%,transparent)]">
+                    Pricing, timelines, what&apos;s included, Apple rejections — anything.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {SUGGESTIONS.map((s, i) => (
+                      <ChatChip key={s} label={s} index={i} onClick={() => void handleSend(s)} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <ul className="space-y-3">
+                {messages.map((m, i) => (
+                  <MessageRow
+                    key={i}
+                    message={m}
+                    streaming={i === streamingIndex}
+                    streamedCount={i === streamingIndex ? streamed : -1}
+                  />
+                ))}
+              </ul>
+
+              {needsEmail && !dismissed && (
+                <EmailGate
+                  draft={emailDraft}
+                  onDraftChange={setEmailDraft}
+                  onSubmit={captureEmail}
+                  onDismiss={() => setDismissed(true)}
+                />
+              )}
+            </div>
+
+            {/* Summary-sent success pill */}
+            <AnimatePresence>
+              {summarySent && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  className="relative z-[2] mx-4 mb-1 flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,#7cf0d4_45%,transparent)] bg-[color-mix(in_srgb,#7cf0d4_12%,transparent)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.2em] text-[color-mix(in_srgb,#c8ffed_92%,white)]"
+                >
+                  <Check className="icon h-3 w-3" aria-hidden />
+                  summary en route · check your inbox
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Input bar — frosted pill */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void handleSend();
+              }}
+              className="chat-input-bar relative z-[2] flex shrink-0 flex-wrap items-center gap-2 px-3 pb-4 pt-3"
+            >
+              <div className="chat-input-wrap relative flex min-w-0 flex-1 items-center">
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={sending}
+                  placeholder="Ask anything…"
+                  className="chat-input chat-glass min-w-0 flex-1 rounded-full border border-[color-mix(in_srgb,#ffffff_18%,transparent)] px-4 py-3 text-[14px] text-[var(--color-fg)] outline-none placeholder:text-[color-mix(in_srgb,#ffffff_45%,transparent)]"
+                  autoComplete="off"
+                  spellCheck
+                />
+              </div>
+              <button
+                type="submit"
+                aria-label="Send"
+                disabled={sending || !input.trim()}
+                className="chat-send group relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full text-white transition-[transform,opacity] active:scale-95 disabled:opacity-50"
+              >
+                <span
+                  aria-hidden
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #9a3dfc 0%, #ff3b82 100%)",
+                    boxShadow:
+                      "0 6px 18px -4px color-mix(in srgb, #9a3dfc 60%, transparent), inset 0 1px 0 rgba(255,255,255,0.25)",
+                  }}
+                />
+                <ArrowUp className="icon relative z-[1] h-4 w-4" aria-hidden strokeWidth={2.6} />
+              </button>
+              {/* Zero-friction escape — always visible, wraps below on mobile */}
+              <a
+                href="mailto:daniel@publishd.app?subject=Publishd%20%E2%80%94%20direct%20line&body=Hey%20Daniel%2C%20your%20AI%20chat%20couldn%27t%20quite%20answer%20my%20question.%20Here%27s%20what%20I%20need%3A%0A%0A"
+                className="chat-escape inline-flex basis-full items-center justify-center gap-1.5 rounded-full border border-[color-mix(in_srgb,#c7b4ff_22%,transparent)] bg-[color-mix(in_srgb,#ffffff_4%,transparent)] px-3 py-1.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-[color-mix(in_srgb,#ffffff_72%,transparent)] transition-colors hover:border-[color-mix(in_srgb,#c7b4ff_55%,transparent)] hover:text-[#ffffff]"
+              >
+                <Mail className="icon h-3 w-3" aria-hidden />
+                stuck? email daniel directly
+              </a>
+            </form>
+
+            {/* Home indicator */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-[6px] z-[3] flex justify-center"
             >
               <span
-                aria-hidden
-                className="absolute inset-0 rounded-full"
+                className="block h-[4px] w-[120px] rounded-full"
                 style={{
-                  background:
-                    "linear-gradient(135deg, #9a3dfc 0%, #ff3b82 100%)",
-                  boxShadow:
-                    "0 6px 18px -4px color-mix(in srgb, #9a3dfc 60%, transparent), inset 0 1px 0 rgba(255,255,255,0.25)",
+                  background: "color-mix(in srgb, #ffffff 40%, transparent)",
+                  boxShadow: "0 0 6px color-mix(in srgb, #ffffff 28%, transparent)",
                 }}
               />
-              <ArrowUp className="icon relative z-[1] h-4 w-4" aria-hidden strokeWidth={2.6} />
-            </button>
-            {/* Zero-friction escape — always visible, wraps below on mobile */}
-            <a
-              href="mailto:daniel@publishd.app?subject=Publishd%20%E2%80%94%20direct%20line&body=Hey%20Daniel%2C%20your%20AI%20chat%20couldn%27t%20quite%20answer%20my%20question.%20Here%27s%20what%20I%20need%3A%0A%0A"
-              className="chat-escape inline-flex basis-full items-center justify-center gap-1.5 rounded-full border border-[color-mix(in_srgb,#c7b4ff_22%,transparent)] bg-[color-mix(in_srgb,#ffffff_4%,transparent)] px-3 py-1.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-[color-mix(in_srgb,#ffffff_72%,transparent)] transition-colors hover:border-[color-mix(in_srgb,#c7b4ff_55%,transparent)] hover:text-[#ffffff]"
-            >
-              <Mail className="icon h-3 w-3" aria-hidden />
-              stuck? email daniel directly
-            </a>
-          </form>
-
-          {/* Home indicator */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-[6px] z-[3] flex justify-center"
-          >
-            <span
-              className="block h-[4px] w-[120px] rounded-full"
-              style={{
-                background: "color-mix(in srgb, #ffffff 40%, transparent)",
-                boxShadow: "0 0 6px color-mix(in srgb, #ffffff 28%, transparent)",
-              }}
-            />
-          </div>
+            </div>
+            </div>
+          </IphoneFrame>
         </motion.div>
       )}
     </AnimatePresence>
