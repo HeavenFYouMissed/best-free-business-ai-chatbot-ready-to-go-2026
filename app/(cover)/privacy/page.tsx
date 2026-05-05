@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
 };
 
-const updated = "April 19, 2026";
+const updated = "May 5, 2026";
 
 export default function PrivacyPage() {
   return (
@@ -34,7 +34,7 @@ export default function PrivacyPage() {
       <h1 className="mt-4">Privacy Policy</h1>
       <p className="mt-3 text-[14px] text-[var(--color-muted)]">
         Last updated: <span className="num">{updated}</span>. Short version: we collect only what&rsquo;s needed
-        to ship your app. We don&rsquo;t sell data. We don&rsquo;t track you with third-party cookies.
+        to ship your app. We don&rsquo;t sell data. Analytics runs only if you opt in (see Cookies below).
       </p>
 
       <Section title="1. What we collect">
@@ -58,7 +58,18 @@ export default function PrivacyPage() {
             <strong>Contact details</strong> &mdash; email, phone (if you share it), business name.
           </li>
         </ul>
-        <p>We do not use analytics cookies. We do not use advertising trackers.</p>
+        <p>
+          <strong>Optional analytics</strong> &mdash; if you click &ldquo;Accept analytics&rdquo; on the cookie
+          banner, we load Segment (segment.com) in the browser for anonymous page views. That helps us understand
+          which pages people use. We do not use advertising pixels or retargeting. If you choose &ldquo;Essential
+          only,&rdquo; Segment is not loaded.
+        </p>
+        <p>
+          <strong>Post-purchase review invites</strong> &mdash; after a successful Stripe checkout, our server may
+          send an <code className="rounded bg-[var(--color-ink)] px-1 py-0.5 font-mono text-[12px]">Order Completed</code>{" "}
+          event to Segment so Trustpilot can email a review invitation. That is server-side (not a browser cookie)
+          and uses the email you gave at checkout.
+        </p>
       </Section>
 
       <Section title="2. Why we collect it">
@@ -80,6 +91,17 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>Cloudflare</strong> &mdash; hosts the site and routes email (<a className="underline underline-offset-2" href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a>).
+          </li>
+          <li>
+            <strong>Segment</strong> &mdash; only if you accept analytics in the cookie banner: anonymous page
+            analytics in the browser (<a className="underline underline-offset-2" href="https://segment.com/docs/legal/privacy/" target="_blank" rel="noopener">segment.com/legal</a>). Server-side events may still reach Segment for
+            order flows as described above.
+          </li>
+          <li>
+            <strong>Trustpilot</strong> &mdash; when you leave a review or receive an invite, their terms apply (
+            <a className="underline underline-offset-2" href="https://legal.trustpilot.com/for-reviewers" target="_blank" rel="noopener">trustpilot legal</a>
+            ). Links to Trustpilot from publishd.app do not load their widget scripts unless we add them later with
+            separate notice.
           </li>
           <li>
             <strong>Apple &amp; Google</strong> &mdash; only the specific app materials and metadata required to
@@ -123,8 +145,18 @@ export default function PrivacyPage() {
 
       <Section title="7. Cookies">
         <p>
-          We use a single first-party cookie for session state if you log into a future customer portal. No
-          third-party advertising or analytics cookies are set by publishd.app.
+          We store your cookie choice in <code className="rounded bg-[var(--color-ink)] px-1 py-0.5 font-mono text-[12px]">localStorage</code>{" "}
+          (key <code className="rounded bg-[var(--color-ink)] px-1 py-0.5 font-mono text-[12px]">publishd_consent_v1</code>
+          ) as <code className="rounded bg-[var(--color-ink)] px-1 py-0.5 font-mono text-[12px]">essential</code> or{" "}
+          <code className="rounded bg-[var(--color-ink)] px-1 py-0.5 font-mono text-[12px]">analytics</code>. You can
+          reopen the banner anytime via <strong>Cookie settings</strong> in the site footer.
+        </p>
+        <p>
+          If you accept analytics, Segment may set cookies or use local storage as described in their policy. We do
+          not run third-party advertising or retargeting pixels on publishd.app.
+        </p>
+        <p>
+          A future customer portal may use first-party session cookies; that will be listed here if it ships.
         </p>
       </Section>
 

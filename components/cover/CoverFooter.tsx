@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 
 const GOOGLE_REVIEW_URL = "https://g.page/r/CYvDUmgOyz4qEBM/review";
+const TRUSTPILOT_READ_URL = "https://www.trustpilot.com/review/publishd.app";
+const TRUSTPILOT_RATE_URL = "https://www.trustpilot.com/evaluate/publishd.app";
 const LINKEDIN_URL = "https://www.linkedin.com/in/daniel-castellani-475044396";
 const INSTAGRAM_URL = "https://www.instagram.com/kanddlabs";
 
@@ -72,35 +75,50 @@ export function CoverFooter() {
             <FooterLink href="/ship-web-app-to-app-store" label="Ship to stores" />
             <FooterLink href="/seo-guide" label="Free SEO guide" />
             <FooterLink href="/seo-title-meta-checker" label="SEO title checker" />
-            <FooterLink href={LINKEDIN_URL} label="LinkedIn" />
-            <FooterLink href={INSTAGRAM_URL} label="Instagram" />
+            <FooterLink href={LINKEDIN_URL} label="LinkedIn" external />
+            <FooterLink href={INSTAGRAM_URL} label="Instagram" external />
             <FooterLink href="/terms" label="Terms" />
             <FooterLink href="/privacy" label="Privacy" />
+            <FooterLink href={TRUSTPILOT_READ_URL} label="Trustpilot reviews" external />
+            <FooterLink href={TRUSTPILOT_RATE_URL} label="Rate on Trustpilot" external />
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-[var(--color-border)] pt-6 md:flex-row md:items-center">
+        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-[var(--color-border)] pt-6 md:flex-row md:items-center">
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--color-fg)_45%,transparent)]">
             Daniel Castellani / Connecticut / 2026
           </span>
-          <a
-            href={GOOGLE_REVIEW_URL}
-            target="_blank"
-            rel="noopener"
-            className="group inline-flex items-center gap-1.5 transition-opacity duration-200 hover:opacity-100 opacity-70"
-            aria-label="Leave a review on Google"
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M21.35 11.1H12v2.98h5.33c-.23 1.48-1.72 4.35-5.33 4.35-3.21 0-5.82-2.66-5.82-5.93s2.61-5.93 5.82-5.93c1.83 0 3.05.78 3.75 1.45l2.56-2.48C16.68 4.02 14.58 3 12 3 7.03 3 3 7.03 3 12s4.03 9 9 9c5.2 0 8.65-3.65 8.65-8.8 0-.59-.06-1.04-.14-1.1Z" fill="#4285F4"/>
-              <path d="M3 7.69 5.9 9.8A5.92 5.92 0 0 1 12 6.07c1.83 0 3.05.78 3.75 1.45l2.56-2.48C16.68 4.02 14.58 3 12 3 8.55 3 5.55 4.98 4.09 7.86L3 7.69Z" fill="#34A853"/>
-              <path d="M12 21c2.52 0 4.63-.83 6.17-2.26l-2.85-2.34c-.76.53-1.77.9-3.32.9-3.6 0-5.08-2.87-5.31-4.34l-2.97 2.29C5.17 18 8.31 21 12 21Z" fill="#FBBC05"/>
-              <path d="M3.69 14.95A9.03 9.03 0 0 1 3 12c0-1.03.17-2.02.47-2.95l2.98 2.29A5.9 5.9 0 0 0 6.18 12c0 .64.1 1.25.28 1.83l-2.77 1.12Z" fill="#EA4335"/>
-            </svg>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#4285F4]">
-              Review on Google
-            </span>
-          </a>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--color-fg)_45%,transparent)]">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href={GOOGLE_REVIEW_URL}
+              target="_blank"
+              rel="noopener"
+              className="group inline-flex items-center gap-1.5 opacity-70 transition-opacity duration-200 hover:opacity-100"
+              aria-label="Leave a review on Google"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21.35 11.1H12v2.98h5.33c-.23 1.48-1.72 4.35-5.33 4.35-3.21 0-5.82-2.66-5.82-5.93s2.61-5.93 5.82-5.93c1.83 0 3.05.78 3.75 1.45l2.56-2.48C16.68 4.02 14.58 3 12 3 7.03 3 3 7.03 3 12s4.03 9 9 9c5.2 0 8.65-3.65 8.65-8.8 0-.59-.06-1.04-.14-1.1Z" fill="#4285F4"/>
+                <path d="M3 7.69 5.9 9.8A5.92 5.92 0 0 1 12 6.07c1.83 0 3.05.78 3.75 1.45l2.56-2.48C16.68 4.02 14.58 3 12 3 8.55 3 5.55 4.98 4.09 7.86L3 7.69Z" fill="#34A853"/>
+                <path d="M12 21c2.52 0 4.63-.83 6.17-2.26l-2.85-2.34c-.76.53-1.77.9-3.32.9-3.6 0-5.08-2.87-5.31-4.34l-2.97 2.29C5.17 18 8.31 21 12 21Z" fill="#FBBC05"/>
+                <path d="M3.69 14.95A9.03 9.03 0 0 1 3 12c0-1.03.17-2.02.47-2.95l2.98 2.29A5.9 5.9 0 0 0 6.18 12c0 .64.1 1.25.28 1.83l-2.77 1.12Z" fill="#EA4335"/>
+              </svg>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#4285F4]">
+                Review on Google
+              </span>
+            </a>
+            <a
+              href={TRUSTPILOT_RATE_URL}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#00b67a] opacity-80 transition-opacity hover:opacity-100"
+              aria-label="Rate Publishd on Trustpilot"
+            >
+              <span aria-hidden>★</span>
+              Rate on Trustpilot
+            </a>
+            <CookieSettingsButton className="bg-transparent p-0 font-mono text-[10px] uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--color-fg)_55%,transparent)] underline underline-offset-2 transition-colors hover:text-[var(--color-fg)]" />
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--color-fg)_45%,transparent)] md:ml-auto">
             publishd.app
           </span>
         </div>
@@ -109,12 +127,18 @@ export function CoverFooter() {
   );
 }
 
-function FooterLink({ href, label }: { href: string; label: string }) {
+function FooterLink({ href, label, external }: { href: string; label: string; external?: boolean }) {
+  const className =
+    "font-mono text-[11px] uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--color-fg)_65%,transparent)] transition-colors duration-200 hover:text-[var(--color-fg)]";
+  if (external) {
+    return (
+      <a href={href} className={className} target="_blank" rel="noopener">
+        {label}
+      </a>
+    );
+  }
   return (
-    <Link
-      href={href}
-      className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--color-fg)_65%,transparent)] transition-colors duration-200 hover:text-[var(--color-fg)]"
-    >
+    <Link href={href} className={className}>
       {label}
     </Link>
   );

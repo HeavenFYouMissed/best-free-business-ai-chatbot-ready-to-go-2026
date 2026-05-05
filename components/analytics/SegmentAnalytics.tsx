@@ -3,6 +3,9 @@ import Script from "next/script";
 /**
  * Segment analytics snippet.
  *
+ * Only mounted after the visitor opts in via `CookieAndAnalytics` (see
+ * components/consent/). Do not import this directly in the root layout.
+ *
  * Renders the official Segment `analytics.js` loader with our write key. The
  * only event fired automatically is `analytics.page()` — no user identity,
  * no personal data, no form-field tracking. That matches Publishd's brand

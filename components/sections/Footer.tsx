@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 import { Logo } from "@/components/nav/Logo";
 import { ReviewLink } from "@/components/reviews/ReviewLink";
+import { TrustpilotPromo } from "@/components/reviews/TrustpilotPromo";
 
 const GOOGLE_REVIEW_URL = "https://g.page/r/CYvDUmgOyz4qEBM/review";
+const TRUSTPILOT_READ_URL = "https://www.trustpilot.com/review/publishd.app";
 const LINKEDIN_URL = "https://www.linkedin.com/in/daniel-castellani-475044396";
 const INSTAGRAM_URL = "https://www.instagram.com/kanddlabs";
 const YOUTUBE_URL = "https://www.youtube.com/@KandDlabs";
@@ -32,6 +35,7 @@ export function Footer() {
                 </a>
               </div>
             </div>
+            <TrustpilotPromo />
           </div>
 
           <div className="grid grid-cols-2 gap-x-14 gap-y-8 sm:grid-cols-3">
@@ -69,6 +73,7 @@ export function Footer() {
                 { label: "GitHub", href: "https://github.com/HeavenFYouMissed" },
                 { label: "Model Surgery", href: "https://model-surgery.com" },
                 { label: "Google reviews", href: GOOGLE_REVIEW_URL },
+                { label: "Trustpilot reviews", href: TRUSTPILOT_READ_URL },
               ]}
             />
             <FooterCol
@@ -90,7 +95,10 @@ export function Footer() {
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-border)] pt-6 text-[12.5px] text-[var(--color-muted)]">
           <span>© {year} Publishd · Made by Daniel Castellani · Solo engineer · Connecticut</span>
-          <span className="num">publishd.app</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <CookieSettingsButton className="bg-transparent p-0 text-[12.5px] text-[var(--color-muted)] underline underline-offset-2 transition-colors hover:text-[var(--color-fg)]" />
+            <span className="num">publishd.app</span>
+          </div>
         </div>
         <div className="mt-3 text-[11.5px] leading-relaxed text-[var(--color-subtle)]">
           Billing processed by SuperClawHub — the SaaS that runs Publishd. All app revenue routes directly to
