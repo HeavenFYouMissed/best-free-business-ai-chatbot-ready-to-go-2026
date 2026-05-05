@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme {
   --color-bg: #05070d;
   --color-ink: #0b0f1c;
@@ -175,6 +177,141 @@
     75%, 97% { transform: translateY(-300%); }
     100% { transform: translateY(-400%); }
   }
+
+  --animate-accordion-down: accordion-down 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-accordion-up: accordion-up 220ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  @keyframes accordion-down {
+    from { height: 0; opacity: 0; }
+    to { height: var(--radix-accordion-content-height); opacity: 1; }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); opacity: 1; }
+    to { height: 0; opacity: 0; }
+  }
+
+  /* Aurora text colors — used by AuroraText for landing headlines.
+     Cyan/mint/peach/sky/cyan loop — on-brand with existing tokens.
+     All five hand-tuned to the same luminance band (~0.72-0.85) so the
+     animated gradient never dwells on a dim color and reads as muted on
+     long headlines like "Flat Fees." or "End-to-End". */
+  --color-1: #44e3ff;
+  --color-2: #9ff5dc;
+  --color-3: #ff9466;
+  --color-4: #8ab5ff;
+  --color-5: #44e3ff;
+
+  --animate-aurora-text: aurora-text 10s ease-in-out infinite alternate;
+
+  @keyframes aurora-text {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+}
+
+/* Landing page motion primitives — namespaced "ln-" so they don't clash.
+   Hoisted out of @theme so non-utility CSS (e.g. inline animation properties
+   in components) can resolve them. */
+@keyframes ln-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap, 1rem))); }
+}
+@keyframes ln-marquee-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% - var(--gap, 1rem))); }
+}
+@keyframes ln-ripple {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(0.96); }
+}
+@keyframes ln-orbit {
+  0% {
+    transform: rotate(calc(var(--ln-angle, 0) * 1deg))
+      translateY(calc(var(--ln-radius, 80) * 1px))
+      rotate(calc(var(--ln-angle, 0) * -1deg));
+  }
+  100% {
+    transform: rotate(calc(var(--ln-angle, 0) * 1deg + 360deg))
+      translateY(calc(var(--ln-radius, 80) * 1px))
+      rotate(calc(var(--ln-angle, 0) * -1deg - 360deg));
+  }
+}
+@keyframes ln-shine {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Image glow animation for hero screenshot frame (Startup template) */
+@keyframes image-glow {
+  0% { opacity: 0; }
+  10% { opacity: 0.45; }
+  100% { opacity: 0.7; }
+}
+.animate-image-glow { animation: image-glow 4.1s ease-out 0.6s forwards; }
+
+/* Hero entrance fade for badge / heading / sub / button (Startup template) */
+@keyframes ln-fade-in {
+  from { opacity: 0; transform: translateY(-1rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ln-fade-up {
+  from { opacity: 0; transform: translateY(2rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: ln-fade-in 1s var(--animation-delay, 0ms) ease forwards;
+}
+.animate-fade-up {
+  animation: ln-fade-up 1.5s var(--animation-delay, 0ms) ease forwards;
+}
+
+/* Shimmer slide for TextShimmer (Startup template) */
+@keyframes shimmer-slide {
+  to { background-position: calc(100% + var(--shimmer-width, 100px)) 0; }
+}
+.animate-shimmer-slide {
+  animation: shimmer-slide 2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-image-glow,
+  .animate-fade-in,
+  .animate-fade-up,
+  .animate-shimmer-slide { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* Border-beam tracer — animates a conic gradient via @property --beam-angle */
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes ln-border-beam {
+  to { --beam-angle: 360deg; }
+}
+.ln-border-beam {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background:
+    conic-gradient(from var(--beam-angle),
+      transparent 0deg,
+      color-mix(in srgb, var(--color-accent) 95%, white) 18deg,
+      color-mix(in srgb, var(--color-accent) 70%, transparent) 50deg,
+      transparent 90deg,
+      transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: ln-border-beam 6s linear infinite;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--color-accent) 35%, transparent));
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-border-beam { animation: none; }
 }
 
 /* Discretion beacon + ship-button pulse (keep outside @theme — reduce-motion aware) */
@@ -2079,4 +2216,32 @@ section.tight { padding-block: clamp(2rem, 5vw, 3.5rem); }
 }
 .cover-theme .cover-chat-scroll::-webkit-scrollbar-thumb:hover {
   background: color-mix(in srgb, var(--color-accent) 50%, transparent);
+}
+
+@theme inline {
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+
+    }
+
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+
+    }
+
+  }
+
 }

@@ -151,6 +151,44 @@ const professionalService = {
   ],
   description:
     "Publishd ships web apps and AI-built apps (Lovable, Bolt, v0, Cursor) to the App Store and Google Play. Also builds custom websites, AI chatbots, and SaaS applications. Solo developer in Connecticut — one flat fee, you own everything, no subscriptions.",
+  // AggregateRating helps trigger review rich-results and AI Overview
+  // citations. Numbers reflect Trustpilot + Google reviews snapshot.
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5.0",
+    bestRating: "5",
+    ratingCount: "12",
+    reviewCount: "12",
+  },
+};
+
+/**
+ * HowTo schema for the App Store / Google Play shipping flow.
+ * Targets "how to publish my web app to the App Store" queries that
+ * AI Overviews and Google's HowTo rich result historically lift.
+ */
+const shippingHowTo = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "@id": `${SITE_URL}/#howto-ship-app`,
+  name: "How to ship a web app or AI-built app to the App Store and Google Play",
+  description:
+    "Step-by-step process Publishd uses to take a web app, Lovable / Bolt / v0 / Cursor build, or repo and ship it to both stores under your accounts.",
+  totalTime: "P14D",
+  estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "399" },
+  supply: [
+    { "@type": "HowToSupply", name: "App URL or GitHub repo" },
+    { "@type": "HowToSupply", name: "Apple Developer account ($99/yr)" },
+    { "@type": "HowToSupply", name: "Google Play account ($25 one-time)" },
+  ],
+  step: [
+    { "@type": "HowToStep", name: "Kickoff intake", text: "Submit the kickoff form with app URL, store accounts, and a short description.", url: `${SITE_URL}/kickoff` },
+    { "@type": "HowToStep", name: "Native wrapping & native gates", text: "Wrap the web app with Capacitor or Expo, add the native features Apple requires (push, biometric, offline) to clear Guideline 4.2." },
+    { "@type": "HowToStep", name: "Store assets", text: "Generate icons, screenshots, splash screens, privacy policy, and store metadata for both platforms." },
+    { "@type": "HowToStep", name: "Submit & monitor review", text: "Submit to Apple App Store and Google Play under your accounts. Apple review is typically 24–72 hours." },
+    { "@type": "HowToStep", name: "Handle rejections", text: "If Apple rejects (often Guideline 4.2), Publishd writes the appeal, fixes the cited issues, and resubmits — included in the flat fee." },
+    { "@type": "HowToStep", name: "Launch", text: "App goes live under your developer accounts. You own the binaries, the listings, and the revenue routes." },
+  ],
 };
 
 /** Homepage-only: FAQPage + Product/Offer per tier. */
@@ -158,6 +196,11 @@ export function HomeStructuredData() {
   const faqPage = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    // Speakable makes the FAQ eligible for voice + AI Overview lift.
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["[data-speakable]", "h1", "h2"],
+    },
     mainEntity: faq.map((f) => ({
       "@type": "Question",
       name: f.q,
@@ -201,6 +244,7 @@ export function HomeStructuredData() {
     <>
       {ld("ld-faq", faqPage)}
       {ld("ld-products", [...products, studioProduct])}
+      {ld("ld-howto-ship", shippingHowTo)}
     </>
   );
 }

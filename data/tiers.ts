@@ -6,6 +6,7 @@ export type TierId =
   | "both"
   | "premium"
   | "rescue"
+  | "aiRemoval"
   | "retainer"
   | "update"
   | "starterSite"
@@ -110,6 +111,24 @@ export const tiers: Tier[] = [
       "Apple 4.2 / 4.3 / metadata appeals",
       "Guideline cite + fix list",
       "Resubmission on your account",
+    ],
+  },
+  {
+    id: "aiRemoval",
+    name: "AI Removal",
+    price: 99,
+    interval: "once",
+    summary:
+      "Vibe-coded site that screams Lovable / Bolt / v0? I refactor it to read like a human built it.",
+    trustNote:
+      "Built and audited 100+ sites. I know every AI fingerprint — generic copy, stock icons, lorem placeholders, gradient overload, template patterns.",
+    bullets: [
+      "Audit report — every AI tell, ranked by severity",
+      "Rewrite generic copy in your real voice",
+      "Strip emoji + stock-icon clichés",
+      "Replace placeholder content (lorem, fake avatars)",
+      "Tighten layout patterns that scream 'template'",
+      "48–72 hour turnaround · diff handed back to you",
     ],
   },
 ];

@@ -19,6 +19,7 @@ const tiers = [
   { id: "both", name: "Publishd Both Platforms", price: 399, interval: "once" },
   { id: "premium", name: "Publishd Done For You Premium", price: 699, interval: "once" },
   { id: "rescue", name: "Publishd Rejection Rescue", price: 199, interval: "once" },
+  { id: "aiRemoval", name: "Publishd AI Removal", price: 99, interval: "once" },
   { id: "retainer", name: "Publishd Retainer", price: 49, interval: "month" },
   { id: "update", name: "Publishd One-off Update", price: 99, interval: "once" },
   /* Built-For-You catalog (sites, chatbots, app polish). Custom Site is

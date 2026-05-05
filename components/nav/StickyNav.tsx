@@ -9,6 +9,7 @@ import { DropdownMenu } from "./DropdownMenu";
 import { MobileDrawer } from "./MobileDrawer";
 import { MenuGlyph } from "./MenuGlyph";
 import { ShipButton } from "@/components/ui/ShipButton";
+import { CHAT_OPEN_EVENT } from "@/components/chat/ChatWidget";
 import { navItems } from "@/data/nav";
 
 export function StickyNav() {
@@ -94,6 +95,27 @@ export function StickyNav() {
           </ul>
 
           <div className="flex items-center gap-2">
+            {/* AI launcher — homepage only. The (cover) layout hides the
+                floating chat FAB on `/` because it overlapped the mobile
+                sticky CTA + the closing Spline scene. This button takes
+                its place and fires the same panel-open event. */}
+            {pathname === "/" ? (
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event(CHAT_OPEN_EVENT))}
+                aria-label="Ask the AI assistant"
+                className="group relative inline-flex h-10 items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3.5 text-[12.5px] font-semibold tracking-tight text-white backdrop-blur-md transition-all duration-200 hover:border-[color-mix(in_srgb,var(--color-accent)_55%,transparent)] hover:bg-white/10 active:scale-[0.97]"
+              >
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)] shadow-[0_0_8px_var(--color-accent)]"
+                />
+                <span className="font-mono text-[11px] uppercase tracking-[0.18em]">
+                  AI
+                </span>
+                <span className="hidden sm:inline">Ask anything</span>
+              </button>
+            ) : null}
             <ShipButton href="/site#pricing" size="compact" className="hidden xs:inline-flex sm:inline-flex">
               <span className="hidden sm:inline">Ship my app</span>
               <span className="sm:hidden">Ship it</span>

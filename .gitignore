@@ -23,3 +23,4 @@ out
 *.tsbuildinfo
 cloudflare-env.d.ts
 lib/blog-manifest.generated.json
+.firecrawl/
